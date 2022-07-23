@@ -1,0 +1,27 @@
+{
+  "files.associations": {
+    "gpio.h": "c",
+    "esp_err.h": "c",
+    "assert.h": "c",
+    "stdlib.h": "c"
+  },
+  "actionButtons": {
+    "defaultColor": "#ff0034", // Can also use string color names.
+    "loadNpmCommands":false, // Disables automatic generation of actions for npm commands.
+    "reloadButton":"♻️", // Custom reload button text or icon (default ↻). null value enables automatic reload on configuration change
+    "commands": [
+        {
+            "name": "Debug",
+            "color": "white",
+            "singleInstance": true,
+            "command": "./debug.sh",
+        },
+        {
+            "name": "OpenOCD",
+            "color": "white",
+            "singleInstance": true,
+            "command": ". $HOME/$whoami/Documents/esp-idf/export.sh && openocd -c \"set ESP_RTOS none\" -f board/esp32s3-ftdi.cfg ",
+        }
+    ]
+  }
+}
