@@ -17,10 +17,22 @@
             "command": "./debug.sh",
         },
         {
+            "name": "Build",
+            "color": "white",
+            "singleInstance": true,
+            "command": "./build.sh",
+        },
+        {
             "name": "OpenOCD",
             "color": "white",
             "singleInstance": true,
             "command": ". $HOME/$whoami/Documents/esp-idf/export.sh && openocd -c \"set ESP_RTOS none\" -f board/esp32s3-ftdi.cfg ",
+        },
+        {
+            "name": "Menuconfig",
+            "color": "white",
+            "singleInstance": true,
+            "command": ". $HOME/$whoami/Documents/esp-idf/export.sh && idf.py menuconfig",
         }
     ]
   }
