@@ -1,4 +1,4 @@
-20286566588045947
+20298178819448518
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -85652,6 +85652,13 @@ varistor SIOV
 2
 2
 easyeda2kicad
+AUDIO-SMD_PJ-320B
+
+
+0
+5
+3
+easyeda2kicad
 AUDIO-TH_PJ-3200
 
 
@@ -85666,12 +85673,26 @@ DC-IN-SMD_DC-050-20A
 6
 3
 easyeda2kicad
+DC-IN-TH_DC-C033D-5.5A-2.5
+
+
+0
+5
+4
+easyeda2kicad
 LQFN-56_L7.0-W7.0-P0.4-EP
 
 
 0
 57
 57
+easyeda2kicad
+SW-TH_3P-L4.5-W7.0-P3.00-LS1.9
+
+
+0
+3
+3
 easyeda2kicad
 SW-TH_ST-0-102-C03-N003-RS
 
@@ -85686,6 +85707,13 @@ USB-A-SMD_AF-LCP-OFFSET
 0
 6
 6
+suku_basics
+AUDIO-SMD_PJ-320B
+
+
+0
+5
+3
 suku_basics
 AUDIO-TH_PJ-3200
 
@@ -85721,6 +85749,13 @@ DC-IN-SMD_DC-050-20A
 0
 6
 3
+suku_basics
+DC-IN-TH_DC-C033D-5.5A-2.5
+
+
+0
+5
+4
 suku_basics
 FERRIT_0805
 Resistor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: https://docs.google.com/spreadsheets/d/1BsfQQcO9C6DZCsRaXUlFlo91Tg2WpOkGARC1WS5S8t0/edit?usp=sharing), generated with kicad-footprint-generator
@@ -85998,6 +86033,20 @@ suku_basics
 SOT-23W
 SOT-23W http://www.allegromicro.com/~/media/Files/Datasheets/A112x-Datasheet.ashx?la=en&hash=7BC461E058CC246E0BAB62433B2F1ECA104CA9D3
 SOT-23W
+0
+3
+3
+suku_basics
+SOT-363_SC-70-6
+SOT-363, SC-70-6
+SOT-363 SC-70-6
+0
+6
+6
+suku_basics
+SW-TH_3P-L4.5-W7.0-P3.00-LS1.9
+
+
 0
 3
 3

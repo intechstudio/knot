@@ -1,0 +1,85 @@
+name: "KiCad CI/CD for MIDI_Host"
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'electrical/MIDI_Host/*.kicad_sch'
+      - 'electrical/MIDI_Host/*.kicad_pcb'
+      - 'electrical/MIDI_Host/*.kibot.yaml'
+      - 'electrical/MIDI_Host/Makefile'
+      - '.github/workflows/MIDI_Host.yml'
+      - '.github/workflows/convert_bottom_position.py'
+  pull_request:
+    paths:
+      - 'electrical/MIDI_Host/*.kicad_sch'
+      - 'electrical/MIDI_Host/*.kicad_pcb'
+      - 'electrical/MIDI_Host/*.kibot.yaml'
+      - 'electrical/MIDI_Host/Makefile'
+      - '.github/workflows/MIDI_Host.yml'
+      - '.github/workflows/convert_bottom_position.py'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  FabPCB:
+    name: PCB fabrication files
+    runs-on: ubuntu-latest
+    container: "setsoft/kicad_auto:dev_k6"
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run PCB stuff
+      run: |
+        make -C electrical/MIDI_Host
+
+    - name: Retrieve results
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: FabPCB_Output
+        path: |
+          electrical/MIDI_Host/mfg-bot/
+          electrical/MIDI_Host/kibot_error.log
+        if-no-files-found: warn
+
+    - name: Print errors
+      if: ${{ always() }}
+      run: |
+        cat electrical/MIDI_Host/mfg-bot/MIDI_Host-drc.txt
+        cat electrical/MIDI_Host/kibot_error.log
+        
+    - name: Set Date
+      run: echo "action_date=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_ENV
+
+    - name: Convert position file
+      run: |
+        python3 .github/workflows/convert_bottom_position.py ../../electrical/MIDI_Host/mfg-bot/mfg/MIDI_Host-both_pos.csv ../../electrical/MIDI_Host/mfg-bot/mfg/MIDI_Host-both_pos_fixed.csv
+        rm electrical/MIDI_Host/mfg-bot/mfg/MIDI_Host-both_pos.csv
+      
+    - name: Zipping artifacts      
+      uses: vimtor/action-zip@v1
+      with:
+        files: electrical/MIDI_Host/mfg-bot/JLCPCB
+        dest: "electrical/MIDI_Host/mfg-bot/mfg/MIDI_Host-gerber.zip"
+
+    - name: Zipping artifacts      
+      uses: vimtor/action-zip@v1
+      with:
+        files: electrical/MIDI_Host/mfg-bot/
+        dest: "MIDI_Host_${{ env.action_date }}.zip"
+        
+    - uses: tsickert/discord-webhook@v4.0.0
+      with:
+        webhook-url: ${{ secrets.WEBHOOK_URL }}
+        content: "Heyo, fresh PCB files are ready!"
+        filename: "MIDI_Host_${{ env.action_date }}.zip"
+        
+    - uses: tsickert/discord-webhook@v4.0.0
+      with:
+        webhook-url: ${{ secrets.WEBHOOK_URL }}
+        content: "Don't forget to check the kibot report!"
+        filename: "electrical/MIDI_Host/kibot_error.log"
