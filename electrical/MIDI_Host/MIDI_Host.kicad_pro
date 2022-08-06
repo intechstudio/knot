@@ -427,6 +427,14 @@
     [
       "e63e39d7-6ac0-4ffd-8aa3-1841a4541b55",
       ""
+    ],
+    [
+      "78083a21-ffc6-4dac-bfdb-cbc4d5f4490c",
+      "MIDI Frontened"
+    ],
+    [
+      "60c177f6-9f45-413f-893d-8d98077afbe8",
+      "Power Input"
     ]
   ],
   "text_variables": {}
