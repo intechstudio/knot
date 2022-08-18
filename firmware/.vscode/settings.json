@@ -3,7 +3,9 @@
     "gpio.h": "c",
     "esp_err.h": "c",
     "assert.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "string.h": "c",
+    "semphr.h": "c"
   },
   "actionButtons": {
     "defaultColor": "#ff0034", // Can also use string color names.
@@ -33,6 +35,12 @@
             "color": "white",
             "singleInstance": true,
             "command": ". $HOME/$whoami/Documents/esp-idf/export.sh && idf.py menuconfig",
+        },
+        {
+            "name": "Flash",
+            "color": "white",
+            "singleInstance": true,
+            "command": ". $HOME/$whoami/Documents/esp-idf/export.sh && idf.py -p /dev/ttyACM0 flash",
         }
     ]
   }
