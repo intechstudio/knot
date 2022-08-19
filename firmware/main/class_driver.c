@@ -162,8 +162,6 @@ static void transfer_cb(usb_transfer_t *transfer)
     struct class_driver_t *class_driver_obj = (struct class_driver_t *)transfer->context;
     printf("Transfer status %d, actual number of bytes transferred %d\n", transfer->status, transfer->actual_num_bytes);
 
-
-    usb_host_transfer_submit(transfer);
 }
 
 
@@ -237,7 +235,7 @@ static void action_get_str_desc(class_driver_t *driver_obj)
     }
 
 
-    if (loopcounter%2000 == 0){
+    if (loopcounter%10 == 1){
 
         usb_host_transfer_submit(transfer);
 
@@ -284,8 +282,13 @@ void class_driver_task(void *arg)
 
 
     while (1) {
+
+        ESP_LOGI(TAG, "actions: %d, loopcounter: %d", driver_obj.actions, loopcounter);
+
         
-        usb_host_client_handle_events(driver_obj.client_hdl, portMAX_DELAY);
+        usb_host_client_handle_events(driver_obj.client_hdl, 10);
+
+
 
 
         if (driver_obj.actions & ACTION_OPEN_DEV) {
