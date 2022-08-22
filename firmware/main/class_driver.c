@@ -164,6 +164,20 @@ static void transfer_cb(usb_transfer_t *transfer)
 
 }
 
+static usb_transfer_t *in_transfer;
+
+static void in_transfer_cb(usb_transfer_t *in_transfer)
+{
+    //This is function is called from within usb_host_client_handle_events(). Don't block and try to keep it short
+    struct class_driver_t *class_driver_obj = (struct class_driver_t *)in_transfer->context;
+    printf("IN: Transfer status %d, actual number of bytes transferred %d\n", in_transfer->status, in_transfer->actual_num_bytes);
+
+    printf("IN: %d %d %d %d", in_transfer->data_buffer[0], in_transfer->data_buffer[1], in_transfer->data_buffer[2], in_transfer->data_buffer[3]);
+
+    usb_host_transfer_submit(in_transfer);
+
+}
+
 
 static void action_get_dev_desc(class_driver_t *driver_obj)
 {
@@ -206,7 +220,18 @@ static void action_get_config_desc(class_driver_t *driver_obj)
     transfer->callback = transfer_cb;
     transfer->context = (void *)&driver_obj;
 
+    //SETUP IN TRANSFER
+    usb_host_transfer_alloc(USB_EP_DESC_GET_MPS(in_ep), 0, &in_transfer);
+    memset(in_transfer->data_buffer, 0xAA, 4);
+    in_transfer->num_bytes = USB_EP_DESC_GET_MPS(in_ep);
+    in_transfer->device_handle = driver_obj->dev_hdl;
+    in_transfer->bEndpointAddress = in_ep->bEndpointAddress;
+    in_transfer->callback = in_transfer_cb;
+    in_transfer->context = (void *)&driver_obj;
 
+
+    ESP_LOGI(TAG, "SUKU start IN transfer on ep %02x nice", in_ep->bEndpointAddress);
+    usb_host_transfer_submit(in_transfer);
 
     //Get the device's string descriptors next
     driver_obj->actions &= ~ACTION_GET_CONFIG_DESC;
@@ -283,11 +308,10 @@ void class_driver_task(void *arg)
 
     while (1) {
 
-        ESP_LOGI(TAG, "actions: %d, loopcounter: %d", driver_obj.actions, loopcounter);
+        //ESP_LOGI(TAG, "actions: %d, loopcounter: %d", driver_obj.actions, loopcounter);
 
         
         usb_host_client_handle_events(driver_obj.client_hdl, 10);
-
 
 
 
