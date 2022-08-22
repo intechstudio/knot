@@ -1777,7 +1777,6 @@
     )
   )
 
-
   (junction (at 190.5 53.34) (diameter 0) (color 0 0 0 0)
     (uuid 014a11e4-427a-4ef5-b132-cf9b194f6da9)
   )
@@ -4650,13 +4649,13 @@
       (reference "R3") (unit 1) (value "220R") (footprint "suku_basics:RES_0805")
     )
     (path "/78083a21-ffc6-4dac-bfdb-cbc4d5f4490c/86c709b5-f359-46e8-9515-263fcab22b0a"
-      (reference "R4") (unit 1) (value "350R") (footprint "suku_basics:RES_0805")
+      (reference "R4") (unit 1) (value "5k1") (footprint "suku_basics:RES_0805")
     )
     (path "/78083a21-ffc6-4dac-bfdb-cbc4d5f4490c/cb588848-87a7-4c99-9948-98349fc953d5"
-      (reference "R5") (unit 1) (value "RES") (footprint "suku_basics:RES_0805")
+      (reference "R5") (unit 1) (value "5k1") (footprint "suku_basics:RES_0805")
     )
     (path "/78083a21-ffc6-4dac-bfdb-cbc4d5f4490c/87ef8960-f317-492d-9021-c88daf36ff31"
-      (reference "R6") (unit 1) (value "350R") (footprint "suku_basics:RES_0805")
+      (reference "R6") (unit 1) (value "5k1") (footprint "suku_basics:RES_0805")
     )
     (path "/60c177f6-9f45-413f-893d-8d98077afbe8/2d6f8c53-c2ae-4f2d-88e8-351c4cb83401"
       (reference "R7") (unit 1) (value "10k") (footprint "suku_basics:RES_0805")
@@ -4683,7 +4682,7 @@
       (reference "R14") (unit 1) (value "5k1") (footprint "suku_basics:RES_0805")
     )
     (path "/78083a21-ffc6-4dac-bfdb-cbc4d5f4490c/84d4a3ca-c694-4daf-8524-7b56e062b567"
-      (reference "R15") (unit 1) (value "RES") (footprint "suku_basics:RES_0805")
+      (reference "R15") (unit 1) (value "10k") (footprint "suku_basics:RES_0805")
     )
     (path "/b8f6db00-f983-431f-aa8f-39ef4acbe07a"
       (reference "R16") (unit 1) (value "5k1") (footprint "suku_basics:RES_0805")
