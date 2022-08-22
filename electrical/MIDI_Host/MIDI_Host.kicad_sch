@@ -3354,7 +3354,7 @@
     (property "Reference" "C1" (id 0) (at 22.6568 115.6716 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "" (id 1) (at 22.6568 117.983 0)
+    (property "Value" "10u" (id 1) (at 22.6568 117.983 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "suku_basics:CAP_0805" (id 2) (at 20.32 116.84 0)
