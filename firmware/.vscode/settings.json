@@ -5,7 +5,10 @@
     "assert.h": "c",
     "stdlib.h": "c",
     "string.h": "c",
-    "semphr.h": "c"
+    "semphr.h": "c",
+    "rmt_tx.h": "c",
+    "usb_host.h": "c",
+    "led_strip_encoder.h": "c"
   },
   "actionButtons": {
     "defaultColor": "#ff0034", // Can also use string color names.

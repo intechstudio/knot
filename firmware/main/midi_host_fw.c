@@ -11,10 +11,18 @@
 #include "esp_intr_alloc.h"
 #include "usb/usb_host.h"
 
+#include <string.h>
+
+
+
+
+
 #define DAEMON_TASK_PRIORITY    2
 #define CLASS_TASK_PRIORITY     3
+#define LED_TASK_PRIORITY       1
 
 extern void class_driver_task(void *arg);
+extern void led_task(void *arg);
 
 static const char *TAG = "DAEMON";
 
@@ -60,6 +68,7 @@ void app_main(void)
 
     TaskHandle_t daemon_task_hdl;
     TaskHandle_t class_driver_task_hdl;
+    TaskHandle_t led_task_hdl;
     //Create daemon task
     xTaskCreatePinnedToCore(host_lib_daemon_task,
                             "daemon",
@@ -75,6 +84,15 @@ void app_main(void)
                             (void *)signaling_sem,
                             CLASS_TASK_PRIORITY,
                             &class_driver_task_hdl,
+                            0);
+
+    //Create the class driver task
+    xTaskCreatePinnedToCore(led_task,
+                            "led",
+                            4096,
+                            (void *)signaling_sem,
+                            LED_TASK_PRIORITY,
+                            &led_task_hdl,
                             0);
 
     vTaskDelay(10);     //Add a short delay to let the tasks run
