@@ -8,7 +8,13 @@
     "semphr.h": "c",
     "rmt_tx.h": "c",
     "usb_host.h": "c",
-    "led_strip_encoder.h": "c"
+    "led_strip_encoder.h": "c",
+    "queue.h": "c",
+    "string_view": "c",
+    "regex": "c",
+    "array": "c",
+    "string": "c",
+    "ranges": "c"
   },
   "actionButtons": {
     "defaultColor": "#ff0034", // Can also use string color names.

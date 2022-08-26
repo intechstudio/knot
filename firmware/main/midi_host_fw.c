@@ -16,13 +16,19 @@
 
 
 
-
 #define DAEMON_TASK_PRIORITY    2
 #define CLASS_TASK_PRIORITY     3
 #define LED_TASK_PRIORITY       1
 
+#define UART_RX_TASK_PRIORITY      12
+#define UART_TX_TASK_PRIORITY      11
+
 extern void class_driver_task(void *arg);
 extern void led_task(void *arg);
+
+extern void uart_init(void);
+extern void uart_rx_task(void *arg);
+extern void uart_tx_task(void *arg);
 
 static const char *TAG = "DAEMON";
 
@@ -66,9 +72,13 @@ void app_main(void)
 {
     SemaphoreHandle_t signaling_sem = xSemaphoreCreateBinary();
 
+
     TaskHandle_t daemon_task_hdl;
     TaskHandle_t class_driver_task_hdl;
     TaskHandle_t led_task_hdl;
+
+    TaskHandle_t uart_rx_task_hdl;
+    TaskHandle_t uart_tx_task_hdl;
     //Create daemon task
     xTaskCreatePinnedToCore(host_lib_daemon_task,
                             "daemon",
@@ -95,7 +105,28 @@ void app_main(void)
                             &led_task_hdl,
                             0);
 
+
+    //Create a task to handler UART event from ISR
+
     vTaskDelay(10);     //Add a short delay to let the tasks run
+
+    uart_init();
+
+    xTaskCreatePinnedToCore(uart_rx_task, 
+                            "uart_rx", 
+                            2048, 
+                            (void *)signaling_sem, 
+                            UART_RX_TASK_PRIORITY, 
+                            &uart_rx_task_hdl,
+                            0);
+
+    xTaskCreatePinnedToCore(uart_tx_task, 
+                            "uart_tx", 
+                            2048, 
+                            (void *)signaling_sem, 
+                            UART_TX_TASK_PRIORITY, 
+                            &uart_tx_task_hdl,
+                            0);
 
     //Wait for the tasks to complete
     for (int i = 0; i < 2; i++) {

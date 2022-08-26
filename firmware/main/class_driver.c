@@ -28,6 +28,8 @@ typedef struct {
     uint32_t actions;
 } class_driver_t;
 
+extern int uart_send_data(const char* logName, const uint8_t* data, uint8_t length);
+
 static const char *TAG = "CLASS";
 
 static void client_event_cb(const usb_host_client_event_msg_t *event_msg, void *arg)
@@ -173,6 +175,8 @@ static void in_transfer_cb(usb_transfer_t *in_transfer)
     printf("IN: Transfer status %d, actual number of bytes transferred %d\n", in_transfer->status, in_transfer->actual_num_bytes);
 
     printf("IN: %d %d %d %d", in_transfer->data_buffer[0], in_transfer->data_buffer[1], in_transfer->data_buffer[2], in_transfer->data_buffer[3]);
+
+    uart_send_data("MIDI from USB", &in_transfer->data_buffer[1], 3);
 
     usb_host_transfer_submit(in_transfer);
 
