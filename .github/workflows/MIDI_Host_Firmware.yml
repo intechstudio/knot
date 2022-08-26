@@ -1,8 +1,11 @@
+name: "Firmware CI/CD for MIDI_Host"
+
 on:
   workflow_dispatch:
   push:
     paths:
       - 'firmware/CMakeLists.txt'
+      - '.github/workflows/MIDI_Host_Firmware.yml'
       - 'firmware/main/*.c'
       - 'firmware/main/*.h'
       - 'firmware/main/CMakeLists.txt'
@@ -10,6 +13,7 @@ on:
   pull_request:
     paths:
       - 'firmware/CMakeLists.txt'
+      - '.github/workflows/MIDI_Host_Firmware.yml'
       - 'firmware/main/*.c'
       - 'firmware/main/*.h'
       - 'firmware/main/CMakeLists.txt'
@@ -28,5 +32,5 @@ jobs:
       uses: espressif/esp-idf-ci-action@v1
       with:
         esp_idf_version: latest
-        target: esp32s2
+        target: esp32s3
         path: 'firmware'
