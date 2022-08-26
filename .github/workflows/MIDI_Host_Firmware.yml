@@ -1,0 +1,32 @@
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'firmware/CMakeLists.txt'
+      - 'firmware/main/*.c'
+      - 'firmware/main/*.h'
+      - 'firmware/main/CMakeLists.txt'
+      - 'firmware/main/Kconfig.projbuild'
+  pull_request:
+    paths:
+      - 'firmware/CMakeLists.txt'
+      - 'firmware/main/*.c'
+      - 'firmware/main/*.h'
+      - 'firmware/main/CMakeLists.txt'
+      - 'firmware/main/Kconfig.projbuild'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - name: esp-idf build
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: latest
+        target: esp32s2
+        path: 'firmware'
