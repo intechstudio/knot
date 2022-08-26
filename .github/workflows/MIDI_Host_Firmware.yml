@@ -34,7 +34,6 @@ jobs:
         esp_idf_version: latest
         target: esp32s3
         path: 'firmware'
-	command: esptool.py merge_bin -o ../your_final_output.bin @flash_args
 
     - name: Retrieve results
       if: ${{ always() }}
