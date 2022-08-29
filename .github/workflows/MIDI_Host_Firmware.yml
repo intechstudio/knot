@@ -35,10 +35,17 @@ jobs:
         target: esp32s3
         path: 'firmware'
 
-    - name: Copy and rename the artifact
+    - name: Run Unit Tests
       run: |
         cd firmware/main/host_test
         ./test.sh
+        ./test.sh >> test.txt
+
+    - uses: tsickert/discord-webhook@v4.0.0
+      with:
+        webhook-url: ${{ secrets.WEBHOOK_URL }}
+        content: "Heyo, Knot Unit Tests are ready!"
+        filename: "firmware/main/host_test/test.txt"
 
     - name: Retrieve results
       if: ${{ always() }}
