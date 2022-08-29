@@ -50,6 +50,12 @@
             "color": "white",
             "singleInstance": true,
             "command": ". $HOME/$whoami/Documents/esp-idf/export.sh && idf.py -p /dev/ttyACM0 flash",
+        },
+        {
+            "name": "Unit Test",
+            "color": "white",
+            "singleInstance": true,
+            "command": "cd ./main/host_test && ./test.sh",
         }
     ]
   }
