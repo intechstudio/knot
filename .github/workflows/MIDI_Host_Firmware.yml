@@ -49,9 +49,8 @@ jobs:
 
     - name: Convert to uf2
       run: |
-        cd firmware/
+        cd firmware
         ./uf2convert.sh >> convert.txt
-	cat convert.txt
 
     - name: Retrieve results
       if: ${{ always() }}
