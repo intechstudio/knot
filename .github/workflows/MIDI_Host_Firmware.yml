@@ -47,10 +47,16 @@ jobs:
         content: "Heyo, Knot Unit Tests are ready!"
         filename: "firmware/main/host_test/test.txt"
 
+    - name: Convert to uf2
+      run: |
+        cd firmware/
+        ./uf2convert.sh >> convert.txt
+	cat convert.txt
+
     - name: Retrieve results
       if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
         name: FabPCB_Output
-        path: firmware/build/
+        path: firmware/build/output/
         if-no-files-found: warn
