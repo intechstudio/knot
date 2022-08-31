@@ -50,7 +50,9 @@ jobs:
     - name: Convert to uf2
       run: |
         cd firmware
-        ./uf2convert.sh >> convert.txt
+        sudo mkdir ./build/output
+        sudo python3 ./tools/uf2conv.py -f ESP32S3 ./build/midi_host_fw.bin -b 0x0 -c -o ./build/output/midi_host_fw.uf2
+
 
     - name: Retrieve results
       if: ${{ always() }}
