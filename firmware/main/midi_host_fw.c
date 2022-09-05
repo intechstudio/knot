@@ -15,6 +15,7 @@
 
 
 
+#include "driver/gpio.h"
 
 #define DAEMON_TASK_PRIORITY    2
 #define CLASS_TASK_PRIORITY     3
@@ -70,6 +71,15 @@ static void host_lib_daemon_task(void *arg)
 
 void app_main(void)
 {
+
+    #define USB_NATIVE_SELECT_PIN 11
+    #define USB_SOFT_SELECT_PIN 12
+
+    gpio_set_direction(USB_NATIVE_SELECT_PIN, GPIO_MODE_OUTPUT);
+    gpio_set_direction(USB_SOFT_SELECT_PIN, GPIO_MODE_OUTPUT);
+    gpio_set_level(USB_NATIVE_SELECT_PIN, 1);
+    gpio_set_level(USB_SOFT_SELECT_PIN, 1);
+
     SemaphoreHandle_t signaling_sem = xSemaphoreCreateBinary();
 
 

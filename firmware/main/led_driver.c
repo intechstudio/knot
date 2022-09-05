@@ -10,16 +10,13 @@
 #include "freertos/semphr.h"
 #include "esp_log.h"
 
-#include "driver/gpio.h"
 
 
 #include "driver/rmt_tx.h"
 #include "led_strip_encoder.h"
 
 #define RMT_LED_STRIP_RESOLUTION_HZ 10000000 // 10MHz resolution, 1 tick = 0.1us (led strip needs a high resolution)
-#define RMT_LED_STRIP_GPIO_NUM      18
-
-#define LDO2_EN      17
+#define RMT_LED_STRIP_GPIO_NUM      1
 
 
 #define EXAMPLE_LED_NUMBERS         24
@@ -119,8 +116,7 @@ void led_task(void *arg)
         .loop_count = 0, // no transfer loop
     };
 
-    gpio_set_direction(LDO2_EN, GPIO_MODE_OUTPUT);
-    gpio_set_level(LDO2_EN, 1);
+
 
     while (1) {
 
@@ -145,7 +141,7 @@ void led_task(void *arg)
             //ESP_ERROR_CHECK(rmt_transmit(led_chan, led_encoder, led_strip_pixels, sizeof(led_strip_pixels), &tx_config));
             //vTaskDelay(pdMS_TO_TICKS(EXAMPLE_CHASE_SPEED_MS));
         }
-        start_rgb += 20;
+        start_rgb += 1;
 
 
     }
