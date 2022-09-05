@@ -19,10 +19,22 @@
 #define RMT_LED_STRIP_GPIO_NUM      1
 
 
-#define EXAMPLE_LED_NUMBERS         24
+#define EXAMPLE_LED_NUMBERS         3
 #define EXAMPLE_CHASE_SPEED_MS      10
 
 static uint8_t led_strip_pixels[EXAMPLE_LED_NUMBERS * 3];
+
+
+
+volatile uint8_t tx_led_timer = 0;
+volatile uint8_t rx_led_timer = 0;
+
+void led_tx_effect_start(void)
+{
+   
+    tx_led_timer = 10;
+}
+
 
 void led_strip_hsv2rgb(uint32_t h, uint32_t s, uint32_t v, uint32_t *r, uint32_t *g, uint32_t *b)
 {
@@ -125,22 +137,31 @@ void led_task(void *arg)
         ESP_LOGI(TAG, "Update LED");
 
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = i; j < EXAMPLE_LED_NUMBERS; j += 3) {
-                // Build RGB pixels
-                hue = j * 360 / EXAMPLE_LED_NUMBERS + start_rgb;
-                led_strip_hsv2rgb(hue, 100, 100, &red, &green, &blue);
-                led_strip_pixels[j * 3 + 0] = green;
-                led_strip_pixels[j * 3 + 1] = blue;
-                led_strip_pixels[j * 3 + 2] = red;
-            }
-            // Flush RGB values to LEDs
-            ESP_ERROR_CHECK(rmt_transmit(led_chan, led_encoder, led_strip_pixels, sizeof(led_strip_pixels), &tx_config));
-            vTaskDelay(pdMS_TO_TICKS(EXAMPLE_CHASE_SPEED_MS));
-            //memset(led_strip_pixels, 0, sizeof(led_strip_pixels));
-            //ESP_ERROR_CHECK(rmt_transmit(led_chan, led_encoder, led_strip_pixels, sizeof(led_strip_pixels), &tx_config));
-            //vTaskDelay(pdMS_TO_TICKS(EXAMPLE_CHASE_SPEED_MS));
+        hue = 0 + start_rgb;
+        led_strip_hsv2rgb(hue, 100, 100, &red, &green, &blue);
+        led_strip_pixels[0 * 3 + 0] = green;
+        led_strip_pixels[0 * 3 + 1] = blue;
+        led_strip_pixels[0 * 3 + 2] = red;
+
+        if (tx_led_timer>0){
+
+            tx_led_timer--;
+
+            led_strip_pixels[2 * 3 + 0] = tx_led_timer;
+            led_strip_pixels[2 * 3 + 1] = tx_led_timer;
+            led_strip_pixels[2 * 3 + 2] = tx_led_timer;      
+
         }
+        else{
+
+            led_strip_pixels[2 * 3 + 0] = 0;
+            led_strip_pixels[2 * 3 + 1] = 0;
+            led_strip_pixels[2 * 3 + 2] = 0;            
+        }
+
+        ESP_ERROR_CHECK(rmt_transmit(led_chan, led_encoder, led_strip_pixels, sizeof(led_strip_pixels), &tx_config));
+        vTaskDelay(pdMS_TO_TICKS(EXAMPLE_CHASE_SPEED_MS));
+
         start_rgb += 1;
 
 

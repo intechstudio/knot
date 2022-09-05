@@ -52,7 +52,7 @@ void uart_init(){
     esp_log_level_set(TAG, ESP_LOG_INFO);
     //Set UART pins (using UART0 default pins ie no changes.)
     uart_set_pin(EX_UART_NUM, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
-    uart_set_pin(EX_UART_NUM, 16, 15, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
+    uart_set_pin(EX_UART_NUM, 17, 18, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
 
     //Set uart pattern detect function.
     uart_enable_pattern_det_baud_intr(EX_UART_NUM, '+', PATTERN_CHR_NUM, 9, 0, 0);
