@@ -80,6 +80,11 @@ void app_main(void)
     gpio_set_level(USB_NATIVE_SELECT_PIN, 1);
     gpio_set_level(USB_SOFT_SELECT_PIN, 1);
 
+
+    #define TRS_TYPE_SELECT 16
+    gpio_set_direction(TRS_TYPE_SELECT, GPIO_MODE_OUTPUT);
+    gpio_set_level(TRS_TYPE_SELECT, 1);
+
     SemaphoreHandle_t signaling_sem = xSemaphoreCreateBinary();
 
 

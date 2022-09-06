@@ -30,6 +30,8 @@ typedef struct {
 
 extern int uart_send_data(const char* logName, const uint8_t* data, uint8_t length);
 
+extern void led_tx_effect_start(void);
+
 static const char *TAG = "CLASS";
 
 static void client_event_cb(const usb_host_client_event_msg_t *event_msg, void *arg)
@@ -177,6 +179,8 @@ static void in_transfer_cb(usb_transfer_t *in_transfer)
     printf("IN: %d %d %d %d", in_transfer->data_buffer[0], in_transfer->data_buffer[1], in_transfer->data_buffer[2], in_transfer->data_buffer[3]);
 
     uart_send_data("MIDI from USB", &in_transfer->data_buffer[1], 3);
+
+    led_tx_effect_start();
 
     usb_host_transfer_submit(in_transfer);
 
