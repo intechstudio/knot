@@ -35,6 +35,12 @@ void led_tx_effect_start(void)
     tx_led_timer = 10;
 }
 
+void led_rx_effect_start(void)
+{
+   
+    rx_led_timer = 10;
+}
+
 
 void led_strip_hsv2rgb(uint32_t h, uint32_t s, uint32_t v, uint32_t *r, uint32_t *g, uint32_t *b)
 {
@@ -134,7 +140,7 @@ void led_task(void *arg)
 
 
 
-        ESP_LOGI(TAG, "Update LED");
+        //ESP_LOGI(TAG, "Update LED");
 
 
         hue = 0 + start_rgb;
@@ -157,6 +163,22 @@ void led_task(void *arg)
             led_strip_pixels[2 * 3 + 0] = 0;
             led_strip_pixels[2 * 3 + 1] = 0;
             led_strip_pixels[2 * 3 + 2] = 0;            
+        }        
+        
+        if (rx_led_timer>0){
+
+            rx_led_timer--;
+
+            led_strip_pixels[1 * 3 + 0] = rx_led_timer;
+            led_strip_pixels[1 * 3 + 1] = rx_led_timer;
+            led_strip_pixels[1 * 3 + 2] = rx_led_timer;      
+
+        }
+        else{
+
+            led_strip_pixels[1 * 3 + 0] = 0;
+            led_strip_pixels[1 * 3 + 1] = 0;
+            led_strip_pixels[1 * 3 + 2] = 0;            
         }
 
         ESP_ERROR_CHECK(rmt_transmit(led_chan, led_encoder, led_strip_pixels, sizeof(led_strip_pixels), &tx_config));

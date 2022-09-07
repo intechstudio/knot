@@ -26,6 +26,14 @@ static QueueHandle_t uart0_queue;
 
 static const char *TAG = "UART";
 
+#include "driver/gpio.h"
+
+#define TRS_TYPE_SELECT_PIN 16
+#define SW_AB_PIN 35
+
+
+extern void led_tx_effect_start(void);
+extern void led_rx_effect_start(void);
 
 void uart_init(){
 
@@ -60,6 +68,12 @@ void uart_init(){
     uart_pattern_queue_reset(EX_UART_NUM, 20);
 
 
+    gpio_set_direction(SW_AB_PIN, GPIO_MODE_INPUT);
+    gpio_set_direction(TRS_TYPE_SELECT_PIN, GPIO_MODE_OUTPUT);
+
+    
+    gpio_set_level(TRS_TYPE_SELECT_PIN, gpio_get_level(SW_AB_PIN));
+
     
 }
 
@@ -67,6 +81,7 @@ void uart_init(){
 int uart_send_data(const char* logName, const uint8_t* data, uint8_t length)
 {
    
+    led_tx_effect_start();
     const int txBytes = uart_write_bytes(EX_UART_NUM, data, length);
     ESP_LOGI(logName, "Wrote %d bytes %d %d %d", txBytes, data[0], data[1], data[2]);
     return txBytes;
@@ -84,6 +99,8 @@ void uart_tx_task(void *arg){
 
     for(;;) {
 
+
+        gpio_set_level(TRS_TYPE_SELECT_PIN, gpio_get_level(SW_AB_PIN));
         vTaskDelay(pdMS_TO_TICKS(1000));
         //ESP_LOGI(TAG, "UART TX loop");
         //uart_write_bytes(EX_UART_NUM, "UUUU", 4);
@@ -121,8 +138,12 @@ void uart_rx_task(void *arg)
                 other types of events. If we take too much time on data event, the queue might
                 be full.*/
                 case UART_DATA:
+                    
+                    led_rx_effect_start();
+                    
                     ESP_LOGI(TAG, "[UART DATA]: %d", event.size);
                     uart_read_bytes(EX_UART_NUM, dtmp, event.size, portMAX_DELAY);
+                    
                     ESP_LOGI(TAG, "[DATA EVT]: %d %d %d %d", dtmp[0], dtmp[1], dtmp[2], dtmp[3]);
                     break;
                 //Event of HW FIFO overflow detected
@@ -180,7 +201,7 @@ void uart_rx_task(void *arg)
             }
         }
 
-        ESP_LOGI(TAG, "UART RX loop");
+        //ESP_LOGI(TAG, "UART RX loop");
     }
     free(dtmp);
     dtmp = NULL;
