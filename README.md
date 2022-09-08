@@ -2,7 +2,7 @@
 
 Knot is the bridge between old-school MIDI gear like synthesizers, groove boxes, guitar pedals and neat USB MIDI devices. Leave out the computer from the equation and control instruments seamlessly with Grid - or any other - USB controller.
 
-![knot, the standalone usb midi host](./knot.png)
+![knot, the standalone usb midi host](./documentation/knot.png)
 
 You can find more info on the [website](https://intech.studio/shop/knot).
 
