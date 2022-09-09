@@ -14,8 +14,20 @@
     "regex": "c",
     "array": "c",
     "string": "c",
-    "ranges": "c"
-  },
+    "ranges": "c",
+    "esp_check.h": "c",
+    "uart.h": "c",
+    "freertos.h": "c",
+    "esp_intr_alloc.h": "c",
+    "task.h": "c",
+    "usb_helpers.h": "c",
+    "usb_types_stack.h": "c",
+    "usb_types_ch9.h": "c",
+    "freertosconfig.h": "c",
+    "freertosconfig_arch.h": "c",
+    "xtensa_config.h": "c",
+    "reent.h": "c"
+},
   "actionButtons": {
     "defaultColor": "#ff0034", // Can also use string color names.
     "loadNpmCommands":false, // Disables automatic generation of actions for npm commands.
@@ -50,6 +62,12 @@
             "color": "white",
             "singleInstance": true,
             "command": ". $HOME/$whoami/Documents/esp-idf/export.sh && idf.py -p /dev/ttyACM0 flash",
+        },        
+	{
+            "name": "Docker Build",
+            "color": "white",
+            "singleInstance": true,
+            "command": "podman run --rm -v $PWD:/project -w /project espressif/idf:latest idf.py build",
         },
         {
             "name": "Unit Test",
@@ -58,5 +76,6 @@
             "command": "cd ./main/host_test && ./test.sh",
         }
     ]
-  }
+},
+"git.ignoreLimitWarning": true
 }
