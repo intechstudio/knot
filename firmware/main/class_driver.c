@@ -11,6 +11,8 @@
 #include "esp_log.h"
 #include "usb/usb_host.h"
 
+#include "midi_translator.h"
+
 #define CLIENT_NUM_EVENT_MSG        5
 
 #define ACTION_OPEN_DEV             0x01
@@ -28,7 +30,7 @@ typedef struct {
     uint32_t actions;
 } class_driver_t;
 
-extern int uart_send_data(const char* logName, const uint8_t* data, uint8_t length);
+extern int uart_send_data(struct uart_midi_event_packet ev);
 
 
 static const char *TAG = "CLASS";
@@ -163,7 +165,7 @@ static void transfer_cb(usb_transfer_t *transfer)
 {
     //This is function is called from within usb_host_client_handle_events(). Don't block and try to keep it short
     struct class_driver_t *class_driver_obj = (struct class_driver_t *)transfer->context;
-    printf("Transfer status %d, actual number of bytes transferred %d\n", transfer->status, transfer->actual_num_bytes);
+    printf("OUT: Transfer status %d, actual number of bytes transferred %d\n", transfer->status, transfer->actual_num_bytes);
 
 }
 
@@ -173,11 +175,22 @@ static void in_transfer_cb(usb_transfer_t *in_transfer)
 {
     //This is function is called from within usb_host_client_handle_events(). Don't block and try to keep it short
     struct class_driver_t *class_driver_obj = (struct class_driver_t *)in_transfer->context;
-    printf("IN: Transfer status %d, actual number of bytes transferred %d\n", in_transfer->status, in_transfer->actual_num_bytes);
+    //printf("IN: Transfer status %d, actual number of bytes transferred %d\n", in_transfer->status, in_transfer->actual_num_bytes);
 
-    printf("IN: %d %d %d %d", in_transfer->data_buffer[0], in_transfer->data_buffer[1], in_transfer->data_buffer[2], in_transfer->data_buffer[3]);
+    //printf("IN: %d %d %d %d", in_transfer->data_buffer[0], in_transfer->data_buffer[1], in_transfer->data_buffer[2], in_transfer->data_buffer[3]);
 
-    uart_send_data("MIDI from USB", &in_transfer->data_buffer[1], 3);
+
+    struct usb_midi_event_packet usb_ev = {
+        .byte0 = in_transfer->data_buffer[0],
+        .byte1 = in_transfer->data_buffer[1],
+        .byte2 = in_transfer->data_buffer[2],
+        .byte3 = in_transfer->data_buffer[3]
+    };
+
+    struct uart_midi_event_packet uart_ev = usb_midi_to_uart(usb_ev);
+
+
+    uart_send_data(uart_ev);
 
 
     usb_host_transfer_submit(in_transfer);
@@ -266,11 +279,11 @@ static void action_get_str_desc(class_driver_t *driver_obj)
     }
 
 
-    if (loopcounter%10 == 1){
+    // if (loopcounter%10 == 1){
 
-        usb_host_transfer_submit(transfer);
+    //     usb_host_transfer_submit(transfer);
 
-    }
+    // }
 
 
     loopcounter++;

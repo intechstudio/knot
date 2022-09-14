@@ -8,6 +8,7 @@
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
+#include "freertos/ringbuf.h"
 #include "esp_log.h"
 #include "esp_system.h"
 
@@ -16,6 +17,8 @@
 
 #include "freertos/queue.h"
 #include "driver/uart.h"
+#include "midi_translator.h"
+
 
 #define EX_UART_NUM UART_NUM_1
 #define PATTERN_CHR_NUM    (3)         /*!< Set the number of consecutive and identical characters received by receiver which defines a UART pattern*/
@@ -32,8 +35,15 @@ static const char *TAG = "UART";
 #define SW_AB_PIN 35
 
 
+
+RingbufHandle_t uart_rx_buffer_cvm;
+RingbufHandle_t uart_rx_buffer_rtm;
+
+uint8_t current_is_sysex = 0;
+
 extern void led_tx_effect_start(void);
 extern void led_rx_effect_start(void);
+extern void led_err_effect_start(void);
 
 void uart_init(){
 
@@ -74,21 +84,37 @@ void uart_init(){
     
     gpio_set_level(TRS_TYPE_SELECT_PIN, gpio_get_level(SW_AB_PIN));
 
-    
+
+
+    // Channel Voice Message Buffer
+    #define UART_RX_BUFFER_CVM_SIZE 1600
+    uart_rx_buffer_cvm = xRingbufferCreate(UART_RX_BUFFER_CVM_SIZE, RINGBUF_TYPE_NOSPLIT);
+    if (uart_rx_buffer_cvm == NULL) {
+        printf("Failed to create ring buffer\n");
+    }
+
+    // Real-Time Message Buffer
+    #define UART_RX_BUFFER_RTM_SIZE 20
+    uart_rx_buffer_rtm = xRingbufferCreate(UART_RX_BUFFER_RTM_SIZE, RINGBUF_TYPE_NOSPLIT);
+    if (uart_rx_buffer_rtm == NULL) {
+        printf("Failed to create ring buffer\n");
+    }
+
 }
 
 
-int uart_send_data(const char* logName, const uint8_t* data, uint8_t length)
+int uart_send_data(struct uart_midi_event_packet ev)
 {
-   
+
     led_tx_effect_start();
-    const int txBytes = uart_write_bytes(EX_UART_NUM, data, length);
-    ESP_LOGI(logName, "Wrote %d bytes %d %d %d", txBytes, data[0], data[1], data[2]);
+
+    const int txBytes = uart_write_bytes(EX_UART_NUM, &ev.byte1, ev.length);
+    //ESP_LOGI(logName, "Wrote %d bytes %d %d %d", txBytes, data[0], data[1], data[2]);
     return txBytes;
 }
 
 
-void uart_tx_task(void *arg){
+void uart_rx_decode_task(void *arg){
 
 
 
@@ -98,25 +124,197 @@ void uart_tx_task(void *arg){
     ESP_LOGI(TAG, "UART TX init done");
 
     for(;;) {
+        
+        for(uint8_t i = 0; i<3; i++) {
+
+            gpio_set_level(TRS_TYPE_SELECT_PIN, gpio_get_level(SW_AB_PIN));
+            //ESP_LOGI(TAG, "UART TX loop");
+            //uart_write_bytes(EX_UART_NUM, "UUUU", 4);
+
+            uint8_t* item_0_ptr = 0;
+            uint8_t* item_1_ptr = 0;
+            uint8_t* item_2_ptr = 0;
+
+            uint16_t item_0 = -1;
+            uint16_t item_1 = -1;
+            uint16_t item_2 = -1;
 
 
-        gpio_set_level(TRS_TYPE_SELECT_PIN, gpio_get_level(SW_AB_PIN));
-        vTaskDelay(pdMS_TO_TICKS(1000));
-        //ESP_LOGI(TAG, "UART TX loop");
-        //uart_write_bytes(EX_UART_NUM, "UUUU", 4);
+            item_0_ptr = xRingbufferReceive(uart_rx_buffer_cvm, NULL, 0);
+            if (item_0_ptr !=  NULL){
+                item_0 = *item_0_ptr;
+                vRingbufferReturnItem(uart_rx_buffer_cvm, (void*)item_0_ptr);
+
+                if (current_is_sysex){
+
+                    if (item_0 == 0xF7){
+                        // sysex ended with sigle byte
+                        struct usb_midi_event_packet ep = {.byte0 = 0x05, .byte1 = 0xF7, .byte2 = 0x00, .byte3 = 0x00};
+                        ESP_LOGI(TAG, "To USB: SYSEX: %d %d %d %d", ep.byte0, ep.byte1, ep.byte2, ep.byte3);
+                        current_is_sysex = 0;
+                    }
+                    else if (item_0 > 127){
+                        ESP_LOGI(TAG, "To USB: Invalid sysex error");
+                    }
+                    else{
+
+                        item_1_ptr = xRingbufferReceive(uart_rx_buffer_cvm, NULL, 0);
+
+                        if (item_1_ptr !=  NULL){
+                            item_1 = *item_1_ptr;
+                            vRingbufferReturnItem(uart_rx_buffer_cvm, (void*)item_1_ptr);
+                        
+                            if (item_1 == 0xF7){
+                                // sysex ended with two bytes
+                                struct usb_midi_event_packet ep = {.byte0 = 0x06, .byte1 = (uint8_t)item_0, .byte2 = 0xF7, .byte3 = 0x00};
+                                ESP_LOGI(TAG, "To USB: SYSEX: %d %d %d %d", ep.byte0, ep.byte1, ep.byte2, ep.byte3);
+                                current_is_sysex = 0;
+                            }
+                            else if (item_1 > 127){
+                                ESP_LOGI(TAG, "To USB: Invalid sysex error");
+                            }
+                            else{
+
+
+                                item_2_ptr = xRingbufferReceive(uart_rx_buffer_cvm, NULL, 0);
+
+                                if (item_2_ptr !=  NULL){
+                                    item_2 = *item_2_ptr;
+                                    vRingbufferReturnItem(uart_rx_buffer_cvm, (void*)item_2_ptr);
+                                
+                                    if (item_2 == 0xF7){
+                                        // sysex ended with three bytes
+                                        struct usb_midi_event_packet ep = {.byte0 = 0x07, .byte1 = (uint8_t)item_0, .byte2 = (uint8_t)item_1, .byte3 = 0xF7};
+                                        ESP_LOGI(TAG, "To USB: SYSEX: %d %d %d %d", ep.byte0, ep.byte1, ep.byte2, ep.byte3);
+                                        current_is_sysex = 0;
+                                    }
+                                    else if (item_2 > 127){
+                                        ESP_LOGI(TAG, "To USB: Invalid sysex error");
+                                    }
+                                    else{
+                                        // sysex continues with three bytes
+                                        struct usb_midi_event_packet ep = {.byte0 = 0x04, .byte1 = (uint8_t)item_0, .byte2 = (uint8_t)item_1, .byte3 = (uint8_t)item_2};
+                                        ESP_LOGI(TAG, "To USB: SYSEX: %d %d %d %d", ep.byte0, ep.byte1, ep.byte2, ep.byte3);
+                                        
+                                    }
+
+                                }
+
+
+                                
+                            }
+
+                        }
+
+                
+
+
+
+                    }
+
+                }
+                else if (item_0 == 0xF0){ // sysex start
+
+
+
+                    current_is_sysex = 1;
+
+                    item_1_ptr = xRingbufferReceive(uart_rx_buffer_cvm, NULL, 0);
+        
+
+                    if (item_1_ptr !=  NULL){
+                        item_1 = *item_1_ptr;
+                        vRingbufferReturnItem(uart_rx_buffer_cvm, (void*)item_1_ptr);
+                    
+                        if (item_1 == 0xF7){
+                            // sysex ended with two bytes
+                            struct usb_midi_event_packet ep = {.byte0 = 0x06, .byte1 = (uint8_t)item_0, .byte2 = 0xF7, .byte3 = 0x00};
+                            ESP_LOGI(TAG, "To USB: SYSEX: %d %d %d %d", ep.byte0, ep.byte1, ep.byte2, ep.byte3);
+                            current_is_sysex = 0;
+                        }
+                        else if (item_1 > 127){
+                            ESP_LOGI(TAG, "To USB: Invalid sysex error");
+                        }
+                        else{
+
+
+                            item_2_ptr = xRingbufferReceive(uart_rx_buffer_cvm, NULL, 0);
+
+                            if (item_2_ptr !=  NULL){
+                                item_2 = *item_2_ptr;
+                                vRingbufferReturnItem(uart_rx_buffer_cvm, (void*)item_2_ptr);
+                            
+                                if (item_2 == 0xF7){
+                                    // sysex ended with three bytes
+                                    struct usb_midi_event_packet ep = {.byte0 = 0x07, .byte1 = (uint8_t)item_0, .byte2 = (uint8_t)item_1, .byte3 = 0xF7};
+                                    ESP_LOGI(TAG, "To USB: SYSEX: %d %d %d %d", ep.byte0, ep.byte1, ep.byte2, ep.byte3);
+                                    current_is_sysex = 0;
+                                }
+                                else if (item_2 > 127){
+                                    ESP_LOGI(TAG, "To USB: Invalid sysex error");
+                                }
+                                else{
+                                    // sysex continues with three bytes
+                                    struct usb_midi_event_packet ep = {.byte0 = 0x04, .byte1 = (uint8_t)item_0, .byte2 = (uint8_t)item_1, .byte3 = (uint8_t)item_2};
+                                    ESP_LOGI(TAG, "To USB: SYSEX: %d %d %d %d", ep.byte0, ep.byte1, ep.byte2, ep.byte3);
+                                    
+                                }
+
+                            }
+
+
+                            
+                        }
+
+                    }
+
+                
+
+
+                }
+                else if(item_0 > 127){ // channel voice message
+
+
+                    item_1_ptr = xRingbufferReceive(uart_rx_buffer_cvm, NULL, 0);
+                    if (item_1_ptr !=  NULL){
+                        item_1 = *item_1_ptr;
+                        vRingbufferReturnItem(uart_rx_buffer_cvm, (void*)item_1_ptr);
+                    }
+
+                    item_2_ptr = xRingbufferReceive(uart_rx_buffer_cvm, NULL, 0);
+                    if (item_2_ptr !=  NULL){
+
+                        item_2 = *item_2_ptr;
+                        vRingbufferReturnItem(uart_rx_buffer_cvm, (void*)item_2_ptr);
+                    }
+
+                    if (item_0 != (uint16_t)-1 || item_1 != (uint16_t)-1 || item_2 != (uint16_t)-1){
+                        //ESP_LOGI(TAG, "To USB: CVM: %d %d %d", item_0, item_1, item_2);
+                    }
+
+                }
+                else{
+                    ESP_LOGI(TAG, "To USB: Invalid Packet %d", item_0);
+                }
+
+
+            }
+
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(10));
+
 
     }
-
-
-
 }
 
 
 void uart_rx_task(void *arg)
 {
+
+
     SemaphoreHandle_t signaling_sem = (SemaphoreHandle_t)arg;
     //xSemaphoreTake(signaling_sem, portMAX_DELAY);
-
 
     uart_event_t event;
     size_t buffered_size;
@@ -131,7 +329,7 @@ void uart_rx_task(void *arg)
         //Waiting for UART event.
         if(xQueueReceive(uart0_queue, (void * )&event, (TickType_t)portMAX_DELAY)) {
             bzero(dtmp, RD_BUF_SIZE);
-            ESP_LOGI(TAG, "uart[%d] event:", EX_UART_NUM);
+            //ESP_LOGI(TAG, "uart[%d] event:", EX_UART_NUM);
             switch(event.type) {
                 //Event of UART receving data
                 /*We'd better handler data event fast, there would be much more data events than
@@ -141,10 +339,32 @@ void uart_rx_task(void *arg)
                     
                     led_rx_effect_start();
                     
-                    ESP_LOGI(TAG, "[UART DATA]: %d", event.size);
+                    //ESP_LOGI(TAG, "[UART DATA]: %d", event.size);
                     uart_read_bytes(EX_UART_NUM, dtmp, event.size, portMAX_DELAY);
                     
-                    ESP_LOGI(TAG, "[DATA EVT]: %d %d %d %d", dtmp[0], dtmp[1], dtmp[2], dtmp[3]);
+                    for(uint8_t i = 0; i<event.size; i++){
+
+                        //Add received bytes to ringbuffer based on message type
+                        if (uart_midi_is_byte_rtm(dtmp[i])){
+
+                            UBaseType_t res =  xRingbufferSend(uart_rx_buffer_rtm, &dtmp[i], sizeof(dtmp[i]), 0);
+                            if (res != pdTRUE) {
+                                printf("RTM: FAIL\n");
+                                led_err_effect_start();
+                            }
+                        }
+                        else{
+
+                            UBaseType_t res =  xRingbufferSend(uart_rx_buffer_cvm, &dtmp[i], sizeof(dtmp[i]), 0);
+                            if (res != pdTRUE) {
+                                printf("CVM: FAIL\n");
+                                led_err_effect_start();
+                            }
+                        }
+
+                    }
+                    
+                    //ESP_LOGI(TAG, "[DATA EVT]: %d %d %d %d", dtmp[0], dtmp[1], dtmp[2], dtmp[3]);
                     break;
                 //Event of HW FIFO overflow detected
                 case UART_FIFO_OVF:

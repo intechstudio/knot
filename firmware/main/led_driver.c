@@ -28,6 +28,7 @@ static uint8_t led_strip_pixels[EXAMPLE_LED_NUMBERS * 3];
 
 volatile uint8_t tx_led_timer = 0;
 volatile uint8_t rx_led_timer = 0;
+volatile uint8_t err_led_timer = 0;
 
 void led_tx_effect_start(void)
 {
@@ -39,6 +40,12 @@ void led_rx_effect_start(void)
 {
    
     rx_led_timer = 10;
+}
+
+void led_err_effect_start(void)
+{
+   
+    err_led_timer = 10;
 }
 
 
@@ -179,6 +186,22 @@ void led_task(void *arg)
             led_strip_pixels[1 * 3 + 0] = 0;
             led_strip_pixels[1 * 3 + 1] = 0;
             led_strip_pixels[1 * 3 + 2] = 0;            
+        }
+
+        if (err_led_timer>0){
+
+            err_led_timer--;
+
+            led_strip_pixels[0 * 3 + 0] = 0;
+            led_strip_pixels[0 * 3 + 1] = err_led_timer*3;
+            led_strip_pixels[0 * 3 + 2] = 0;      
+
+        }
+        else{
+
+            led_strip_pixels[0 * 3 + 0] = 0;
+            led_strip_pixels[0 * 3 + 1] = 0;
+            led_strip_pixels[0 * 3 + 2] = 0;            
         }
 
         ESP_ERROR_CHECK(rmt_transmit(led_chan, led_encoder, led_strip_pixels, sizeof(led_strip_pixels), &tx_config));

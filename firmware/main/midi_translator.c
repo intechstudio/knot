@@ -54,3 +54,13 @@ struct uart_midi_event_packet usb_midi_to_uart(struct usb_midi_event_packet usb_
   return uart_packet;
 
 }
+
+uint8_t uart_midi_is_byte_rtm(uint8_t byte){
+
+  if (byte >= 0xF8){
+    return 1;
+  }
+  else{
+    return 0;
+  }
+}

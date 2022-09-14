@@ -203,6 +203,34 @@ void test_function_should_recogniseReservedMessages(void) {
 }
 
 
+void uart_midi_is_byte_rtm__should_recogniseRtmMessages(void) {
+    //test stuff
+
+  TEST_ASSERT_EQUAL_UINT8(0, uart_midi_is_byte_rtm(0)); // value 0
+  TEST_ASSERT_EQUAL_UINT8(0, uart_midi_is_byte_rtm(127)); // value 127
+  TEST_ASSERT_EQUAL_UINT8(0, uart_midi_is_byte_rtm(128)); // command note off
+  TEST_ASSERT_EQUAL_UINT8(1, uart_midi_is_byte_rtm(0x0F8)); //RTM Timing Clock
+  TEST_ASSERT_EQUAL_UINT8(1, uart_midi_is_byte_rtm(0x0F9)); //RTM Undefined
+  TEST_ASSERT_EQUAL_UINT8(1, uart_midi_is_byte_rtm(0x0FA)); //RTM Start
+  TEST_ASSERT_EQUAL_UINT8(1, uart_midi_is_byte_rtm(0x0FB)); //RTM Continue
+  TEST_ASSERT_EQUAL_UINT8(1, uart_midi_is_byte_rtm(0x0FC)); //RTM Stop
+  TEST_ASSERT_EQUAL_UINT8(1, uart_midi_is_byte_rtm(0x0FD)); //RTM Undefined
+  TEST_ASSERT_EQUAL_UINT8(1, uart_midi_is_byte_rtm(0x0FE)); //RTM Active Sensing
+  TEST_ASSERT_EQUAL_UINT8(1, uart_midi_is_byte_rtm(0x0FF)); //RTM System Reset
+
+  
+}
+
+
+
+void uart_midi_find_packet_from_buffer__should_recogniseChannelVoiceMessages(void){
+
+  uint8_t buffer[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  uint8_t buffer[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+
+
+}
 
 
 void test_function_should_doAlsoDoBlah(void) {
@@ -218,5 +246,9 @@ int main(void) {
     RUN_TEST(test_function_should_recogniseSysEx);
     RUN_TEST(test_function_should_recogniseOtherMessages);
     RUN_TEST(test_function_should_recogniseReservedMessages);
+
+    uart_midi_is_byte_rtm__should_recogniseRtmMessages();
+
+    uart_midi_find_packet_from_buffer__should_recogniseChannelVoiceMessages();
     return UNITY_END();
 }

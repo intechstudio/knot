@@ -17,19 +17,19 @@
 
 #include "driver/gpio.h"
 
-#define DAEMON_TASK_PRIORITY    2
-#define CLASS_TASK_PRIORITY     3
-#define LED_TASK_PRIORITY       1
+#define DAEMON_TASK_PRIORITY    3
+#define CLASS_TASK_PRIORITY     4
+#define LED_TASK_PRIORITY       2
 
 #define UART_RX_TASK_PRIORITY      12
-#define UART_TX_TASK_PRIORITY      11
+#define UART_RX_DECODE_TASK_PRIORITY      11
 
 extern void class_driver_task(void *arg);
 extern void led_task(void *arg);
 
 extern void uart_init(void);
 extern void uart_rx_task(void *arg);
-extern void uart_tx_task(void *arg);
+extern void uart_rx_decode_task(void *arg);
 
 static const char *TAG = "DAEMON";
 
@@ -90,7 +90,7 @@ void app_main(void)
     TaskHandle_t led_task_hdl;
 
     TaskHandle_t uart_rx_task_hdl;
-    TaskHandle_t uart_tx_task_hdl;
+    TaskHandle_t uart_rx_decode_task_hdl;
     //Create daemon task
     xTaskCreatePinnedToCore(host_lib_daemon_task,
                             "daemon",
@@ -132,12 +132,12 @@ void app_main(void)
                             &uart_rx_task_hdl,
                             0);
 
-    xTaskCreatePinnedToCore(uart_tx_task, 
-                            "uart_tx", 
+    xTaskCreatePinnedToCore(uart_rx_decode_task, 
+                            "uart_rx_decode", 
                             2048, 
                             (void *)signaling_sem, 
-                            UART_TX_TASK_PRIORITY, 
-                            &uart_tx_task_hdl,
+                            UART_RX_DECODE_TASK_PRIORITY, 
+                            &uart_rx_decode_task_hdl,
                             0);
 
     //Wait for the tasks to complete
