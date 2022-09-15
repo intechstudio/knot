@@ -225,9 +225,146 @@ void uart_midi_is_byte_rtm__should_recogniseRtmMessages(void) {
 
 void uart_midi_find_packet_from_buffer__should_recogniseChannelVoiceMessages(void){
 
-  uint8_t buffer[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  uint8_t buffer[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  // control change
+  
+  uart_midi_process_byte(0);
+  uart_midi_process_byte(1);
 
+  struct uart_midi_event_packet expected = {.length = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00};
+  struct uart_midi_event_packet actual = {.length = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00};
+
+  // Control Change Message
+  expected = (struct uart_midi_event_packet){.length = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00};
+  actual = uart_midi_process_byte(176);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+  
+  expected = (struct uart_midi_event_packet){.length = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00};
+  actual = uart_midi_process_byte(0);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4); 
+
+  expected = (struct uart_midi_event_packet){.length = 0x03, .byte1 = 176, .byte2 = 0x00, .byte3 = 0x00};
+  actual = uart_midi_process_byte(0);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+  // Sysex 0xF0 0xF7
+  expected = (struct uart_midi_event_packet){.length = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00};
+  actual = uart_midi_process_byte(0xF0);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+  expected = (struct uart_midi_event_packet){.length = 0x02, .byte1 = 0xF0, .byte2 = 0xF7, .byte3 = 0x00};
+  actual = uart_midi_process_byte(0xF7);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+
+  // Sysex 0xF0 0x00 0x01 0xF7
+  expected = (struct uart_midi_event_packet){.length = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00};
+  actual = uart_midi_process_byte(0xF0);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+  expected = (struct uart_midi_event_packet){.length = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00};
+  actual = uart_midi_process_byte(0x00);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+  expected = (struct uart_midi_event_packet){.length = 0x03, .byte1 = 0xF0, .byte2 = 0x00, .byte3 = 0x01};
+  actual = uart_midi_process_byte(0x01);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+   // Sysex one byte stop
+  expected = (struct uart_midi_event_packet){.length = 0x01, .byte1 = 0xF7, .byte2 = 0x00, .byte3 = 0x00};
+  actual = uart_midi_process_byte(0xF7);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+
+   // RTM
+  expected = (struct uart_midi_event_packet){.length = 0x01, .byte1 = 0xF8, .byte2 = 0x00, .byte3 = 0x00};
+  actual = uart_midi_process_byte(0xF8);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+
+  // Control Change Message WITH RTM in the middle
+  expected = (struct uart_midi_event_packet){.length = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00};
+  actual = uart_midi_process_byte(176);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+   // RTM
+  expected = (struct uart_midi_event_packet){.length = 0x01, .byte1 = 0xF8, .byte2 = 0x00, .byte3 = 0x00};
+  actual = uart_midi_process_byte(0xF8);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+  
+  expected = (struct uart_midi_event_packet){.length = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00};
+  actual = uart_midi_process_byte(0);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4); 
+
+  expected = (struct uart_midi_event_packet){.length = 0x03, .byte1 = 176, .byte2 = 0x00, .byte3 = 0x00};
+  actual = uart_midi_process_byte(0);
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+
+}
+
+void midi_uart_to_usb__should_convertAllMessages(void){
+
+  // control change
+  
+  uart_midi_process_byte(0);
+  uart_midi_process_byte(1);
+
+  struct usb_midi_event_packet expected = {.byte0 = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00};
+  struct usb_midi_event_packet actual = {.byte0 = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00};
+
+  // Zero length packet should resturn all zeros usb midi event packet
+  actual = midi_uart_to_usb((struct uart_midi_event_packet){.length = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00});
+  expected = (struct usb_midi_event_packet){.byte0 = 0x00, .byte1 = 0x00, .byte2 = 0x00, .byte3 = 0x00};
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+  
+  // Note on message on channel 0
+  actual = midi_uart_to_usb((struct uart_midi_event_packet){.length = 0x03, .byte1 = 0x90, .byte2 = 0x00, .byte3 = 0x7F});
+  expected = (struct usb_midi_event_packet){.byte0 = 0x09, .byte1 = 0x90, .byte2 = 0x00, .byte3 = 0x7F};
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+
+
+  // Sysex 0xF0 0xF7
+  actual = midi_uart_to_usb((struct uart_midi_event_packet){.length = 0x02, .byte1 = 0xF0, .byte2 = 0xF7, .byte3 = 0x00});
+  expected = (struct usb_midi_event_packet){.byte0 = 0x06, .byte1 = 0xF0, .byte2 = 0xF7, .byte3 = 0x00};
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+  // Sysex 0xF0 0x01 0xF7
+  actual = midi_uart_to_usb((struct uart_midi_event_packet){.length = 0x03, .byte1 = 0xF0, .byte2 = 0x01, .byte3 = 0xF7});
+  expected = (struct usb_midi_event_packet){.byte0 = 0x07, .byte1 = 0xF0, .byte2 = 0x01, .byte3 = 0xF7};
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+  // Sysex 0xF0 0x01 0x02 (long sysex started)
+  actual = midi_uart_to_usb((struct uart_midi_event_packet){.length = 0x03, .byte1 = 0xF0, .byte2 = 0x01, .byte3 = 0x02});
+  expected = (struct usb_midi_event_packet){.byte0 = 0x04, .byte1 = 0xF0, .byte2 = 0x01, .byte3 = 0x02};
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+  // Sysex 0xF7 (sysex ended with one byte)
+  actual = midi_uart_to_usb((struct uart_midi_event_packet){.length = 0x01, .byte1 = 0xF7, .byte2 = 0x00, .byte3 = 0x00});
+  expected = (struct usb_midi_event_packet){.byte0 = 0x05, .byte1 = 0xF7, .byte2 = 0x00, .byte3 = 0x00};
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+  
+  // Sysex 0x01 0xF7 (sysex ended with two bytes)
+  actual = midi_uart_to_usb((struct uart_midi_event_packet){.length = 0x02, .byte1 = 0x01, .byte2 = 0xF7, .byte3 = 0x00});
+  expected = (struct usb_midi_event_packet){.byte0 = 0x06, .byte1 = 0x01 , .byte2 = 0xF7, .byte3 = 0x00};
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+
+  // Sysex 0x01 0x02 0xF7 (sysex ended with three bytes)
+  actual = midi_uart_to_usb((struct uart_midi_event_packet){.length = 0x03, .byte1 = 0x01, .byte2 = 0x02, .byte3 = 0xF7});
+  expected = (struct usb_midi_event_packet){.byte0 = 0x07, .byte1 = 0x01 , .byte2 = 0x02, .byte3 = 0xF7};
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+  // Sysex 0x01 0x02 0x03 (sysex continue with three bytes)
+  actual = midi_uart_to_usb((struct uart_midi_event_packet){.length = 0x03, .byte1 = 0x01, .byte2 = 0x02, .byte3 = 0x03});
+  expected = (struct usb_midi_event_packet){.byte0 = 0x04, .byte1 = 0x01 , .byte2 = 0x02, .byte3 = 0x03};
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
+
+
+  // Real-Time 
+  actual = midi_uart_to_usb((struct uart_midi_event_packet){.length = 0x01, .byte1 = 0xF8, .byte2 = 0x00, .byte3 = 0x00});
+  expected = (struct usb_midi_event_packet){.byte0 = 0x0F, .byte1 = 0xF8 , .byte2 = 0x00, .byte3 = 0x00};
+  TEST_ASSERT_EQUAL_MEMORY(&expected, &actual, 4);
 
 
 }
@@ -247,8 +384,10 @@ int main(void) {
     RUN_TEST(test_function_should_recogniseOtherMessages);
     RUN_TEST(test_function_should_recogniseReservedMessages);
 
-    uart_midi_is_byte_rtm__should_recogniseRtmMessages();
+    RUN_TEST(uart_midi_is_byte_rtm__should_recogniseRtmMessages);
 
-    uart_midi_find_packet_from_buffer__should_recogniseChannelVoiceMessages();
+    RUN_TEST(uart_midi_find_packet_from_buffer__should_recogniseChannelVoiceMessages);
+    RUN_TEST(midi_uart_to_usb__should_convertAllMessages);
+
     return UNITY_END();
 }

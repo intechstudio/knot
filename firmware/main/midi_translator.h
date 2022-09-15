@@ -33,6 +33,14 @@ struct uart_midi_event_packet
 struct uart_midi_event_packet usb_midi_to_uart(struct usb_midi_event_packet usb_packet);
 
 /**
+ * @brief Convert 1-3 byte uart midi packets to 4 byte USB midi event packets.
+ * @param[in] uart_packet 1-3 byte uart_midi_event_packet
+ *
+ * @return The 4 byte usb event packet
+ */
+struct usb_midi_event_packet midi_uart_to_usb(struct uart_midi_event_packet uart_packet);
+
+/**
  * @brief Determine wether a given byte represents a MIDI Real-Time Message or not
  * @param[in] byte MIDI byte
  *
@@ -40,16 +48,16 @@ struct uart_midi_event_packet usb_midi_to_uart(struct usb_midi_event_packet usb_
  */
 uint8_t uart_midi_is_byte_rtm(uint8_t byte);
 
-/**
- * @brief Find next valid packet from buffer if available
- * @param[in] buffer cyclic containing the received bytes
- * @param[in] length length of the cyclic buffer in bytes
- * @param[in] start_index start index where next byte is in buffer
- *
- * @return number of bytes describing next whole packet, 0 if not available
- */
-uint8_t uart_midi_find_packet_from_buffer(uint8_t* buffer, uint32_t length, uint32_t start_index);
 
+
+
+/**
+ * @brief Store next byte and return event packet once completed
+ * @param[in] byte incoming 8-bit data chunk
+ *
+ * @return event packet if available, all zeros if not complete yet
+ */
+struct uart_midi_event_packet uart_midi_process_byte(uint8_t byte);
 
 
 #ifdef __cplusplus
