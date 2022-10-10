@@ -42,12 +42,6 @@
             "command": "./debug.sh",
         },
         {
-            "name": "Build",
-            "color": "white",
-            "singleInstance": true,
-            "command": "./build.sh",
-        },
-        {
             "name": "OpenOCD",
             "color": "white",
             "singleInstance": true,
@@ -76,6 +70,12 @@
             "color": "white",
             "singleInstance": true,
             "command": "podman run -it -v $PWD:/project -w /project espressif/idf:latest cd main/host_test",
+        },   
+	    {
+            "name": "Docker Terminal",
+            "color": "white",
+            "singleInstance": true,
+            "command": "sudo podman run -it -v $PWD:/project -v /dev:/dev -w /project espressif/idf:latest",
         },
         {
             "name": "Unit Test",

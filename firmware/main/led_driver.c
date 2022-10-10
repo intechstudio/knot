@@ -30,6 +30,8 @@ volatile uint8_t tx_led_timer = 0;
 volatile uint8_t rx_led_timer = 0;
 volatile uint8_t err_led_timer = 0;
 
+volatile uint8_t connected = 0;
+
 void led_tx_effect_start(void)
 {
    
@@ -46,6 +48,19 @@ void led_err_effect_start(void)
 {
    
     err_led_timer = 10;
+}
+
+
+void led_connect_effect_start(void)
+{
+   
+    connected = 1;
+}
+
+void led_disconnect_effect_start(void)
+{
+   
+    connected = 0;
 }
 
 
@@ -160,9 +175,9 @@ void led_task(void *arg)
 
             tx_led_timer--;
 
-            led_strip_pixels[2 * 3 + 0] = tx_led_timer;
-            led_strip_pixels[2 * 3 + 1] = tx_led_timer;
-            led_strip_pixels[2 * 3 + 2] = tx_led_timer;      
+            led_strip_pixels[2 * 3 + 0] = tx_led_timer*4;
+            led_strip_pixels[2 * 3 + 1] = tx_led_timer*4;
+            led_strip_pixels[2 * 3 + 2] = tx_led_timer*4;      
 
         }
         else{
@@ -176,9 +191,9 @@ void led_task(void *arg)
 
             rx_led_timer--;
 
-            led_strip_pixels[1 * 3 + 0] = rx_led_timer;
-            led_strip_pixels[1 * 3 + 1] = rx_led_timer;
-            led_strip_pixels[1 * 3 + 2] = rx_led_timer;      
+            led_strip_pixels[1 * 3 + 0] = rx_led_timer*6;
+            led_strip_pixels[1 * 3 + 1] = rx_led_timer*6;
+            led_strip_pixels[1 * 3 + 2] = rx_led_timer*6;      
 
         }
         else{
@@ -192,14 +207,14 @@ void led_task(void *arg)
 
             err_led_timer--;
 
-            led_strip_pixels[0 * 3 + 0] = 0;
+            led_strip_pixels[0 * 3 + 0] = connected*50;
             led_strip_pixels[0 * 3 + 1] = err_led_timer*3;
             led_strip_pixels[0 * 3 + 2] = 0;      
 
         }
         else{
 
-            led_strip_pixels[0 * 3 + 0] = 0;
+            led_strip_pixels[0 * 3 + 0] = connected*50;
             led_strip_pixels[0 * 3 + 1] = 0;
             led_strip_pixels[0 * 3 + 2] = 0;            
         }

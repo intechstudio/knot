@@ -30,6 +30,11 @@ typedef struct {
     uint32_t actions;
 } class_driver_t;
 
+
+
+extern void led_connect_effect_start(void);
+extern void led_disconnect_effect_start(void);
+
 extern int uart_send_data(struct uart_midi_event_packet ev);
 
 
@@ -343,6 +348,7 @@ void class_driver_task(void *arg)
         }
         if (driver_obj.actions & ACTION_GET_DEV_DESC) {
             action_get_dev_desc(&driver_obj);
+            led_connect_effect_start();
         }
         if (driver_obj.actions & ACTION_GET_CONFIG_DESC) {
             action_get_config_desc(&driver_obj);
