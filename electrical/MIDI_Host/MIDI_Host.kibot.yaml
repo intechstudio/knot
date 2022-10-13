@@ -120,7 +120,7 @@ outputs:
       exclude_pads_from_silkscreen: true
       plot_sheet_reference: false
       plot_footprint_refs: true
-      plot_footprint_values: false
+      plot_footprint_values: true
       force_plot_invisible_refs_vals: false
       tent_vias: true
       use_protel_extensions: false
