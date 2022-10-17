@@ -31,7 +31,8 @@ static const char *TAG = "UART";
 
 #include "driver/gpio.h"
 
-#define TRS_TYPE_SELECT_PIN 16
+#define TRS_TX_AB_SELECT 15
+#define TRS_RX_AB_SELECT 16
 #define SW_AB_PIN 35
 
 
@@ -72,6 +73,8 @@ void uart_init(){
     uart_set_pin(EX_UART_NUM, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
     uart_set_pin(EX_UART_NUM, 17, 18, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
 
+    uart_set_line_inverse(EX_UART_NUM, UART_SIGNAL_TXD_INV);
+
     //Set uart pattern detect function.
     uart_enable_pattern_det_baud_intr(EX_UART_NUM, '+', PATTERN_CHR_NUM, 9, 0, 0);
     //Reset the pattern queue length to record at most 20 pattern positions.
@@ -79,10 +82,13 @@ void uart_init(){
 
 
     gpio_set_direction(SW_AB_PIN, GPIO_MODE_INPUT);
-    gpio_set_direction(TRS_TYPE_SELECT_PIN, GPIO_MODE_OUTPUT);
+
+    gpio_set_direction(TRS_TX_AB_SELECT, GPIO_MODE_OUTPUT);
+    // gpio_set_direction(TRS_RX_AB_SELECT, GPIO_MODE_OUTPUT);
 
     
-    gpio_set_level(TRS_TYPE_SELECT_PIN, gpio_get_level(SW_AB_PIN));
+    gpio_set_level(TRS_TX_AB_SELECT, gpio_get_level(SW_AB_PIN));
+    //gpio_set_level(TRS_RX_AB_SELECT, !gpio_get_level(SW_AB_PIN));
 
 
 
@@ -114,7 +120,7 @@ int uart_send_data(struct uart_midi_event_packet ev)
 }
 
 
-void uart_rx_decode_task(void *arg){
+void uart_housekeeping_task(void *arg){
 
 
 
@@ -124,10 +130,12 @@ void uart_rx_decode_task(void *arg){
     ESP_LOGI(TAG, "UART TX init done");
 
     for(;;) {
-        
+    
 
         vTaskDelay(pdMS_TO_TICKS(10));
 
+        gpio_set_level(TRS_TX_AB_SELECT, gpio_get_level(SW_AB_PIN));
+        //gpio_set_level(TRS_RX_AB_SELECT, !gpio_get_level(SW_AB_PIN));
 
     }
 }
@@ -135,6 +143,7 @@ void uart_rx_decode_task(void *arg){
 
 void uart_rx_task(void *arg)
 {
+
 
 
     SemaphoreHandle_t signaling_sem = (SemaphoreHandle_t)arg;
@@ -148,6 +157,7 @@ void uart_rx_task(void *arg)
     ESP_LOGI(TAG, "UART RX init done");
 
     for(;;) {
+
 
 
         //Waiting for UART event.

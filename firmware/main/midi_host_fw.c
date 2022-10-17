@@ -22,14 +22,14 @@
 #define LED_TASK_PRIORITY       2
 
 #define UART_RX_TASK_PRIORITY      12
-#define UART_RX_DECODE_TASK_PRIORITY      11
+#define UART_HOUSEKEEPING_TASK_PRIORITY      11
 
 extern void class_driver_task(void *arg);
 extern void led_task(void *arg);
 
 extern void uart_init(void);
 extern void uart_rx_task(void *arg);
-extern void uart_rx_decode_task(void *arg);
+extern void uart_housekeeping_task(void *arg);
 
 static const char *TAG = "DAEMON";
 
@@ -90,7 +90,7 @@ void app_main(void)
     TaskHandle_t led_task_hdl;
 
     TaskHandle_t uart_rx_task_hdl;
-    TaskHandle_t uart_rx_decode_task_hdl;
+    TaskHandle_t uart_housekeeping_task_hdl;
     //Create daemon task
     xTaskCreatePinnedToCore(host_lib_daemon_task,
                             "daemon",
@@ -132,12 +132,12 @@ void app_main(void)
                             &uart_rx_task_hdl,
                             0);
 
-    xTaskCreatePinnedToCore(uart_rx_decode_task, 
+    xTaskCreatePinnedToCore(uart_housekeeping_task, 
                             "uart_rx_decode", 
                             2048, 
                             (void *)signaling_sem, 
-                            UART_RX_DECODE_TASK_PRIORITY, 
-                            &uart_rx_decode_task_hdl,
+                            UART_HOUSEKEEPING_TASK_PRIORITY, 
+                            &uart_housekeeping_task_hdl,
                             0);
 
     //Wait for the tasks to complete
