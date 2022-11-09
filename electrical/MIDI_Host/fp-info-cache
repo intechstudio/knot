@@ -1,4 +1,4 @@
-20532646772056781
+20537656747772635
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -86310,6 +86310,13 @@ Surface mounted pin header SMD 1x03 2.54mm single row style1 pin1 left
 7
 3
 suku_basics
+SHT41
+DFN, 4 Pin (https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/0_Datasheets/Humidity/Sensirion_Humidity_Sensors_SHTC3_Datasheet.pdf)
+Sensirion DFN NoLead
+0
+8
+5
+suku_basics
 SOIC-8W_FLASH
 SOIC, 8 Pin (http://www.winbond.com/resource-files/w25q32jv%20revg%2003272018%20plus.pdf#page=68), generated with kicad-footprint-generator ipc_gullwing_generator.py
 SOIC SO
@@ -86429,6 +86436,13 @@ SOT-363 SC-70-6
 6
 6
 suku_basics
+STH41
+DFN, 4 Pin (https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/0_Datasheets/Humidity/Sensirion_Humidity_Sensors_SHTC3_Datasheet.pdf)
+Sensirion DFN NoLead
+0
+8
+5
+suku_basics
 SW-TH_3P-L4.5-W7.0-P3.00-LS1.9
 
 
@@ -86449,6 +86463,13 @@ Light Touch Switch
 0
 5
 2
+suku_basics
+Sensirion_DFN-4-1EP_2x2mm_P1mm_EP0.7x1.6mm
+DFN, 4 Pin (https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/0_Datasheets/Humidity/Sensirion_Humidity_Sensors_SHTC3_Datasheet.pdf)
+Sensirion DFN NoLead
+0
+14
+6
 suku_basics
 Surface_1x4
 Through hole straight pin header, 1x04, 2.00mm pitch, single row
