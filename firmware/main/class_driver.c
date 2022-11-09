@@ -115,13 +115,16 @@ static esp_err_t midi_find_intf_and_ep_desc(class_driver_t *driver_obj, const us
         const usb_standard_desc_t *this_desc = (const usb_standard_desc_t *)config_desc;
         do {
 
+            ESP_LOGI(TAG, "TRY");
             intf_idx++;
 
             this_desc = usb_parse_next_descriptor_of_type(
                 this_desc, config_desc->wTotalLength, USB_B_DESCRIPTOR_TYPE_INTERFACE, &desc_offset);
 
-            if (this_desc == NULL)
+            if (this_desc == NULL){
+                ESP_LOGI(TAG, "INTERFACE NOT FOUND");
                 break; // Reached end of configuration descriptor
+            }
 
             const usb_intf_desc_t *intf_desc = (const usb_intf_desc_t *)this_desc;
             
@@ -159,6 +162,59 @@ static esp_err_t midi_find_intf_and_ep_desc(class_driver_t *driver_obj, const us
 
         }
     } 
+    else{
+        ESP_LOGI(TAG, "NOT IAD");
+
+             const usb_standard_desc_t *this_desc = (const usb_standard_desc_t *)config_desc;
+        do {
+
+            ESP_LOGI(TAG, "TRY");
+            intf_idx++;
+
+            this_desc = usb_parse_next_descriptor_of_type(
+                this_desc, config_desc->wTotalLength, USB_B_DESCRIPTOR_TYPE_INTERFACE, &desc_offset);
+
+            if (this_desc == NULL){
+                ESP_LOGI(TAG, "INTERFACE NOT FOUND");
+                break; // Reached end of configuration descriptor
+            }
+
+            const usb_intf_desc_t *intf_desc = (const usb_intf_desc_t *)this_desc;
+            
+            #define USB_SUBCLASS_MIDISTREAMING 0x03
+            if (intf_desc->bInterfaceClass == USB_CLASS_AUDIO && intf_desc->bInterfaceSubClass == USB_SUBCLASS_MIDISTREAMING && intf_desc->bInterfaceProtocol == 0x00){
+
+                ESP_LOGI(TAG, "MIDI INTERFACE FOUND %d", intf_idx);
+                *intf_num = intf_idx;
+                interface_found = true;
+
+            }
+            
+        } while (!interface_found);
+
+
+        if (interface_found){
+
+            usb_intf_desc_t* intf_desc = usb_parse_interface_descriptor(config_desc, intf_idx, 0, &desc_offset);
+
+            int temp_offset = desc_offset;
+            for (int i = 0; i < 2; i++) {
+                const usb_ep_desc_t *this_ep = usb_parse_endpoint_descriptor_by_index(intf_desc, i, config_desc->wTotalLength, &desc_offset);
+                assert(this_ep);
+                if (USB_EP_DESC_GET_EP_DIR(this_ep)) {
+                    *in_ep = this_ep;
+                    ESP_LOGI(TAG, "IN EP FOUND %d", this_ep->bEndpointAddress);
+                } else {
+                    *out_ep = this_ep;
+                    ESP_LOGI(TAG, "OUT EP FOUND %d", this_ep->bEndpointAddress);
+                }
+                desc_offset = temp_offset;
+            }
+
+            return ESP_OK;
+
+        }
+    }
 
     return ESP_ERR_NOT_FOUND;
 }
@@ -194,7 +250,8 @@ static void in_transfer_cb(usb_transfer_t *in_transfer)
 
     struct uart_midi_event_packet uart_ev = usb_midi_to_uart(usb_ev);
 
-
+    
+    ESP_LOGI(TAG, "USB -> MIDI: %d %d %d %d", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
     uart_send_data(uart_ev);
 
 
