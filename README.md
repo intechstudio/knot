@@ -24,6 +24,7 @@ You can find more info on the [website](https://intech.studio/shop/knot).
 
 | Manufacturer | Device name | Compatibility |
 | ---- | ---- | ---- |
+| Intech Studio  |   Grid         | Tested - OK |
 | M-AUDIO  |   MIDISPORT UNO         | Tested - OK |
 |   Novation   | Launchpad MK3 Mini  | Tested - OK |
 |    Novation  | Launchpad MK2     | Tested - OK |
