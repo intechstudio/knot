@@ -115,6 +115,7 @@ int uart_send_data(struct uart_midi_event_packet ev)
     led_tx_effect_start();
 
     const int txBytes = uart_write_bytes(EX_UART_NUM, &ev.byte1, ev.length);
+    //printf("MIDI: %d : %d %d %d\n", ev.length, ev.byte1, ev.byte2, ev.byte3);
     //ESP_LOGI(logName, "Wrote %d bytes %d %d %d", txBytes, data[0], data[1], data[2]);
     return txBytes;
 }
