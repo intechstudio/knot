@@ -18,27 +18,41 @@ You can find more info on the [website](https://intech.studio/shop/knot).
 
 
 
-### USB MIDI Device compatibility
+### USB MIDI Device compatibility with Knot as a host
 
 
 
-| Manufacturer | Device name | Compatibility |
-| ---- | ---- | ---- |
-| Intech Studio  |   Grid         | Tested - OK |
-| M-AUDIO  |   MIDISPORT UNO         | Tested - OK |
-|   Novation   | Launchpad MK3 Mini  | Tested - OK |
-|    Novation  | Launchpad MK2     | Tested - OK |
-|    Novation  | Launchkey 25   | Tested - Not Working |
+| Manufacturer | Device name | Compatibility | Tester |
+| ---- | ---- | ---- | ---- |
+| Intech Studio  |   Grid         | Tested - OK | Intech |
+| M-AUDIO  |   MIDISPORT UNO         | Tested - OK | Intech |
+|   Novation   | Launchpad MK3 Mini  | Tested - OK | Intech |
+|    Novation  | Launchpad MK2     | Tested - OK | Intech |
+|    Novation  | Launchkey 25   | Tested - Not Working | Intech |
+|    Korg  | Electribe ES2  |  Untested | - |
 
 ### 5-pin DIN/TRS MIDI Device compatibility
 
 
 
-| Manufacturer | Device name | MIDI connector |Compatibility |
-| ---- | ---- | ---- | ---- |
-|Behringer |   TD-3-AM | 5-pin DIN       | Tested - OK |
-|Behringer |   U-PHORIA UMC404HD | 5-pin DIN     | Tested - OK |
-|   Korg   | Volca FM  |  5-pin DIN | Tested - OK |
-|    Korg  | Electribe ES2  | TRS type-B  | Tested - OK |
-|    Polyend  | Tracker  | TRS type-B | Tested - OK |
+| Manufacturer | Device name | MIDI connector |Compatibility | Tester |
+| ---- | ---- | ---- | ---- | ---- |
+|Behringer |   TD-3-AM | 5-pin DIN       | Tested - OK |  Intech |
+|Behringer |   U-PHORIA UMC404HD | 5-pin DIN     | Tested - OK | Intech |
+|   Korg   | Volca FM (other Volcas should perform similarly)  |  5-pin DIN | Tested - OK | Intech |
+|    Korg  | Electribe ES2  | TRS type-B  | Tested - OK | Intech |
+|    Polyend  | Tracker  | TRS type-B | Tested - OK | Intech |
+|    Dirtywave  | M8 Tracker  | TRS type-A | Untested | - |
+|   Audiothingies   | Micromonsta 2  | TRS type-A | Untested | - |
+|    Bastl Instruments  | Softpop SP2  | 5-pin DIN | Untested | - |
+|    Elektron  | Octatrack  | 5-pin DIN | Untested | - |
+|    Elektron  | Syntakt  | 5-pin DIN | Untested | - |
+|    Elektron  | Digitakt  | 5-pin DIN | Untested | - |
+|    Elektron  | Digitone  | 5-pin DIN | Untested | - |
+|    Elektron  | Analog Rytm  | 5-pin DIN | Untested | - |
+|    Elektron  | Analog Four  | 5-pin DIN | Untested | - |
+|    Elektron  | Analog Keys  | 5-pin DIN | Untested | - |
+|    Elektron  | Model:Samples  | TRS type-A | Untested | - |
+|    Elektron  | Model:Cycles  | TRS type-A | Untested | - |
+|    Arturia  | Microfreak  | TRS type-A  | Untested | - |
 
