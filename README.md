@@ -41,6 +41,7 @@ You can find more info on the [website](https://intech.studio/shop/knot).
 |Behringer |   U-PHORIA UMC404HD | 5-pin DIN     | Tested - OK | Intech |
 |   Korg   | Volca FM (other Volcas should perform similarly)  |  5-pin DIN | Tested - OK | Intech |
 |    Korg  | Electribe ES2  | TRS type-B  | Tested - OK | Intech |
+|Mutable Instruments |   Yarns | 5-pin DIN     | Tested - OK | Intech |
 |    Polyend  | Tracker  | TRS type-B | Tested - OK | Intech |
 |    Dirtywave  | M8 Tracker  | TRS type-A | Untested | - |
 |   Audiothingies   | Micromonsta 2  | TRS type-A | Untested | - |
