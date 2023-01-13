@@ -20,7 +20,7 @@ You can find more info on the [website](https://intech.studio/shop/knot).
 
 ### USB MIDI Device compatibility with Knot as a host
 
-
+*If you own a device you couldn't find in the list below, help us out by submitting a test of your own to support@intech.studio!*
 
 | Manufacturer | Device name | Compatibility | Tester |
 | ---- | ---- | ---- | ---- |
@@ -33,7 +33,7 @@ You can find more info on the [website](https://intech.studio/shop/knot).
 
 ### 5-pin DIN/TRS MIDI Device compatibility
 
-
+*If you own a device you couldn't find in the list below, help us out by submitting a test of your own to support@intech.studio!*
 
 | Manufacturer | Device name | MIDI connector |Compatibility | Tester |
 | ---- | ---- | ---- | ---- | ---- |
@@ -43,6 +43,8 @@ You can find more info on the [website](https://intech.studio/shop/knot).
 |    Korg  | Electribe ES2  | TRS type-B  | Tested - OK | Intech |
 |Mutable Instruments |   Yarns | 5-pin DIN     | Tested - OK | Intech |
 |    Polyend  | Tracker  | TRS type-B | Tested - OK | Intech |
+
+<!---
 |    Dirtywave  | M8 Tracker  | TRS type-A | Untested | - |
 |   Audiothingies   | Micromonsta 2  | TRS type-A | Untested | - |
 |    Bastl Instruments  | Softpop SP2  | 5-pin DIN | Untested | - |
@@ -56,4 +58,4 @@ You can find more info on the [website](https://intech.studio/shop/knot).
 |    Elektron  | Model:Samples  | TRS type-A | Untested | - |
 |    Elektron  | Model:Cycles  | TRS type-A | Untested | - |
 |    Arturia  | Microfreak  | TRS type-A  | Untested | - |
-
+--->
