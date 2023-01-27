@@ -28,7 +28,7 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 | M-AUDIO  |   MIDISPORT UNO         | Tested - OK | Intech |
 |   Novation   | Launchpad MK3 Mini  | Tested - OK | Intech |
 |    Novation  | Launchpad MK2     | Tested - OK | Intech |
-|    Novation  | Launchkey 25   | Tested - Not Working | Intech |
+|    Novation  | Launchkey 25   | Tested - Power OK, No MIDI | Intech |
 |    Korg  | Electribe ES2  |  Tested - CC behavior is good, but some sequnced notes are left hanging when used to sequence Vital VST | Intech |
 
 ### 5-pin DIN/TRS MIDI Device compatibility
