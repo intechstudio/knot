@@ -1,4 +1,4 @@
-name: "Firmware CI/CD for MIDI_Host"
+name: "Nightly Firmware CI/CD for MIDI_Host"
 
 on:
   workflow_dispatch:
@@ -57,6 +57,6 @@ jobs:
       if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
-        name: FabPCB_Output
+        name: Nightly Knot Firmware
         path: firmware/output/
         if-no-files-found: warn
