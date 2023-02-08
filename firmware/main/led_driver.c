@@ -126,8 +126,6 @@ void led_task(void *arg)
     uint32_t red = 0;
     uint32_t green = 0;
     uint32_t blue = 0;
-    uint16_t hue = 0;
-    uint16_t start_rgb = 0;
 
     ESP_LOGI(TAG, "Create RMT TX channel");
     rmt_channel_handle_t led_chan = NULL;
@@ -157,16 +155,29 @@ void led_task(void *arg)
     };
 
 
+    uint8_t wainting_animation_direction = 0;
+    uint8_t wainting_animation = 0;
 
     while (1) {
+
+        if (wainting_animation_direction == 0){
+            wainting_animation++;
+            if (wainting_animation == 150){
+                wainting_animation_direction = 1;
+            }
+        }
+        else{
+            wainting_animation--;
+            if (wainting_animation == 0){
+                wainting_animation_direction = 0;
+            }
+        }
 
 
 
         //ESP_LOGI(TAG, "Update LED");
 
 
-        hue = 0 + start_rgb;
-        led_strip_hsv2rgb(hue, 100, 100, &red, &green, &blue);
         led_strip_pixels[0 * 3 + 0] = green;
         led_strip_pixels[0 * 3 + 1] = blue;
         led_strip_pixels[0 * 3 + 2] = red;
@@ -214,16 +225,14 @@ void led_task(void *arg)
         }
         else{
 
-            led_strip_pixels[0 * 3 + 0] = connected*50;
-            led_strip_pixels[0 * 3 + 1] = 0;
-            led_strip_pixels[0 * 3 + 2] = 0;            
+            led_strip_pixels[0 * 3 + 0] = (!connected)*wainting_animation/2 + connected*50;
+            led_strip_pixels[0 * 3 + 1] = (!connected)*wainting_animation/2;
+            led_strip_pixels[0 * 3 + 2] = (!connected)*wainting_animation/2;            
         }
+
 
         ESP_ERROR_CHECK(rmt_transmit(led_chan, led_encoder, led_strip_pixels, sizeof(led_strip_pixels), &tx_config));
         vTaskDelay(pdMS_TO_TICKS(EXAMPLE_CHASE_SPEED_MS));
-
-        start_rgb += 1;
-
 
     }
 

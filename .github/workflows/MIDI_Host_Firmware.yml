@@ -50,8 +50,7 @@ jobs:
     - name: Convert to uf2
       run: |
         cd firmware
-        sudo mkdir ./build/output
-        sudo python3 ./tools/uf2conv.py -f ESP32S3 ./build/midi_host_fw.bin -b 0x0 -c -o ./build/output/midi_host_fw.uf2
+        sudo python3 ./tools/uf2conv.py -f ESP32S3 ./build/midi_host_fw.bin -b 0x0 -c -o ./output/midi_host_fw.uf2
 
 
     - name: Retrieve results
@@ -59,5 +58,5 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: FabPCB_Output
-        path: firmware/build/output/
+        path: firmware/output/
         if-no-files-found: warn
