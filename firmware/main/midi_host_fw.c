@@ -71,7 +71,7 @@ static void host_lib_daemon_task(void *arg)
 
 void app_main(void)
 {
-
+    
     #define USB_NATIVE_SELECT_PIN 11
     #define USB_SOFT_SELECT_PIN 12
 
@@ -79,6 +79,12 @@ void app_main(void)
     gpio_set_direction(USB_SOFT_SELECT_PIN, GPIO_MODE_OUTPUT);
     gpio_set_level(USB_NATIVE_SELECT_PIN, 1);
     gpio_set_level(USB_SOFT_SELECT_PIN, 1);
+
+
+    #define PMIC_EN_PIN 48
+
+    gpio_set_direction(PMIC_EN_PIN, GPIO_MODE_OUTPUT);
+    gpio_set_level(PMIC_EN_PIN, 1);
 
 
 
