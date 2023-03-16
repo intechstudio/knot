@@ -6,7 +6,7 @@ Knot is the bridge between old-school MIDI gear like synthesizers, groove boxes,
 
 You can find more info on the [website](https://intech.studio/shop/knot) or in the [Knot - Starter's Guide](https://grid-documentation.onrender.com/guides/guide/knot-start).
 
-### Planned features for release
+### Knot features
 
 - Standalone USB MIDI Host, works with Grid and any MIDI class compliant USB controller
 - TRS MIDI input port
@@ -29,7 +29,9 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 |   Novation   | Launchpad MK3 Mini  | Tested - OK | Intech |
 |    Novation  | Launchpad MK2     | Tested - OK | Intech |
 |    Novation  | Launchkey 25   | Tested - Power OK, No MIDI | Intech |
-|    Korg  | Electribe ES2  |  Tested - CC behavior is good, but some sequnced notes are left hanging when used to sequence Vital VST | Intech |
+|    Korg  | Electribe ES2  |  Tested - OK | Intech |
+|    Livid Instruments  | DS-1  |  Tested - OK | Community |
+|    Midi Fighter  | Midi Fighter Twister  |  Tested - OK | Community |
 
 ### 5-pin DIN/TRS MIDI Device compatibility
 
@@ -37,14 +39,23 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 
 | Manufacturer | Device name | MIDI connector |Compatibility | Tester |
 | ---- | ---- | ---- | ---- | ---- |
+| 1010music |   Blackbox | TRS type-B       | Tested - OK |  Community |
+| 1010music |   Bluebox | TRS type-B       | Tested - OK |  Community |
 |Behringer |   TD-3-AM | 5-pin DIN       | Tested - OK |  Intech |
 |Behringer |   U-PHORIA UMC404HD | 5-pin DIN     | Tested - OK | Intech |
 |   Korg   | Volca FM (other Volcas should perform similarly)  |  5-pin DIN | Tested - OK | Intech |
 |    Korg  | Electribe ES2  | TRS type-B  | Tested - OK | Intech |
-|Mutable Instruments |   Yarns | 5-pin DIN     | Tested - OK | Intech |
+| Mutable Instruments |   Yarns | 5-pin DIN     | Tested - OK | Intech |
 |    Polyend  | Tracker  | TRS type-B | Tested - OK | Intech |
 
 <!---
+### Comunity contributors
+
+A big thank you to our community contributors for testing these devices: 
+- Michal
+- Tibi
+
+
 |    Dirtywave  | M8 Tracker  | TRS type-A | Untested | - |
 |   Audiothingies   | Micromonsta 2  | TRS type-A | Untested | - |
 |    Bastl Instruments  | Softpop SP2  | 5-pin DIN | Untested | - |
