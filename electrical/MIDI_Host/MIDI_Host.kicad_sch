@@ -2168,7 +2168,6 @@
     )
   )
 
-
   (junction (at 190.5 53.34) (diameter 0) (color 0 0 0 0)
     (uuid 014a11e4-427a-4ef5-b132-cf9b194f6da9)
   )
@@ -6156,13 +6155,13 @@
       (reference "C15") (unit 1) (value "100n") (footprint "suku_basics:CAP_0402")
     )
     (path "/60c177f6-9f45-413f-893d-8d98077afbe8/9763964f-54df-4089-9ebe-8bf9fbb9f1c9"
-      (reference "C16") (unit 1) (value "56u EEEFK1E560SR") (footprint "Capacitor_SMD:CP_Elec_5x5.8")
+      (reference "C16") (unit 1) (value "CS1E470M-CRE54") (footprint "Capacitor_SMD:CP_Elec_6.3x5.7")
     )
     (path "/60c177f6-9f45-413f-893d-8d98077afbe8/6b44eaf5-7d68-416b-b879-730d722316db"
-      (reference "C17") (unit 1) (value "56u") (footprint "Capacitor_SMD:CP_Elec_5x5.8")
+      (reference "C17") (unit 1) (value "CS1E470M-CRE54") (footprint "Capacitor_SMD:CP_Elec_6.3x5.7")
     )
     (path "/60c177f6-9f45-413f-893d-8d98077afbe8/68b15d92-5c22-4f1d-9338-dea1b8717cdf"
-      (reference "C18") (unit 1) (value "56u") (footprint "Capacitor_SMD:CP_Elec_5x5.8")
+      (reference "C18") (unit 1) (value "CS1E470M-CRE54") (footprint "Capacitor_SMD:CP_Elec_6.3x5.7")
     )
     (path "/60c177f6-9f45-413f-893d-8d98077afbe8/d03477a4-3d9e-48b7-a3f3-2e34a7ddd91d"
       (reference "C19") (unit 1) (value "10u") (footprint "suku_basics:CAP_0402")
