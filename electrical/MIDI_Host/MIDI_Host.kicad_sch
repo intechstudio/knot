@@ -6299,10 +6299,10 @@
       (reference "R20") (unit 1) (value "10k") (footprint "suku_basics:RES_0402")
     )
     (path "/60c177f6-9f45-413f-893d-8d98077afbe8/3aac17af-0e9c-4905-88f1-c41a8ddc82a9"
-      (reference "R21") (unit 1) (value "3k24") (footprint "suku_basics:RES_0402")
+      (reference "R21") (unit 1) (value "3k3") (footprint "suku_basics:RES_0402")
     )
     (path "/60c177f6-9f45-413f-893d-8d98077afbe8/bdeda33e-a503-4613-83e1-5e0b082b8fd9"
-      (reference "R22") (unit 1) (value "3k4") (footprint "suku_basics:RES_0402")
+      (reference "R22") (unit 1) (value "3k3") (footprint "suku_basics:RES_0402")
     )
     (path "/be6da077-d179-463a-af26-1bac671e85bf"
       (reference "SW1") (unit 1) (value "TC-1109DE-C-G") (footprint "suku_basics:SW-TH_3P-L4.5-W7.0-P3.00-LS1.9")
