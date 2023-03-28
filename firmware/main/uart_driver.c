@@ -87,8 +87,8 @@ void uart_init(){
     // gpio_set_direction(TRS_RX_AB_SELECT, GPIO_MODE_OUTPUT);
 
     
-    gpio_set_level(TRS_TX_AB_SELECT, gpio_get_level(SW_AB_PIN));
-    //gpio_set_level(TRS_RX_AB_SELECT, !gpio_get_level(SW_AB_PIN));
+    //gpio_set_level(TRS_TX_AB_SELECT, gpio_get_level(SW_AB_PIN));
+    gpio_set_level(TRS_TX_AB_SELECT, !gpio_get_level(SW_AB_PIN));
 
 
 
@@ -135,8 +135,8 @@ void uart_housekeeping_task(void *arg){
 
         vTaskDelay(pdMS_TO_TICKS(10));
 
-        gpio_set_level(TRS_TX_AB_SELECT, gpio_get_level(SW_AB_PIN));
-        //gpio_set_level(TRS_RX_AB_SELECT, !gpio_get_level(SW_AB_PIN));
+        //gpio_set_level(TRS_TX_AB_SELECT, gpio_get_level(SW_AB_PIN));
+        gpio_set_level(TRS_TX_AB_SELECT, !gpio_get_level(SW_AB_PIN));
 
     }
 }
