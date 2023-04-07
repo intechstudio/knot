@@ -11,7 +11,8 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 - Standalone USB MIDI Host, works with Grid and any MIDI class compliant USB controller
 - TRS MIDI input port
 - TRS MIDI output port
-- USB-C port for charging, updating the device
+- USB-C port for powering, updating the device
+- DC in port for powering (6V or 15V with automatic polarity detection)
 - Hardware A/B switch for changing the TRS wiring mode
 - Mode button for updating the firmware
 - 3 indicator LEDs, which will be utilized for various feedback
