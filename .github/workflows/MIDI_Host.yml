@@ -27,7 +27,7 @@ jobs:
   FabPCB:
     name: PCB fabrication files
     runs-on: ubuntu-latest
-    container: "setsoft/kicad_auto:dev_k6"
+    container: "setsoft/kicad_auto:ki7"
 
     steps:
     - uses: actions/checkout@v2
@@ -58,6 +58,7 @@ jobs:
     - name: Convert position file
       run: |
         python3 .github/workflows/convert_bottom_position.py ../../electrical/MIDI_Host/mfg-bot/mfg/MIDI_Host-both_pos.csv ../../electrical/MIDI_Host/mfg-bot/mfg/MIDI_Host-both_pos_fixed.csv
+        python3 .github/workflows/convert_position_offset.py ../../electrical/MIDI_Host/mfg-bot/mfg/MIDI_Host-both_pos_fixed.csv ../../electrical/MIDI_Host/mfg-bot/mfg/MIDI_Host-both_pos_fixed_offset.csv
         rm electrical/MIDI_Host/mfg-bot/mfg/MIDI_Host-both_pos.csv
       
     - name: Zipping artifacts      
