@@ -1,1 +1,0 @@
-sudo podman run -it -v $PWD:/project -v /dev:/dev -w /project espressif/idf:latest
