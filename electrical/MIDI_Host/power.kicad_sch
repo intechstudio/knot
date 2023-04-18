@@ -1286,6 +1286,7 @@
   )
 
   (no_connect (at 149.86 40.64) (uuid 7f6b5c3a-ef29-4295-9ea6-32ab8ca9c6b0))
+  (no_connect (at 35.56 53.34) (uuid d20e1309-e92a-4b96-8bae-b2ba3f45d6bf))
   (no_connect (at 35.56 48.26) (uuid f23605ae-8089-497b-a870-9c2ec8b93d03))
 
   (wire (pts (xy 81.28 22.86) (xy 119.38 22.86))
@@ -1612,10 +1613,6 @@
     (stroke (width 0) (type default))
     (uuid 93387163-76af-437f-88f5-471c55f90aa9)
   )
-  (wire (pts (xy 38.1 53.34) (xy 38.1 58.42))
-    (stroke (width 0) (type default))
-    (uuid 949d1487-7fb2-4c25-b0b8-f8a571d96cde)
-  )
   (wire (pts (xy 195.58 22.86) (xy 193.04 22.86))
     (stroke (width 0) (type default))
     (uuid 951eec6c-6ed0-4393-aa65-1b42639aef33)
@@ -1687,10 +1684,6 @@
   (wire (pts (xy 248.92 68.58) (xy 248.92 71.12))
     (stroke (width 0) (type default))
     (uuid b6b2ae5f-e7b0-43ee-b7d9-6787d0c5e433)
-  )
-  (wire (pts (xy 35.56 53.34) (xy 38.1 53.34))
-    (stroke (width 0) (type default))
-    (uuid ba87a473-3db8-4a92-b30f-69398d36cb05)
   )
   (wire (pts (xy 223.52 71.12) (xy 226.06 71.12))
     (stroke (width 0) (type default))
@@ -3164,31 +3157,6 @@
       (project "MIDI_Host"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "R19") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "power:GND") (at 38.1 58.42 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid e3251fa3-a91e-46f6-af36-8ea4b47a72ad)
-    (property "Reference" "#PWR094" (at 38.1 64.77 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "GND" (at 38.1 63.5 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 38.1 58.42 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 38.1 58.42 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 93a5ea42-360a-4b0a-8937-394e7b3862a0))
-    (instances
-      (project "MIDI_Host"
-        (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
-          (reference "#PWR094") (unit 1)
         )
       )
     )
