@@ -441,7 +441,7 @@
       "netlist": "",
       "specctra_dsn": "",
       "step": "MIDI_Host.step",
-      "vrml": "MIDI_Host.wrl"
+      "vrml": "../../../intech-render/Source-Knot/knot_pcb.wrl"
     },
     "page_layout_descr_file": ""
   },
