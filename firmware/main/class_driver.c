@@ -13,6 +13,8 @@
 
 #include "midi_translator.h"
 
+#include "rom/ets_sys.h" // For ets_printf
+
 #define CLIENT_NUM_EVENT_MSG        5
 
 #define ACTION_OPEN_DEV             0x01
@@ -29,6 +31,8 @@ typedef struct {
     usb_device_handle_t dev_hdl;
     uint32_t actions;
 } class_driver_t;
+
+
 
 
 
@@ -220,13 +224,15 @@ static esp_err_t midi_find_intf_and_ep_desc(class_driver_t *driver_obj, const us
 }
 
 
-static usb_transfer_t *transfer;
+static usb_transfer_t *out_transfer;
 
-static void transfer_cb(usb_transfer_t *transfer)
+static void out_transfer_cb(usb_transfer_t *transfer)
 {
     //This is function is called from within usb_host_client_handle_events(). Don't block and try to keep it short
     struct class_driver_t *class_driver_obj = (struct class_driver_t *)transfer->context;
-    printf("OUT: Transfer status %d, actual number of bytes transferred %d\n", transfer->status, transfer->actual_num_bytes);
+
+    
+    ets_printf("OUT: Transfer status %d, actual number of bytes transferred %d\n", transfer->status, transfer->actual_num_bytes);
 
 }
 
@@ -260,6 +266,31 @@ static void in_transfer_cb(usb_transfer_t *in_transfer)
 }
 
 
+void usb_midi_packet_send(struct usb_midi_event_packet ev){
+
+    if (out_transfer!=NULL){
+
+        out_transfer->num_bytes = 4;
+        ets_printf("OUT: %d %d %d %d\r\n", ev.byte0, ev.byte1, ev.byte2, ev.byte3 );
+
+        out_transfer->data_buffer[0] = ev.byte0;
+        out_transfer->data_buffer[1] = ev.byte1;
+        out_transfer->data_buffer[2] = ev.byte2;
+        out_transfer->data_buffer[3] = ev.byte3;
+        
+        usb_host_transfer_submit(out_transfer);
+    }
+    else{
+        ets_printf("USB not connected\r\n");
+    }
+
+    //memset(out_transfer->data_buffer, 0xAA, 4);
+    //out_transfer->num_bytes = 4;
+    //ets_printf("OUT: %d %d %d %d\r\n", ev.byte0, ev.byte1, ev.byte2, ev.byte3 );
+    //usb_host_transfer_submit(out_transfer);
+
+}
+
 static void action_get_dev_desc(class_driver_t *driver_obj)
 {
     assert(driver_obj->dev_hdl != NULL);
@@ -291,15 +322,17 @@ static void action_get_config_desc(class_driver_t *driver_obj)
     ESP_ERROR_CHECK(usb_host_interface_claim(driver_obj->client_hdl, driver_obj->dev_hdl, intf_num, 0));
 
 
-    usb_host_transfer_alloc(4, 0, &transfer);
+    //Send an OUT transfer to EP3
+    usb_host_transfer_alloc(4, 0, &out_transfer);
+    memset(out_transfer->data_buffer, 0xAA, 4);
+    out_transfer->num_bytes = 4;
+    out_transfer->device_handle = driver_obj->dev_hdl;
+    out_transfer->bEndpointAddress = out_ep->bEndpointAddress;
+    out_transfer->callback = out_transfer_cb;
+    out_transfer->context = (void *)&driver_obj;
+    ESP_LOGI(TAG, "Setup OUT transfer on ep %02x nice", out_ep->bEndpointAddress);
+    //usb_host_transfer_submit(in_transfer);
 
-    //Send an OUT transfer to EP1
-    memset(transfer->data_buffer, 0xAA, 4);
-    transfer->num_bytes = 4;
-    transfer->device_handle = driver_obj->dev_hdl;
-    transfer->bEndpointAddress = out_ep->bEndpointAddress;
-    transfer->callback = transfer_cb;
-    transfer->context = (void *)&driver_obj;
 
     //SETUP IN TRANSFER
     usb_host_transfer_alloc(USB_EP_DESC_GET_MPS(in_ep), 0, &in_transfer);
@@ -394,7 +427,7 @@ void class_driver_task(void *arg)
         
         usb_host_client_handle_events(driver_obj.client_hdl, 10);
 
-
+        
 
         if (driver_obj.actions & ACTION_OPEN_DEV) {
             action_open_dev(&driver_obj);

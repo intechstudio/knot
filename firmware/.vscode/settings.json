@@ -36,46 +36,21 @@
     "reloadButton":"♻️", // Custom reload button text or icon (default ↻). null value enables automatic reload on configuration change
     "commands": [
         {
-            "name": "Debug",
+            "name": "ESP32 Docker",
             "color": "white",
             "singleInstance": true,
-            "command": "./debug.sh",
+            "command": "podman run --privileged -it -v /dev:/dev -v $PWD:/project -w /project espressif/idf:latest",
+            // clear && idf.py build && idf.py -p $(ls /dev/ttyACM*) flash
+            // ./burn_bootloader.sh
+            // clear && idf.py build && esptool.py --chip esp32s3 -p $(ls /dev/ttyACM*) --before=default_reset --after=no_reset write_flash --flash_mode dio --flash_size detect --flash_freq 80m 0x10000 build/grid_fw.bin && otatool.py -p $(ls /dev/ttyACM*) switch_ota_partition --slot 0
+            // clear && idf.py build && ./uf2convert.sh
         },
         {
-            "name": "OpenOCD",
+            "name": "ESP32 Monitor",
             "color": "white",
             "singleInstance": true,
-            "command": ". $HOME/$whoami/Documents/esp-idf/export.sh && openocd -c \"set ESP_RTOS none\" -f board/esp32s3-ftdi.cfg ",
-        },
-        {
-            "name": "Menuconfig",
-            "color": "white",
-            "singleInstance": true,
-            "command": ". $HOME/$whoami/Documents/esp-idf/export.sh && idf.py menuconfig",
-        },
-        {
-            "name": "Flash",
-            "color": "white",
-            "singleInstance": true,
-            "command": ". $HOME/$whoami/Documents/esp-idf/export.sh && idf.py -p /dev/ttyACM0 flash",
-        },        
-	    {
-            "name": "Docker Build",
-            "color": "white",
-            "singleInstance": true,
-            "command": "podman run --rm -v $PWD:/project -w /project espressif/idf:latest idf.py build && ./uf2convert.sh",
-        },     
-	    {
-            "name": "Docker Unit Test",
-            "color": "white",
-            "singleInstance": true,
-            "command": "podman run -it -v $PWD:/project -w /project espressif/idf:latest cd main/host_test",
-        },   
-	    {
-            "name": "Docker Terminal",
-            "color": "white",
-            "singleInstance": true,
-            "command": "sudo podman run -it -v $PWD:/project -v /dev:/dev -w /project espressif/idf:latest",
+            "command": "podman run --privileged -it -v /dev:/dev -v $PWD:/project -w /project espressif/idf:latest",
+            // idf.py -p $(ls /dev/ttyUSB*) monitor
         },
         {
             "name": "Unit Test",

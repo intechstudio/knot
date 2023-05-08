@@ -45,6 +45,7 @@ uint8_t current_is_sysex = 0;
 extern void led_tx_effect_start(void);
 extern void led_rx_effect_start(void);
 extern void led_err_effect_start(void);
+extern void usb_midi_packet_send(struct usb_midi_event_packet ev);
 
 void uart_init(){
 
@@ -184,6 +185,8 @@ void uart_rx_task(void *arg)
                         if (uart_ev.length){
                             struct usb_midi_event_packet usb_ev = midi_uart_to_usb(uart_ev);
                             printf("USB: %d %d %d %d\n", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
+                            usb_midi_packet_send(usb_ev);
+
                         }
 
                     }
