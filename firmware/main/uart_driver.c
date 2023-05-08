@@ -186,6 +186,7 @@ void uart_rx_task(void *arg)
                             struct usb_midi_event_packet usb_ev = midi_uart_to_usb(uart_ev);
                             printf("USB: %d %d %d %d\n", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
                             usb_midi_packet_send(usb_ev);
+                            uart_send_data(uart_ev);
 
                         }
 
