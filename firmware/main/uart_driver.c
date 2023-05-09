@@ -14,6 +14,7 @@
 
 #include "driver/gpio.h"
 
+#include "rom/ets_sys.h" // For ets_printf
 
 #include "freertos/queue.h"
 #include "driver/uart.h"
@@ -29,11 +30,14 @@ static QueueHandle_t uart0_queue;
 
 static const char *TAG = "UART";
 
+uint8_t midi_through = false;
+
 #include "driver/gpio.h"
 
 #define TRS_TX_AB_SELECT 15
 #define TRS_RX_AB_SELECT 16
 #define SW_AB_PIN 35
+#define SW_MODE_PIN 36
 
 
 
@@ -83,6 +87,7 @@ void uart_init(){
 
 
     gpio_set_direction(SW_AB_PIN, GPIO_MODE_INPUT);
+    gpio_set_direction(SW_MODE_PIN, GPIO_MODE_INPUT);
 
     gpio_set_direction(TRS_TX_AB_SELECT, GPIO_MODE_OUTPUT);
     // gpio_set_direction(TRS_RX_AB_SELECT, GPIO_MODE_OUTPUT);
@@ -97,14 +102,14 @@ void uart_init(){
     #define UART_RX_BUFFER_CVM_SIZE 1600
     uart_rx_buffer_cvm = xRingbufferCreate(UART_RX_BUFFER_CVM_SIZE, RINGBUF_TYPE_NOSPLIT);
     if (uart_rx_buffer_cvm == NULL) {
-        printf("Failed to create ring buffer\n");
+        ets_printf("Failed to create ring buffer\n");
     }
 
     // Real-Time Message Buffer
     #define UART_RX_BUFFER_RTM_SIZE 20
     uart_rx_buffer_rtm = xRingbufferCreate(UART_RX_BUFFER_RTM_SIZE, RINGBUF_TYPE_NOSPLIT);
     if (uart_rx_buffer_rtm == NULL) {
-        printf("Failed to create ring buffer\n");
+        ets_printf("Failed to create ring buffer\n");
     }
 
 }
@@ -131,6 +136,8 @@ void uart_housekeeping_task(void *arg){
 
     ESP_LOGI(TAG, "UART TX init done");
 
+    uint8_t last_button_state = 1;
+
     for(;;) {
     
 
@@ -138,6 +145,21 @@ void uart_housekeeping_task(void *arg){
 
         //gpio_set_level(TRS_TX_AB_SELECT, gpio_get_level(SW_AB_PIN));
         gpio_set_level(TRS_TX_AB_SELECT, !gpio_get_level(SW_AB_PIN));
+
+
+        uint8_t current_button_state = gpio_get_level(SW_MODE_PIN);
+
+        if (last_button_state == 1 && current_button_state == 0){
+
+            if (midi_through){
+                midi_through = 0;
+            }
+            else{
+                midi_through = 1;
+            }
+        }
+
+        last_button_state = current_button_state;
 
     }
 }
@@ -184,9 +206,15 @@ void uart_rx_task(void *arg)
 
                         if (uart_ev.length){
                             struct usb_midi_event_packet usb_ev = midi_uart_to_usb(uart_ev);
-                            printf("USB: %d %d %d %d\n", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
                             usb_midi_packet_send(usb_ev);
-                            uart_send_data(uart_ev);
+
+                            if (midi_through){
+                                uart_send_data(uart_ev);
+                                ets_printf("USB + MIDI: %d %d %d %d\n", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
+                            }
+                            else{
+                                ets_printf("USB: %d %d %d %d\n", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
+                            }
 
                         }
 

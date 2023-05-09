@@ -232,7 +232,7 @@ static void out_transfer_cb(usb_transfer_t *transfer)
     struct class_driver_t *class_driver_obj = (struct class_driver_t *)transfer->context;
 
     
-    ets_printf("OUT: Transfer status %d, actual number of bytes transferred %d\n", transfer->status, transfer->actual_num_bytes);
+    //ets_printf("OUT: Transfer status %d, actual number of bytes transferred %d\n", transfer->status, transfer->actual_num_bytes);
 
 }
 

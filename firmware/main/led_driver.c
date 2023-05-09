@@ -24,6 +24,7 @@
 
 static uint8_t led_strip_pixels[EXAMPLE_LED_NUMBERS * 3];
 
+extern uint8_t midi_through;
 
 
 volatile uint8_t tx_led_timer = 0;
@@ -218,16 +219,16 @@ void led_task(void *arg)
 
             err_led_timer--;
 
-            led_strip_pixels[0 * 3 + 0] = connected*50;
+            led_strip_pixels[0 * 3 + 0] = connected*50*(midi_through-1);
             led_strip_pixels[0 * 3 + 1] = err_led_timer*3;
-            led_strip_pixels[0 * 3 + 2] = 0;      
+            led_strip_pixels[0 * 3 + 2] = connected*100*(midi_through);      
 
         }
         else{
 
-            led_strip_pixels[0 * 3 + 0] = (!connected)*wainting_animation/2 + connected*50;
+            led_strip_pixels[0 * 3 + 0] = (!connected)*wainting_animation/2 + connected*50*(midi_through-1);
             led_strip_pixels[0 * 3 + 1] = (!connected)*wainting_animation/2;
-            led_strip_pixels[0 * 3 + 2] = (!connected)*wainting_animation/2;            
+            led_strip_pixels[0 * 3 + 2] = (!connected)*wainting_animation/2 + connected*100*(midi_through);            
         }
 
 
