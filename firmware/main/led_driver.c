@@ -231,7 +231,6 @@ void led_task(void *arg)
             led_strip_pixels[0 * 3 + 2] = (!connected)*wainting_animation/2 + connected*100*(midi_through);            
         }
 
-
         ESP_ERROR_CHECK(rmt_transmit(led_chan, led_encoder, led_strip_pixels, sizeof(led_strip_pixels), &tx_config));
         vTaskDelay(pdMS_TO_TICKS(EXAMPLE_CHASE_SPEED_MS));
 
