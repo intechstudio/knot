@@ -43,6 +43,8 @@ filters:
       - ["SOT-23-6", 0.0]
       - ["SOIC-8W_FLASH", 270.0]
       - ["SOT-363_SC-70-6", 180]
+      - ["CP_Elec_6.3x5.7",180]
+      - ["UI_WS2812C-2020_LIGHTPIPE",180]
 
 variants:
   - name: rotated
