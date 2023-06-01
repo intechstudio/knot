@@ -34,6 +34,8 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 |    Livid Instruments  | DS-1  |  Tested - OK | Community |
 |    Midi Fighter  | Midi Fighter Twister  |  Tested - OK | Community |
 |    Sonicware  | ELZ_1  |  Tested - OK | Community |
+|    Teenage Engineering  | OP-1  |  Tested - No MIDI | Community |
+|    Teenage Engineering  | OP-1 field |  Tested - No MIDI | Community |
 
 
 ### 5-pin DIN/TRS MIDI Device compatibility
