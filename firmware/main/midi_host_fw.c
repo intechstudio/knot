@@ -54,10 +54,10 @@ static void host_lib_daemon_task(void *arg)
         uint32_t event_flags;
         ESP_ERROR_CHECK(usb_host_lib_handle_events(portMAX_DELAY, &event_flags));
         if (event_flags & USB_HOST_LIB_EVENT_FLAGS_NO_CLIENTS) {
-            has_clients = false;
+            //has_clients = false;
         }
         if (event_flags & USB_HOST_LIB_EVENT_FLAGS_ALL_FREE) {
-            has_devices = false;
+            //has_devices = false;
         }
     }
     ESP_LOGI(TAG, "No more clients and devices");
@@ -85,8 +85,6 @@ void app_main(void)
 
     gpio_set_direction(PMIC_EN_PIN, GPIO_MODE_OUTPUT);
     gpio_set_level(PMIC_EN_PIN, 1);
-
-
 
     SemaphoreHandle_t signaling_sem = xSemaphoreCreateBinary();
 
