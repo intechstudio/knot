@@ -69,8 +69,38 @@ static void host_lib_daemon_task(void *arg)
     vTaskSuspend(NULL);
 }
 
+
+#include "rom/ets_sys.h" // For ets_printf
+void grid_platform_printf(char const *fmt, ...){
+
+
+	va_list ap;
+
+	char temp[200] = {0};
+
+	va_start(ap, fmt);
+
+	vsnprintf(temp, 199, fmt, ap);
+
+	va_end(ap);
+
+    ets_printf(temp);
+
+
+}
+
+#include "../managed_components/sukuwc__grid_common/include/grid_lua_api.h"
+
 void app_main(void)
 {
+
+    ESP_LOGI(TAG, "===== LUA INIT =====");
+	grid_lua_init(&grid_lua_state);
+    grid_lua_set_memory_target(&grid_lua_state, 80); //80kb
+    //grid_lua_start_vm(&grid_lua_state);
+    //grid_lua_dostring(&grid_lua_state, "print(123)");
+
+
     
     #define USB_NATIVE_SELECT_PIN 11
     #define USB_SOFT_SELECT_PIN 12

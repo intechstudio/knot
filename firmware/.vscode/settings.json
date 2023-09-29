@@ -28,7 +28,8 @@
     "xtensa_config.h": "c",
     "reent.h": "c",
     "esp_system.h": "c",
-    "ringbuf.h": "c"
+    "ringbuf.h": "c",
+    "grid_lua_api.h": "c"
 },
   "actionButtons": {
     "defaultColor": "#ff0034", // Can also use string color names.
@@ -42,7 +43,7 @@
             "command": "podman run --privileged -it -v /dev:/dev -v $PWD:/project -w /project espressif/idf:release-v5.1",
             // clear && idf.py build && idf.py -p $(ls /dev/ttyACM*) flash
             // ./burn_bootloader.sh
-            // clear && idf.py build && esptool.py --chip esp32s3 -p $(ls /dev/ttyACM*) --before=default_reset --after=no_reset write_flash --flash_mode dio --flash_size detect --flash_freq 80m 0x10000 build/grid_fw.bin && otatool.py -p $(ls /dev/ttyACM*) switch_ota_partition --slot 0
+            // clear && idf.py build && esptool.py --chip esp32s3 -p $(ls /dev/ttyACM*) --before=default_reset --after=no_reset write_flash --flash_mode dio --flash_size detect --flash_freq 80m 0x10000 build/midi_host_fw.bin && otatool.py -p $(ls /dev/ttyACM*) switch_ota_partition --slot 0
             // clear && idf.py build && ./uf2convert.sh
         },
         {
