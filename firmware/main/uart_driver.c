@@ -34,6 +34,9 @@ uint8_t midi_through = false;
 
 #include "driver/gpio.h"
 
+#include "grid_led.h"
+#include "../managed_components/sukuwc__grid_common/include/grid_led.h"
+
 #define TRS_TX_AB_SELECT 15
 #define TRS_RX_AB_SELECT 16
 #define SW_AB_PIN 35
@@ -46,9 +49,9 @@ RingbufHandle_t uart_rx_buffer_rtm;
 
 uint8_t current_is_sysex = 0;
 
-extern void led_tx_effect_start(void);
-extern void led_rx_effect_start(void);
-extern void led_err_effect_start(void);
+//extern void led_tx_effect_start(void);
+//extern void led_rx_effect_start(void);
+//extern void led_err_effect_start(void);
 extern void usb_midi_packet_send(struct usb_midi_event_packet ev);
 
 void uart_init(){
@@ -118,7 +121,9 @@ void uart_init(){
 int uart_send_data(struct uart_midi_event_packet ev)
 {
 
-    led_tx_effect_start();
+    grid_led_set_alert(&grid_led_state, 100, 100, 100, 30);
+
+    //led_tx_effect_start();
 
     const int txBytes = uart_write_bytes(EX_UART_NUM, &ev.byte1, ev.length);
     //printf("MIDI: %d : %d %d %d\n", ev.length, ev.byte1, ev.byte2, ev.byte3);
@@ -195,7 +200,7 @@ void uart_rx_task(void *arg)
                 be full.*/
                 case UART_DATA:
                     
-                    led_rx_effect_start();
+                    //led_rx_effect_start();
                     
                     //ESP_LOGI(TAG, "[UART DATA]: %d", event.size);
                     uart_read_bytes(EX_UART_NUM, dtmp, event.size, portMAX_DELAY);

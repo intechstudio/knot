@@ -1,6 +1,7 @@
 ## IDF Component Manager Manifest File
 dependencies:
-  sukuwc/grid_common: "1.0.7"
+  sukuwc/grid_esp32_led: "*"
+  sukuwc/grid_common: "*"
   ## Required IDF version
   idf:
     version: ">=4.1.0"

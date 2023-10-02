@@ -29,7 +29,11 @@
     "reent.h": "c",
     "esp_system.h": "c",
     "ringbuf.h": "c",
-    "grid_lua_api.h": "c"
+    "grid_lua_api.h": "c",
+    "grid_ain.h": "c",
+    "grid_esp32_led.h": "c",
+    "grid_ui.h": "c",
+    "grid_led.h": "c"
 },
   "actionButtons": {
     "defaultColor": "#ff0034", // Can also use string color names.
