@@ -7,5 +7,4 @@ idf_component_register(
 
     INCLUDE_DIRS 
         "." 
-        "../managed_components/sukuwc__grid_common/include"
 )

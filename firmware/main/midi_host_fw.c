@@ -59,6 +59,7 @@ static void host_lib_daemon_task(void *arg)
         if (event_flags & USB_HOST_LIB_EVENT_FLAGS_ALL_FREE) {
             //has_devices = false;
         }
+        ESP_LOGI(TAG, "Event: %ld", event_flags);
     }
     ESP_LOGI(TAG, "No more clients and devices");
 
@@ -105,10 +106,10 @@ uint8_t grid_platform_get_adc_bit_depth(void){
     return 12;
 }
 
-#include "../managed_components/sukuwc__grid_common/include/grid_lua_api.h"
-#include "../managed_components/sukuwc__grid_common/include/grid_ui.h"
-#include "../managed_components/sukuwc__grid_common/include/grid_led.h"
-#include "../managed_components/sukuwc__grid_common/include/grid_ain.h"
+#include "../managed_components/sukuwc__grid_common/grid_lua_api.h"
+#include "../managed_components/sukuwc__grid_common/grid_ui.h"
+#include "../managed_components/sukuwc__grid_common/grid_led.h"
+#include "../managed_components/sukuwc__grid_common/grid_ain.h"
 
 #include "grid_esp32_led.h"
 
@@ -118,7 +119,7 @@ void knot_module_ui_init(struct grid_ain_model* ain, struct grid_led_model* led,
 	//grid_ain_init(ain, 16, 5);
 
 	grid_led_init(led, 3);		
-	grid_ui_model_init(ui, GRID_PORT_U, 0+1); // +1 for the system element
+	grid_ui_model_init(ui, 0+1); // +1 for the system element
 
 	for(uint8_t j=0; j<16; j++){
 			
@@ -132,6 +133,29 @@ void knot_module_ui_init(struct grid_ain_model* ain, struct grid_led_model* led,
 
 
 }
+
+void knot_lua_ui_init_knot(struct grid_lua_model* mod){
+
+    // define encoder_init_function
+
+    //grid_lua_dostring(mod, GRID_LUA_P_META_init);
+
+    // create element array
+    grid_lua_dostring(mod, GRID_LUA_KW_ELEMENT_short"= {} ");
+
+    // initialize 16 potmeter
+    // grid_lua_dostring(mod, "for i=0, 15 do "GRID_LUA_KW_ELEMENT_short"[i] = {index = i} end");
+    // grid_lua_dostring(mod, "for i=0, 15 do setmetatable("GRID_LUA_KW_ELEMENT_short"[i], potmeter_meta) end");
+
+    grid_lua_gc_try_collect(mod);
+
+    //initialize the system element
+    grid_lua_dostring(mod, GRID_LUA_KW_ELEMENT_short"[0] = {index = 0}");
+    grid_lua_dostring(mod, GRID_LUA_SYS_META_init);
+    grid_lua_dostring(mod, "setmetatable("GRID_LUA_KW_ELEMENT_short"[0], system_meta)");
+
+}
+
 
 void app_main(void)
 {
@@ -151,23 +175,26 @@ void app_main(void)
     knot_module_ui_init(&grid_ain_state, &grid_led_state, &grid_ui_state);
     grid_led_set_pin(&grid_led_state, 1);
 
-    grid_led_set_layer_color(&grid_led_state, 0, 0, 50, 0, 0);
-    grid_led_set_layer_color(&grid_led_state, 1, 0, 0, 50, 0);
-    grid_led_set_layer_color(&grid_led_state, 2, 0, 0, 0, 50);
+    grid_led_set_layer_color(&grid_led_state, 0, 0, 0, 0, 0);
+    grid_led_set_layer_color(&grid_led_state, 1, 0, 0, 0, 0);
+    grid_led_set_layer_color(&grid_led_state, 2, 0, 0, 0, 0);
 
-    grid_led_set_layer_color(&grid_led_state, 0, 1, 50, 0, 0);
-    grid_led_set_layer_color(&grid_led_state, 1, 1, 0, 50, 0);
-    grid_led_set_layer_color(&grid_led_state, 2, 1, 0, 0, 50);
+    grid_led_set_layer_color(&grid_led_state, 0, 1, 0, 0, 0);
+    grid_led_set_layer_color(&grid_led_state, 1, 1, 0, 0, 0);
+    grid_led_set_layer_color(&grid_led_state, 2, 1, 0, 0, 0);
 
-    grid_led_set_layer_color(&grid_led_state, 0, 2, 50, 0, 0);
-    grid_led_set_layer_color(&grid_led_state, 1, 2, 0, 50, 0);
-    grid_led_set_layer_color(&grid_led_state, 2, 2, 0, 0, 50);
+    grid_led_set_layer_color(&grid_led_state, 0, 2, 0, 0, 0);
+    grid_led_set_layer_color(&grid_led_state, 1, 2, 0, 0, 0);
+    grid_led_set_layer_color(&grid_led_state, 2, 2, 0, 0, 0);
 
     ESP_LOGI(TAG, "===== LUA INIT =====");
 	grid_lua_init(&grid_lua_state);
     grid_lua_set_memory_target(&grid_lua_state, 80); //80kb
     grid_lua_start_vm(&grid_lua_state);
     grid_lua_dostring(&grid_lua_state, "foo = 123");
+    knot_lua_ui_init_knot(&grid_lua_state);
+    //grid_lua_dostring(&grid_lua_state, "print(foo, 2)");
+
 
     
     #define USB_NATIVE_SELECT_PIN 11

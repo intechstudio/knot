@@ -35,7 +35,7 @@ uint8_t midi_through = false;
 #include "driver/gpio.h"
 
 #include "grid_led.h"
-#include "../managed_components/sukuwc__grid_common/include/grid_led.h"
+#include "../managed_components/sukuwc__grid_common/grid_led.h"
 
 #define TRS_TX_AB_SELECT 15
 #define TRS_RX_AB_SELECT 16
@@ -121,7 +121,9 @@ void uart_init(){
 int uart_send_data(struct uart_midi_event_packet ev)
 {
 
-    grid_led_set_alert(&grid_led_state, 100, 100, 100, 30);
+    grid_alert_one_set(&grid_led_state, 1, 100, 100, 100, 30);
+
+
 
     //led_tx_effect_start();
 
@@ -142,6 +144,7 @@ void uart_housekeeping_task(void *arg){
     ESP_LOGI(TAG, "UART TX init done");
 
     uint8_t last_button_state = 1;
+    grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 100, 0);
 
     for(;;) {
     
@@ -152,15 +155,18 @@ void uart_housekeeping_task(void *arg){
         gpio_set_level(TRS_TX_AB_SELECT, !gpio_get_level(SW_AB_PIN));
 
 
+
         uint8_t current_button_state = gpio_get_level(SW_MODE_PIN);
 
         if (last_button_state == 1 && current_button_state == 0){
 
             if (midi_through){
                 midi_through = 0;
+                grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 100, 0);
             }
             else{
                 midi_through = 1;
+                grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 0, 100);
             }
         }
 
@@ -201,6 +207,8 @@ void uart_rx_task(void *arg)
                 case UART_DATA:
                     
                     //led_rx_effect_start();
+
+                    grid_alert_one_set(&grid_led_state, 0, 100, 100, 100, 30);
                     
                     //ESP_LOGI(TAG, "[UART DATA]: %d", event.size);
                     uart_read_bytes(EX_UART_NUM, dtmp, event.size, portMAX_DELAY);

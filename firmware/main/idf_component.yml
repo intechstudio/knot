@@ -1,5 +1,6 @@
 ## IDF Component Manager Manifest File
 dependencies:
+  espressif/usb_host_cdc_acm: "^2.0.1"
   sukuwc/grid_esp32_led: "*"
   sukuwc/grid_common: "*"
   ## Required IDF version

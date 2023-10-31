@@ -10,6 +10,8 @@
 #include "freertos/semphr.h"
 #include "esp_log.h"
 #include "usb/usb_host.h"
+#include "grid_led.h"
+#include "../managed_components/sukuwc__grid_common/grid_led.h"
 
 #include "midi_translator.h"
 
@@ -47,7 +49,13 @@ static const char *TAG = "CLASS";
 
 static void client_event_cb(const usb_host_client_event_msg_t *event_msg, void *arg)
 {
+
     class_driver_t *driver_obj = (class_driver_t *)arg;
+
+
+
+    ets_printf("client event %d\r\n", event_msg->event);
+
     switch (event_msg->event) {
         case USB_HOST_CLIENT_EVENT_NEW_DEV:
             if (driver_obj->dev_addr == 0) {
@@ -102,19 +110,21 @@ static esp_err_t midi_find_intf_and_ep_desc(class_driver_t *driver_obj, const us
     bool interface_found = false;
     const usb_config_desc_t *config_desc;
     const usb_device_desc_t *device_desc;
-    int intf_idx = -1;
+    int intf_idx = -1;    
     int desc_offset = 0;
     
-
     // Get required descriptors
     ESP_ERROR_CHECK(usb_host_get_device_descriptor(driver_obj->dev_hdl, &device_desc));
     ESP_ERROR_CHECK(usb_host_get_active_config_descriptor(driver_obj->dev_hdl, &config_desc));
 
+    #define USB_SUBCLASS_NULL          0x00
     #define USB_SUBCLASS_COMMON        0x02
+
+    #define USB_PROTOCOL_NULL           0x00
     #define USB_DEVICE_PROTOCOL_IAD    0x01
 
-    if ((device_desc->bDeviceClass == USB_CLASS_MISC) && (device_desc->bDeviceSubClass == USB_SUBCLASS_COMMON) &&
-        (device_desc->bDeviceProtocol == USB_DEVICE_PROTOCOL_IAD)) {
+    if (((device_desc->bDeviceClass == USB_CLASS_MISC) && (device_desc->bDeviceSubClass == USB_SUBCLASS_COMMON) && (device_desc->bDeviceProtocol == USB_DEVICE_PROTOCOL_IAD)) ||
+        ((device_desc->bDeviceClass == USB_CLASS_PER_INTERFACE) && (device_desc->bDeviceSubClass == USB_SUBCLASS_NULL) && (device_desc->bDeviceProtocol == USB_PROTOCOL_NULL))) {
 
         ESP_LOGI(TAG, "IAD");
 
@@ -142,8 +152,8 @@ static esp_err_t midi_find_intf_and_ep_desc(class_driver_t *driver_obj, const us
             #define USB_SUBCLASS_MIDISTREAMING 0x03
             if (intf_desc->bInterfaceClass == USB_CLASS_AUDIO && intf_desc->bInterfaceSubClass == USB_SUBCLASS_MIDISTREAMING && intf_desc->bInterfaceProtocol == 0x00){
 
-                ESP_LOGI(TAG, "MIDI INTERFACE FOUND %d", intf_idx);
-                *intf_num = intf_idx;
+                ESP_LOGI(TAG, "MIDI INTERFACE FOUND %d", intf_desc->bInterfaceNumber);
+                *intf_num = intf_desc->bInterfaceNumber;
                 interface_found = true;
 
             }
@@ -153,7 +163,11 @@ static esp_err_t midi_find_intf_and_ep_desc(class_driver_t *driver_obj, const us
 
         if (interface_found){
 
-            usb_intf_desc_t* intf_desc = usb_parse_interface_descriptor(config_desc, intf_idx, 0, &desc_offset);
+
+            usb_intf_desc_t* intf_desc = usb_parse_interface_descriptor(config_desc, *intf_num, 0, &desc_offset);
+
+            ESP_LOGI(TAG, "wTotal, offset: 0x%lx %d %d", (unsigned long int) intf_desc, config_desc->wTotalLength, desc_offset);
+
 
             int temp_offset = desc_offset;
             for (int i = 0; i < 2; i++) {
@@ -462,10 +476,14 @@ void class_driver_task(void *arg)
     xSemaphoreTake(signaling_sem, portMAX_DELAY);
 
 
+
+    grid_alert_all_set(&grid_led_state, 50,50,50,-1);
+
+
     while (1) {
 
         
-        //ESP_LOGI(TAG, "actions: %d, loopcounter: %d", driver_obj.actions, loopcounter);
+        //ESP_LOGI(TAG, "actions: %ld, loopcounter: %ld", driver_obj.actions, loopcounter);
 
         while (driver_obj.client_hdl == NULL){
 
@@ -484,12 +502,16 @@ void class_driver_task(void *arg)
         }
 
 
+
         usb_host_client_handle_events(driver_obj.client_hdl, 10);
 
         
 
         if (driver_obj.actions & ACTION_OPEN_DEV) {
             if (driver_obj.dev_addr != 0){
+
+                // stop waiting pulse animation
+                grid_alert_all_set(&grid_led_state, 0,0,0,0);
 
                 action_open_dev(&driver_obj);
             }
@@ -513,6 +535,7 @@ void class_driver_task(void *arg)
         }
         if (driver_obj.actions & ACTION_CLOSE_DEV) {
             aciton_close_dev(&driver_obj);
+            grid_alert_all_set(&grid_led_state, 50,50,50,-1);
         }
         if (driver_obj.actions & ACTION_EXIT) {
             break;
