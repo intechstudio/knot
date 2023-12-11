@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: Unlicense OR CC0-1.0
  */
 
+
+#include "knot_midi_usb.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include "freertos/FreeRTOS.h"
@@ -11,9 +14,9 @@
 #include "esp_log.h"
 #include "usb/usb_host.h"
 #include "grid_led.h"
-#include "../managed_components/sukuwc__grid_common/grid_led.h"
 
 #include "knot_midi_translator.h"
+#include "knot_midi_uart.h"
 
 #include "rom/ets_sys.h" // For ets_printf
 
@@ -26,15 +29,6 @@
 #define ACTION_GET_STR_DESC         0x10
 #define ACTION_CLOSE_DEV            0x20
 #define ACTION_EXIT                 0x40
-
-typedef struct {
-    usb_host_client_handle_t client_hdl;
-    uint8_t dev_addr;
-    usb_device_handle_t dev_hdl;
-    uint32_t actions;
-    int claimed_interface;
-} class_driver_t;
-
 
 
 

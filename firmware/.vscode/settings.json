@@ -33,7 +33,8 @@
     "grid_ain.h": "c",
     "grid_esp32_led.h": "c",
     "grid_ui.h": "c",
-    "grid_led.h": "c"
+    "grid_led.h": "c",
+    "knot_midi_translator.h": "c"
 },
   "actionButtons": {
     "defaultColor": "#ff0034", // Can also use string color names.
