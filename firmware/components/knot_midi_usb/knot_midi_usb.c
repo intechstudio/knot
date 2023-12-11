@@ -33,13 +33,8 @@
 
 
 
-//extern void led_connect_effect_start(void);
-//extern void led_disconnect_effect_start(void);
 
-extern int uart_send_data(struct uart_midi_event_packet ev);
-
-
-static const char *TAG = "CLASS";
+static const char *TAG = "KNOT_MIDI_USB";
 
 static void client_event_cb(const usb_host_client_event_msg_t *event_msg, void *arg)
 {
@@ -273,7 +268,7 @@ static void in_transfer_cb(usb_transfer_t *in_transfer)
 
     
     ESP_LOGI(TAG, "USB -> MIDI: %d %d %d %d", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
-    uart_send_data(uart_ev);
+    knot_midi_uart_send_packet(uart_ev);
 
 
     usb_host_transfer_submit(in_transfer);
@@ -281,7 +276,7 @@ static void in_transfer_cb(usb_transfer_t *in_transfer)
 }
 
 
-void usb_midi_packet_send(struct usb_midi_event_packet ev){
+void knot_midi_usb_send_packet(struct usb_midi_event_packet ev){
 
     if (out_transfer!=NULL){
 

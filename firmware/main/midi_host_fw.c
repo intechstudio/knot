@@ -13,7 +13,12 @@
 
 #include <string.h>
 
+#include "knot_midi_uart.h"
+#include "knot_midi_usb.h"
 
+
+#define SW_AB_PIN 35
+#define SW_MODE_PIN 36
 
 #include "driver/gpio.h"
 
@@ -22,14 +27,7 @@
 #define LED_TASK_PRIORITY       2
 
 #define UART_RX_TASK_PRIORITY      12
-#define UART_HOUSEKEEPING_TASK_PRIORITY      11
 
-extern void class_driver_task(void *arg);
-extern void led_task(void *arg);
-
-extern void uart_init(void);
-extern void uart_rx_task(void *arg);
-extern void uart_housekeeping_task(void *arg);
 
 static const char *TAG = "DAEMON";
 
@@ -106,10 +104,10 @@ uint8_t grid_platform_get_adc_bit_depth(void){
     return 12;
 }
 
-#include "../managed_components/sukuwc__grid_common/grid_lua_api.h"
-#include "../managed_components/sukuwc__grid_common/grid_ui.h"
-#include "../managed_components/sukuwc__grid_common/grid_led.h"
-#include "../managed_components/sukuwc__grid_common/grid_ain.h"
+#include "grid_lua_api.h"
+#include "grid_ui.h"
+#include "grid_led.h"
+#include "grid_ain.h"
 
 #include "grid_esp32_led.h"
 
@@ -253,9 +251,9 @@ void app_main(void)
 
     vTaskDelay(10);     //Add a short delay to let the tasks run
 
-    uart_init();
+    knot_midi_uart_init(&knot_midi_uart_state);
 
-    xTaskCreatePinnedToCore(uart_rx_task, 
+    xTaskCreatePinnedToCore(knot_midi_uart_rx_task, 
                             "uart_rx", 
                             2048, 
                             (void *)signaling_sem, 
@@ -263,20 +261,40 @@ void app_main(void)
                             &uart_rx_task_hdl,
                             0);
 
-    xTaskCreatePinnedToCore(uart_housekeeping_task, 
-                            "uart_rx_decode", 
-                            2048, 
-                            (void *)signaling_sem, 
-                            UART_HOUSEKEEPING_TASK_PRIORITY, 
-                            &uart_housekeeping_task_hdl,
-                            0);
 
-    //Wait for the tasks to complete
-    for (int i = 0; i < 2; i++) {
-        xSemaphoreTake(signaling_sem, portMAX_DELAY);
-    }
+    // MIDI A/B SWITCH AND THROUGH BUTTON INTERACTIVITY
+    gpio_set_direction(SW_AB_PIN, GPIO_MODE_INPUT);
+    gpio_set_direction(SW_MODE_PIN, GPIO_MODE_INPUT);
 
-    //Delete the tasks
-    vTaskDelete(class_driver_task_hdl);
-    vTaskDelete(daemon_task_hdl);
+
+
+
+
+    uint8_t last_button_state = 1;
+    grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 200, 0);
+
+    while(1){
+    
+
+        vTaskDelay(pdMS_TO_TICKS(10));
+
+        knot_midi_uart_set_miditrsab_state(&knot_midi_uart_state, !gpio_get_level(SW_AB_PIN));
+
+        uint8_t current_button_state = gpio_get_level(SW_MODE_PIN);
+
+        if (last_button_state == 1 && current_button_state == 0){
+
+            if (knot_midi_uart_get_midithrough_state(&knot_midi_uart_state)){
+                knot_midi_uart_set_midithrough_state(&knot_midi_uart_state, false);
+                grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 200, 0);
+            }
+            else{
+                knot_midi_uart_set_midithrough_state(&knot_midi_uart_state, true);
+                grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 0, 200);
+            }
+        }
+
+        last_button_state = current_button_state;
+
+    } 
 }

@@ -5,6 +5,7 @@ idf_component_register(
         "."
     REQUIRES
         "knot_midi_translator"
+        "knot_midi_usb"
         "driver"
         "grid_common"
         "grid_esp32_led"

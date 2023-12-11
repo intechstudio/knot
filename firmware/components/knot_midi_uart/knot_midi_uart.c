@@ -22,46 +22,31 @@
 #include "freertos/queue.h"
 #include "driver/uart.h"
 #include "knot_midi_translator.h"
+#include "knot_midi_usb.h"
 
 
-#define EX_UART_NUM UART_NUM_1
-#define PATTERN_CHR_NUM    (3)         /*!< Set the number of consecutive and identical characters received by receiver which defines a UART pattern*/
+struct knot_midi_uart_model knot_midi_uart_state;
 
-#define BUF_SIZE (1024)
-#define RD_BUF_SIZE (BUF_SIZE)
-static QueueHandle_t uart0_queue;
-
-static const char *TAG = "UART";
-
-uint8_t midi_through = false;
-
-#include "driver/gpio.h"
-
-#include "grid_led.h"
-
-#define TRS_TX_AB_SELECT 15
-#define TRS_RX_AB_SELECT 16
-#define SW_AB_PIN 35
-#define SW_MODE_PIN 36
+static const char *TAG = "KNOT_MIDI_UART";
 
 
+uint8_t knot_midi_uart_get_midithrough_state(struct knot_midi_uart_model* midi_uart){
+    return midi_uart->midi_through_state;
+}
+void knot_midi_uart_set_midithrough_state(struct knot_midi_uart_model* midi_uart, uint8_t state){
+    midi_uart->midi_through_state = state;
+}
 
-RingbufHandle_t uart_rx_buffer_cvm;
-RingbufHandle_t uart_rx_buffer_rtm;
-
-uint8_t current_is_sysex = 0;
-
-//extern void led_tx_effect_start(void);
-//extern void led_rx_effect_start(void);
-//extern void led_err_effect_start(void);
-extern void usb_midi_packet_send(struct usb_midi_event_packet ev);
-
-void uart_init(){
+uint8_t knot_midi_uart_get_miditrsab_state(struct knot_midi_uart_model* midi_uart){
+    return midi_uart->midi_trs_ab_state;
+}
+void knot_midi_uart_set_miditrsab_state(struct knot_midi_uart_model* midi_uart, uint8_t state){
+    gpio_set_level(TRS_TX_AB_SELECT, state);
+    midi_uart->midi_trs_ab_state = state;
+}
 
 
-    ESP_LOGI(TAG, "UART init");
-
-    esp_log_level_set(TAG, ESP_LOG_INFO);
+static void midi_uart_init(QueueHandle_t* uart_queue){
 
     /* Configure parameters of an UART driver,
      * communication pins and install the driver */
@@ -74,53 +59,50 @@ void uart_init(){
         .source_clk = UART_SCLK_DEFAULT,
     };
     //Install UART driver, and get the queue.
-    uart_driver_install(EX_UART_NUM, BUF_SIZE * 2, BUF_SIZE * 2, 20, &uart0_queue, 0);
+    uart_driver_install(EX_UART_NUM, BUF_SIZE * 2, BUF_SIZE * 2, 20, uart_queue, 0);
     uart_param_config(EX_UART_NUM, &uart_config);
 
-    //Set UART log level
-    esp_log_level_set(TAG, ESP_LOG_INFO);
-    //Set UART pins (using UART0 default pins ie no changes.)
-    uart_set_pin(EX_UART_NUM, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
     uart_set_pin(EX_UART_NUM, 17, 18, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
 
     uart_set_line_inverse(EX_UART_NUM, UART_SIGNAL_TXD_INV);
 
-    //Set uart pattern detect function.
-    uart_enable_pattern_det_baud_intr(EX_UART_NUM, '+', PATTERN_CHR_NUM, 9, 0, 0);
-    //Reset the pattern queue length to record at most 20 pattern positions.
-    uart_pattern_queue_reset(EX_UART_NUM, 20);
+}
+
+void knot_midi_uart_init(struct knot_midi_uart_model* midi_uart){
+
+    memset(midi_uart, 0, sizeof(struct knot_midi_uart_model));
+    midi_uart->current_is_sysex = false;
+    midi_uart->midi_through_state = false;
+    midi_uart->midi_trs_ab_state = false;
+
+    ESP_LOGI(TAG, "UART init");
 
 
-    gpio_set_direction(SW_AB_PIN, GPIO_MODE_INPUT);
-    gpio_set_direction(SW_MODE_PIN, GPIO_MODE_INPUT);
+    midi_uart_init(&midi_uart->uart0_queue);
+
 
     gpio_set_direction(TRS_TX_AB_SELECT, GPIO_MODE_OUTPUT);
-    // gpio_set_direction(TRS_RX_AB_SELECT, GPIO_MODE_OUTPUT);
-
-    
-    //gpio_set_level(TRS_TX_AB_SELECT, gpio_get_level(SW_AB_PIN));
-    gpio_set_level(TRS_TX_AB_SELECT, !gpio_get_level(SW_AB_PIN));
-
+    gpio_set_level(TRS_TX_AB_SELECT, 0);
 
 
     // Channel Voice Message Buffer
     #define UART_RX_BUFFER_CVM_SIZE 1600
-    uart_rx_buffer_cvm = xRingbufferCreate(UART_RX_BUFFER_CVM_SIZE, RINGBUF_TYPE_NOSPLIT);
-    if (uart_rx_buffer_cvm == NULL) {
+    midi_uart->uart_rx_buffer_cvm = xRingbufferCreate(UART_RX_BUFFER_CVM_SIZE, RINGBUF_TYPE_NOSPLIT);
+    if (midi_uart->uart_rx_buffer_cvm == NULL) {
         ets_printf("Failed to create ring buffer\n");
     }
 
     // Real-Time Message Buffer
     #define UART_RX_BUFFER_RTM_SIZE 20
-    uart_rx_buffer_rtm = xRingbufferCreate(UART_RX_BUFFER_RTM_SIZE, RINGBUF_TYPE_NOSPLIT);
-    if (uart_rx_buffer_rtm == NULL) {
+    midi_uart->uart_rx_buffer_rtm = xRingbufferCreate(UART_RX_BUFFER_RTM_SIZE, RINGBUF_TYPE_NOSPLIT);
+    if (midi_uart->uart_rx_buffer_rtm == NULL) {
         ets_printf("Failed to create ring buffer\n");
     }
 
 }
 
 
-int uart_send_data(struct uart_midi_event_packet ev)
+int knot_midi_uart_send_packet(struct uart_midi_event_packet ev)
 {
 
     grid_alert_one_set(&grid_led_state, 1, 100, 100, 100, 30);
@@ -136,49 +118,7 @@ int uart_send_data(struct uart_midi_event_packet ev)
 }
 
 
-void uart_housekeeping_task(void *arg){
-
-
-
-    SemaphoreHandle_t signaling_sem = (SemaphoreHandle_t)arg;
-    //xSemaphoreTake(signaling_sem, portMAX_DELAY);
-
-    ESP_LOGI(TAG, "UART TX init done");
-
-    uint8_t last_button_state = 1;
-    grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 100, 0);
-
-    for(;;) {
-    
-
-        vTaskDelay(pdMS_TO_TICKS(10));
-
-        //gpio_set_level(TRS_TX_AB_SELECT, gpio_get_level(SW_AB_PIN));
-        gpio_set_level(TRS_TX_AB_SELECT, !gpio_get_level(SW_AB_PIN));
-
-
-
-        uint8_t current_button_state = gpio_get_level(SW_MODE_PIN);
-
-        if (last_button_state == 1 && current_button_state == 0){
-
-            if (midi_through){
-                midi_through = 0;
-                grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 100, 0);
-            }
-            else{
-                midi_through = 1;
-                grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 0, 100);
-            }
-        }
-
-        last_button_state = current_button_state;
-
-    }
-}
-
-
-void uart_rx_task(void *arg)
+void knot_midi_uart_rx_task(void *arg)
 {
 
 
@@ -198,7 +138,7 @@ void uart_rx_task(void *arg)
 
 
         //Waiting for UART event.
-        if(xQueueReceive(uart0_queue, (void * )&event, (TickType_t)portMAX_DELAY)) {
+        if(xQueueReceive(knot_midi_uart_state.uart0_queue, (void * )&event, (TickType_t)portMAX_DELAY)) {
             bzero(dtmp, RD_BUF_SIZE);
             //ESP_LOGI(TAG, "uart[%d] event:", EX_UART_NUM);
             switch(event.type) {
@@ -221,10 +161,10 @@ void uart_rx_task(void *arg)
 
                         if (uart_ev.length){
                             struct usb_midi_event_packet usb_ev = midi_uart_to_usb(uart_ev);
-                            usb_midi_packet_send(usb_ev);
+                            knot_midi_usb_send_packet(usb_ev);
 
-                            if (midi_through){
-                                uart_send_data(uart_ev);
+                            if (knot_midi_uart_state.midi_through_state){
+                                knot_midi_uart_send_packet(uart_ev);
                                 ets_printf("USB + MIDI: %d %d %d %d\n", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
                             }
                             else{
@@ -244,7 +184,7 @@ void uart_rx_task(void *arg)
                     // The ISR has already reset the rx FIFO,
                     // As an example, we directly flush the rx buffer here in order to read more data.
                     uart_flush_input(EX_UART_NUM);
-                    xQueueReset(uart0_queue);
+                    xQueueReset(knot_midi_uart_state.uart0_queue);
                     break;
                 //Event of UART ring buffer full
                 case UART_BUFFER_FULL:
@@ -252,7 +192,7 @@ void uart_rx_task(void *arg)
                     // If buffer full happened, you should consider encreasing your buffer size
                     // As an example, we directly flush the rx buffer here in order to read more data.
                     uart_flush_input(EX_UART_NUM);
-                    xQueueReset(uart0_queue);
+                    xQueueReset(knot_midi_uart_state.uart0_queue);
                     break;
                 //Event of UART RX break detected
                 case UART_BREAK:
