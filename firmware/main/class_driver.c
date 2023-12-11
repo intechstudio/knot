@@ -13,7 +13,7 @@
 #include "grid_led.h"
 #include "../managed_components/sukuwc__grid_common/grid_led.h"
 
-#include "midi_translator.h"
+#include "knot_midi_translator.h"
 
 #include "rom/ets_sys.h" // For ets_printf
 

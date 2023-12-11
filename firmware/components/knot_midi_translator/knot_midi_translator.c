@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "midi_translator.h"
+#include "knot_midi_translator.h"
 
 
 struct uart_midi_event_packet usb_midi_to_uart(struct usb_midi_event_packet usb_packet){

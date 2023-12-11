@@ -1,5 +1,5 @@
 #include "unity.h"
-#include "../midi_translator.h"
+#include "../knot_midi_translator.h"
 
 #include <stdio.h>
 #include <memory.h>

@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: Unlicense OR CC0-1.0
  */
 
+
+#include "knot_midi_uart.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include "freertos/FreeRTOS.h"
@@ -18,7 +21,7 @@
 
 #include "freertos/queue.h"
 #include "driver/uart.h"
-#include "midi_translator.h"
+#include "knot_midi_translator.h"
 
 
 #define EX_UART_NUM UART_NUM_1
@@ -35,7 +38,6 @@ uint8_t midi_through = false;
 #include "driver/gpio.h"
 
 #include "grid_led.h"
-#include "../managed_components/sukuwc__grid_common/grid_led.h"
 
 #define TRS_TX_AB_SELECT 15
 #define TRS_RX_AB_SELECT 16

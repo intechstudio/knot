@@ -61,7 +61,7 @@
             "name": "Unit Test",
             "color": "white",
             "singleInstance": true,
-            "command": "cd ./main/host_test && ./test.sh",
+            "command": "cd ./components/knot_midi_translator/host_test && ./test.sh",
         }
     ]
 },
