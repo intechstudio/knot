@@ -49,3 +49,5 @@ void knot_midi_uart_set_midithrough_state(struct knot_midi_uart_model* midi_uart
 
 uint8_t knot_midi_uart_get_miditrsab_state(struct knot_midi_uart_model* midi_uart);
 void knot_midi_uart_set_miditrsab_state(struct knot_midi_uart_model* midi_uart, uint8_t state);
+
+int knot_midi_uart_send_packet(struct uart_midi_event_packet ev);
