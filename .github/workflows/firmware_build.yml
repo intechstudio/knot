@@ -1,4 +1,4 @@
-name: "Release Firmware CI/CD for MIDI_Host"
+name: "Combined Firmware Workflow"
 
 on:
   workflow_dispatch:
@@ -22,17 +22,17 @@ jobs:
         with:
           esp_idf_version: latest
           target: esp32s3
-          path: 'firmware'
+          path: 'Firmware'
 
       - name: Run Unit Tests
         run: |
-          cd firmware/main/host_test
+          cd Firmware/main/host_test
           ./test.sh
           ./test.sh >> test.txt
 
       - name: Convert to uf2
         run: |
-          cd firmware
+          cd Firmware
           sudo python3 ./tools/uf2conv.py -f ESP32S3 ./build/midi_host_fw.bin -b 0x0 -c -o ./output/midi_host_fw.uf2
 
       - name: Set env
@@ -44,9 +44,9 @@ jobs:
       - name: Copy and rename the artifacts
         run: |
           ls
-          cp firmware/output/midi_host_fw.uf2 knot_release_${{ env.ACTION_DATE }}.uf2
-          cp firmware/output/midi_host_fw.uf2 knot_nightly_${{ env.ACTION_DATE }}.uf2
-          cp firmware/output/midi_host_fw.uf2 knot_nightly.uf2
+          cp Firmware/output/midi_host_fw.uf2 knot_release_${{ env.ACTION_DATE }}.uf2
+          cp Firmware/output/midi_host_fw.uf2 knot_nightly_${{ env.ACTION_DATE }}.uf2
+          cp Firmware/output/midi_host_fw.uf2 knot_nightly.uf2
 
       - uses: actions/upload-artifact@v4
         with:
