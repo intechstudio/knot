@@ -3,92 +3,109 @@ name: "Release Firmware CI/CD for MIDI_Host"
 on:
   workflow_dispatch:
   push:
-    tags:
-     - 'v*.*.*'
-     
-permissions:
-  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
 
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-    - name: esp-idf build
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: latest
-        target: esp32s3
-        path: 'firmware'
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - name: esp-idf build
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: latest
+          target: esp32s3
+          path: 'firmware'
 
-    - name: Run Unit Tests
-      run: |
-        cd firmware/main/host_test
-        ./test.sh
-        ./test.sh >> test.txt
+      - name: Run Unit Tests
+        run: |
+          cd firmware/main/host_test
+          ./test.sh
+          ./test.sh >> test.txt
 
-    - uses: tsickert/discord-webhook@v4.0.0
-      with:
-        webhook-url: ${{ secrets.WEBHOOK_URL }}
-        content: "Heyo, Knot Unit Tests are ready!"
-        filename: "firmware/main/host_test/test.txt"
+      - name: Convert to uf2
+        run: |
+          cd firmware
+          sudo python3 ./tools/uf2conv.py -f ESP32S3 ./build/midi_host_fw.bin -b 0x0 -c -o ./output/midi_host_fw.uf2
 
-    - name: Convert to uf2
-      run: |
-        cd firmware
-        sudo python3 ./tools/uf2conv.py -f ESP32S3 ./build/midi_host_fw.bin -b 0x0 -c -o ./output/midi_host_fw.uf2
+      - name: Set env
+        shell: bash
+        run: |
+          echo "ACTION_DATE=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_ENV
+          echo "RELEASE_VERSION=$(git tag --contains ${{ github.sha }})" >> $GITHUB_ENV
 
-    - name: Set Date
-      run: echo "action_date=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_ENV
-           
-    - name: Set env
-      shell: bash
-      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      - name: Copy and rename the artifacts
+        run: |
+          ls
+          cp firmware/output/midi_host_fw.uf2 knot_release_${{ env.ACTION_DATE }}.uf2
+          cp firmware/output/midi_host_fw.uf2 knot_nightly_${{ env.ACTION_DATE }}.uf2
+          cp firmware/output/midi_host_fw.uf2 knot_nightly.uf2
 
-    - name: See env
-      run: echo "${{ env.RELEASE_VERSION }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: grid-fw nightly
+          path: |
+            knot_nightly_${{ env.ACTION_DATE }}.uf2
+            knot_nightly.uf2
 
-    - name: Copy and rename the artifacts
-      run: |
-        ls
-        cp firmware/output/midi_host_fw.uf2 knot_release_${{ env.action_date }}.uf2
+      - name: Zipping artifacts for Github Release 
+        uses: vimtor/action-zip@v1
+        if: ${{ env.RELEASE_VERSION != '' }}
+        with:
+          files: knot_release_${{ env.ACTION_DATE }}.uf2
+          dest: knot_release.zip     
+            
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: ${{ env.RELEASE_VERSION != '' }}
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          name: Knot  ${{ env.RELEASE_VERSION }} (${{ env.ACTION_DATE }})
+          files: knot_release.zip
+          draft: true
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Retrieve results
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: Nightly Knot Firmware
-        path: firmware/output/
-        if-no-files-found: warn
+  deploy-results:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: preview
 
-    - name: Zipping artifacts for Discord      
-      uses: vimtor/action-zip@v1
-      with:
-        files: knot_release_${{ env.action_date }}.uf2
-        dest: knot_release_${{ env.action_date }}.zip
+      - name: Download reports' artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: download
 
-    - name: Zipping artifacts for Github Release   
-      uses: vimtor/action-zip@v1
-      with:
-        files: knot_release_${{ env.action_date }}.uf2
-        dest: knot_release.zip     
-          
-    - uses: tsickert/discord-webhook@v4.0.0
-      with:
-        webhook-url: ${{ secrets.WEBHOOK_URL }}
-        content: "Congrats, the Knot Release Firmware is Fire!"
-        filename: "knot_release_${{ env.action_date }}.zip"
-          
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: ${{ env.RELEASE_VERSION }}
-        name: Knot  ${{ env.RELEASE_VERSION }} (${{ env.action_date }})
-        files: knot_release.zip
-        draft: true
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Collecting files
+        run: |
+
+          # Create the temp folder if it doesn't exist
+          mkdir -p Preview/Firmware
+
+          # Loop through each subdirectory in the download folder
+          for subdirectory in download/*; do
+              # Check if it is a directory
+              if [ -d "$subdirectory" ]; then
+                  # Copy the contents of the subdirectory to the temp folder
+                  cp -r "$subdirectory"/* "Preview/Firmware/"
+              fi
+          done
+
+      - name: Commit the files
+        run: |
+          git config --global user.name ${{ github.actor }}
+          git config --global user.email ${{ github.actor }}@users.noreply.github.com
+          git add Preview/*
+          git commit -m "BOT ${{ github.workflow }} ${{ github.sha }}"
+          git push
