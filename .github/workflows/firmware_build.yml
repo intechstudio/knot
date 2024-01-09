@@ -44,22 +44,22 @@ jobs:
       - name: Copy and rename the artifacts
         run: |
           ls
-          cp Firmware/output/midi_host_fw.uf2 knot_release_${{ env.ACTION_DATE }}.uf2
-          cp Firmware/output/midi_host_fw.uf2 knot_nightly_${{ env.ACTION_DATE }}.uf2
-          cp Firmware/output/midi_host_fw.uf2 knot_nightly.uf2
+          cp Firmware/output/midi_host_fw.uf2 knot_esp32_release_${{ env.ACTION_DATE }}.uf2
+          cp Firmware/output/midi_host_fw.uf2 knot_esp32_nightly_${{ env.ACTION_DATE }}.uf2
+          cp Firmware/output/midi_host_fw.uf2 knot_esp32_nightly.uf2
 
       - uses: actions/upload-artifact@v4
         with:
           name: grid-fw nightly
           path: |
-            knot_nightly_${{ env.ACTION_DATE }}.uf2
-            knot_nightly.uf2
+            knot_esp32_nightly_${{ env.ACTION_DATE }}.uf2
+            knot_esp32_nightly.uf2
 
       - name: Zipping artifacts for Github Release 
         uses: vimtor/action-zip@v1
         if: ${{ env.RELEASE_VERSION != '' }}
         with:
-          files: knot_release_${{ env.ACTION_DATE }}.uf2
+          files: knot_esp32_release_${{ env.ACTION_DATE }}.uf2
           dest: knot_release.zip     
             
       - name: Release
