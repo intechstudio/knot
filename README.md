@@ -23,9 +23,9 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 
 *If you own a device you couldn't find in the list below, help us out by submitting a test of your own to support@intech.studio!*
 
-| Manufacturer | Device name | Compatibility | Tester | Note |
+| Manufacturer | Device name | Compatibility with Knot | Tester | Note |
 | ---- | ---- | ---- | ---- | --- |
-| Intech Studio  |   Grid         | Tested - OK | Intech | |
+|    Intech Studio  |   Grid         | Tested - OK | Intech | |
 |    Alesis  | Qmini  |  Tested - Not working | Community | |
 |    AKAI  | MPK Mini MK2  |  Tested - OK | Community | |
 |    AKAI  | MPK Mini Plus  |  Tested - OK | Community | |
@@ -39,9 +39,9 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 |    Korg  | Nanokey 2  |  Tested - OK | Community | |
 |    Livid Instruments  | DS-1  |  Tested - OK | Community | |
 |    Midi Fighter  | Midi Fighter Twister  |  Tested - OK | Community | |
-| M-AUDIO  |   MIDISPORT UNO         | Tested - OK | Intech | |
+|    M-AUDIO  |   MIDISPORT UNO         | Tested - OK | Intech | |
 |    Novation  | Circuit   | Tested - OK | Community | |
-|   Novation   | Launchpad MK3 Mini  | Tested - OK | Intech | |
+|    Novation   | Launchpad MK3 Mini  | Tested - OK | Intech | |
 |    Novation  | Launchpad MK2     | Tested - OK | Intech | |
 |    Novation  | Launchkey 25   | Tested - Only Power | Intech | |
 |    Roland  | MC-101   | Tested - OK | Community | |
