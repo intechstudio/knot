@@ -23,37 +23,57 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 
 *If you own a device you couldn't find in the list below, help us out by submitting a test of your own to support@intech.studio!*
 
-| Manufacturer | Device name | Compatibility | Tester |
-| ---- | ---- | ---- | ---- |
-| Intech Studio  |   Grid         | Tested - OK | Intech |
-| M-AUDIO  |   MIDISPORT UNO         | Tested - OK | Intech |
-|   Novation   | Launchpad MK3 Mini  | Tested - OK | Intech |
-|    Novation  | Launchpad MK2     | Tested - OK | Intech |
-|    Novation  | Launchkey 25   | Tested - Power OK, No MIDI | Intech |
-|    Korg  | Electribe ES2  |  Tested - OK | Intech |
-|    Korg  | Microkey Air 37  |  Tested - OK | Community |
-|    Livid Instruments  | DS-1  |  Tested - OK | Community |
-|    Midi Fighter  | Midi Fighter Twister  |  Tested - OK | Community |
-|    Sonicware  | ELZ_1  |  Tested - OK | Community |
-|    Teenage Engineering  | OP-1  |  Tested - No MIDI | Community |
-|    Teenage Engineering  | OP-1 field |  Tested - No MIDI | Community |
+| Manufacturer | Device name | Compatibility | Tester | Note |
+| ---- | ---- | ---- | ---- | --- |
+| Intech Studio  |   Grid         | Tested - OK | Intech | |
+|    Alesis  | Qmini  |  Tested - Not working | Community | |
+|    AKAI  | MPK Mini MK2  |  Tested - OK | Community | |
+|    AKAI  | MPK Mini Plus  |  Tested - OK | Community | |
+|    Arturia  | Beatstep (non-Pro)  |  Tested - OK | Community | |
+|    Arturia  | Keystep  |  Tested - OK | Community | |
+|    Arturia  | MiniLab MK2   |  Tested - OK | Community | |
+|    DoReMIDI  | USB-C MIDI adapter  |  Tested - OK | Community | |
+|    Elektron  | Digitakt |  Tested - Not working | Community | |
+|    Korg  | Electribe ES2  |  Tested - OK | Intech | |
+|    Korg  | Microkey Air 37  |  Tested - OK | Community | |
+|    Korg  | Nanokey 2  |  Tested - OK | Community | |
+|    Livid Instruments  | DS-1  |  Tested - OK | Community | |
+|    Midi Fighter  | Midi Fighter Twister  |  Tested - OK | Community | |
+| M-AUDIO  |   MIDISPORT UNO         | Tested - OK | Intech | |
+|    Novation  | Circuit   | Tested - OK | Community | |
+|   Novation   | Launchpad MK3 Mini  | Tested - OK | Intech | |
+|    Novation  | Launchpad MK2     | Tested - OK | Intech | |
+|    Novation  | Launchkey 25   | Tested - Only Power | Intech | |
+|    Roland  | MC-101   | Tested - OK | Community | |
+|    Sonicware  | ELZ_1  |  Tested - OK | Community | |
+|    Teenage Engineering  | EP-133 |  Tested - OK | Community | *Knot supplies ample power to the device* |
+|    Teenage Engineering  | OP-1  |  Tested - No MIDI | Community | |
+|    Teenage Engineering  | OP-1 field |  Tested - No MIDI | Community | |
+|    Teenage Engineering  | OP-Z |  Tested - OK | Community | |
+
+
 
 
 ### 5-pin DIN/TRS MIDI Device compatibility
 
 *If you own a device you couldn't find in the list below, help us out by submitting a test of your own to support@intech.studio!*
 
-| Manufacturer | Device name | MIDI connector |Compatibility | Tester |
-| ---- | ---- | ---- | ---- | ---- |
-| 1010music |   Blackbox | TRS type-B       | Tested - OK |  Community |
-| 1010music |   Bluebox | TRS type-B       | Tested - OK |  Community |
-|Behringer |   TD-3-AM | 5-pin DIN       | Tested - OK |  Intech |
-|Behringer |   U-PHORIA UMC404HD | 5-pin DIN     | Tested - OK | Intech |
-|   Dreadbox  | Nymphes  | TRS type-B  | Tested - OK | Community |
-|   Korg   | Volca FM (other Volcas should perform similarly)  |  5-pin DIN | Tested - OK | Intech |
-|   Korg  | Electribe ES2  | TRS type-B  | Tested - OK | Intech |
-| Mutable Instruments |   Yarns | 5-pin DIN     | Tested - OK | Intech |
-|    Polyend  | Tracker  | TRS type-B | Tested - OK | Intech |
+| Manufacturer | Device name | MIDI connector |Compatibility | Tester | Note |
+| ---- | ---- | ---- | ---- | ---- | --- |
+| 1010music |   Blackbox | TRS type-B       | Tested - OK |  Community | |
+| 1010music |   Bluebox | TRS type-B       | Tested - OK |  Community | |
+| Arturia  | Beatstep (non-Pro) | TS "type-C" |  Tested - !!! | Community | *Needs 3.5mm TS to TRS adapter* |
+|Behringer |   TD-3-AM | 5-pin DIN       | Tested - OK |  Intech | *With adapter* |
+|Behringer |   U-PHORIA UMC404HD | 5-pin DIN     | Tested - OK | Intech | *With adapter* |
+|   Dreadbox  | Nymphes  | TRS type-B  | Tested - OK | Community | |
+|    Elektron  | Digitakt | 5-pin DIN | Tested - OK | Community | *With adapter* |
+|   Korg  | Electribe ES2  | TRS type-B  | Tested - OK | Intech | |
+|   Korg   | Volca Series (Tested on Volca FM)  |  5-pin DIN | Tested - OK | Intech | *With adapter* |
+| Mutable Instruments |   Yarns | 5-pin DIN     | Tested - OK | Intech | *With adapter* |
+|    Polyend  | Tracker  | TRS type-B | Tested - OK | Intech | |
+|    Teenage Engineering  | EP-133 | TRS type-A | Tested - OK | Community |  |
+|    Teenage Engineering  | OP-Z | TRS type-A | Tested - OK | Community | *With Line Module* |
+|    Woovebox  | Woovebox | TRS type-A | Tested - OK | Community | |
 
 <!---
 ### Comunity contributors
