@@ -271,7 +271,7 @@ void app_main(void)
 
 
     uint8_t last_button_state = 1;
-    grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 200, 0);
+    grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 255, 0);
 
     while(1){
     
@@ -286,11 +286,11 @@ void app_main(void)
 
             if (knot_midi_uart_get_midithrough_state(&knot_midi_uart_state)){
                 knot_midi_uart_set_midithrough_state(&knot_midi_uart_state, false);
-                grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 200, 0);
+                grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 255, 0);
             }
             else{
                 knot_midi_uart_set_midithrough_state(&knot_midi_uart_state, true);
-                grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 0, 200);
+                grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 0, 255);
             }
         }
 

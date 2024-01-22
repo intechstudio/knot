@@ -466,7 +466,7 @@ void class_driver_task(void *arg)
 
 
 
-    grid_alert_all_set(&grid_led_state, 50,50,50,-1);
+    grid_alert_all_set(&grid_led_state, 100,100,100,-1);
 
 
     while (1) {
@@ -524,7 +524,7 @@ void class_driver_task(void *arg)
         }
         if (driver_obj.actions & ACTION_CLOSE_DEV) {
             aciton_close_dev(&driver_obj);
-            grid_alert_all_set(&grid_led_state, 50,50,50,-1);
+            grid_alert_all_set(&grid_led_state, 100,100,100,-1);
         }
         if (driver_obj.actions & ACTION_EXIT) {
             break;

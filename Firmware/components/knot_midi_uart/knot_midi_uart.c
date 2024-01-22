@@ -105,7 +105,7 @@ void knot_midi_uart_init(struct knot_midi_uart_model* midi_uart){
 int knot_midi_uart_send_packet(struct uart_midi_event_packet ev)
 {
 
-    grid_alert_one_set(&grid_led_state, 1, 100, 100, 100, 30);
+    grid_alert_one_set(&grid_led_state, 1, 200, 200, 200, 30);
 
 
 
@@ -150,7 +150,7 @@ void knot_midi_uart_rx_task(void *arg)
                     
                     //led_rx_effect_start();
 
-                    grid_alert_one_set(&grid_led_state, 0, 100, 100, 100, 30);
+                    grid_alert_one_set(&grid_led_state, 0, 200, 200, 200, 30);
                     
                     //ESP_LOGI(TAG, "[UART DATA]: %d", event.size);
                     uart_read_bytes(EX_UART_NUM, dtmp, event.size, portMAX_DELAY);
