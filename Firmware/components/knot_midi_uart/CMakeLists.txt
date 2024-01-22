@@ -1,7 +1,7 @@
 idf_component_register(
-    SRCS 
+    SRCS
         "knot_midi_uart.c"
-    INCLUDE_DIRS 
+    INCLUDE_DIRS
         "."
     REQUIRES
         "knot_midi_translator"

@@ -1,0 +1,53 @@
+# SPDX-FileCopyrightText: 2020 Diego Elio Pettenò
+#
+# SPDX-License-Identifier: Unlicense
+
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.4.0
+  hooks:
+  - id: check-yaml
+  - id: trailing-whitespace
+    exclude: |
+      (?x)^(
+        Firmware/bootloader/|
+        Mechanical/|
+        Electrical/|
+        Graphics/|
+        Render/
+      )
+  - id: end-of-file-fixer
+    exclude: |
+      (?x)^(
+        Firmware/bootloader/|
+        Mechanical/|
+        Electrical/|
+        Graphics/|
+        Render/
+      )
+
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.2.4
+  hooks:
+  - id: codespell
+    args: [-w]
+    exclude: |
+      (?x)^(
+        Firmware/bootloader/|
+        Mechanical/|
+        Electrical/|
+        Graphics/|
+        Render/
+      )
+- repo: https://github.com/pre-commit/mirrors-clang-format
+  rev: v17.0.6
+  hooks:
+  - id: clang-format
+    exclude: |
+      (?x)^(
+        Firmware/bootloader/|
+        Mechanical/|
+        Electrical/|
+        Graphics/|
+        Render/
+      )

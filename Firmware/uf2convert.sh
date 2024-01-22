@@ -10,5 +10,3 @@ mkdir -p ./output
 # python3 ./tools/uf2conv.py -f ESP32S3 ./build/merged_image.bin -b 0x0 -c -o ./output/merged.uf2
 
 python3 ./tools/uf2conv.py -f ESP32S3 ./build/midi_host_fw.bin -b 0x0 -c -o ./output/midi_host_fw.uf2
-
-

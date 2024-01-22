@@ -6,18 +6,14 @@
 extern "C" {
 #endif
 
-
-
-struct usb_midi_event_packet
-{
+struct usb_midi_event_packet {
   uint8_t byte0;
   uint8_t byte1;
   uint8_t byte2;
   uint8_t byte3;
 };
 
-struct uart_midi_event_packet
-{
+struct uart_midi_event_packet {
   uint8_t length;
   uint8_t byte1;
   uint8_t byte2;
@@ -41,15 +37,12 @@ struct uart_midi_event_packet usb_midi_to_uart(struct usb_midi_event_packet usb_
 struct usb_midi_event_packet midi_uart_to_usb(struct uart_midi_event_packet uart_packet);
 
 /**
- * @brief Determine wether a given byte represents a MIDI Real-Time Message or not
+ * @brief Determine whether a given byte represents a MIDI Real-Time Message or not
  * @param[in] byte MIDI byte
  *
  * @return true or false
  */
 uint8_t uart_midi_is_byte_rtm(uint8_t byte);
-
-
-
 
 /**
  * @brief Store next byte and return event packet once completed
@@ -58,7 +51,6 @@ uint8_t uart_midi_is_byte_rtm(uint8_t byte);
  * @return event packet if available, all zeros if not complete yet
  */
 struct uart_midi_event_packet uart_midi_process_byte(uint8_t byte);
-
 
 #ifdef __cplusplus
 }

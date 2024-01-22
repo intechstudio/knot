@@ -26,4 +26,3 @@ for row in csv_f:
       row[5] -= 360.0
   startwriter.writerow(row)
   print(row)
-

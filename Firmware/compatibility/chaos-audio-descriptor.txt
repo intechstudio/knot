@@ -4,9 +4,9 @@ Device Descriptor:
   bLength                18
   bDescriptorType         1
   bcdUSB               2.00
-  bDeviceClass            0 
-  bDeviceSubClass         0 
-  bDeviceProtocol         0 
+  bDeviceClass            0
+  bDeviceSubClass         0
+  bDeviceProtocol         0
   bMaxPacketSize0        64
   idVendor           0x1d6b Linux Foundation
   idProduct          0x0104 Multifunction Composite Gadget
@@ -27,7 +27,7 @@ OTG Descriptor:
     wTotalLength       0x0141
     bNumInterfaces          8
     bConfigurationValue     1
-    iConfiguration          0 
+    iConfiguration          0
     bmAttributes         0x80
       (Bus Powered)
     MaxPower              500mA
@@ -37,9 +37,9 @@ OTG Descriptor:
       bFirstInterface         0
       bInterfaceCount         2
       bFunctionClass        239 Miscellaneous Device
-      bFunctionSubClass       4 
-      bFunctionProtocol       1 
-      iFunction               6 
+      bFunctionSubClass       4
+      bFunctionProtocol       1
+      iFunction               6
     Interface Descriptor:
       bLength                 9
       bDescriptorType         4
@@ -49,7 +49,7 @@ OTG Descriptor:
       bInterfaceClass         2 Communications
       bInterfaceSubClass      2 Abstract (modem)
       bInterfaceProtocol    255 Vendor Specific (MSFT RNDIS?)
-      iInterface              4 
+      iInterface              4
       CDC Header:
         bcdCDC               1.10
       CDC Call Management:
@@ -59,7 +59,7 @@ OTG Descriptor:
         bmCapabilities       0x00
       CDC Union:
         bMasterInterface        0
-        bSlaveInterface         1 
+        bSlaveInterface         1
       Endpoint Descriptor:
         bLength                 7
         bDescriptorType         5
@@ -77,9 +77,9 @@ OTG Descriptor:
       bAlternateSetting       0
       bNumEndpoints           2
       bInterfaceClass        10 CDC Data
-      bInterfaceSubClass      0 
-      bInterfaceProtocol      0 
-      iInterface              5 
+      bInterfaceSubClass      0
+      bInterfaceProtocol      0
+      iInterface              5
       Endpoint Descriptor:
         bLength                 7
         bDescriptorType         5
@@ -106,9 +106,9 @@ OTG Descriptor:
       bFirstInterface         2
       bInterfaceCount         2
       bFunctionClass          2 Communications
-      bFunctionSubClass      13 
-      bFunctionProtocol       0 
-      iFunction              11 
+      bFunctionSubClass      13
+      bFunctionProtocol       0
+      iFunction              11
     Interface Descriptor:
       bLength                 9
       bDescriptorType         4
@@ -116,14 +116,14 @@ OTG Descriptor:
       bAlternateSetting       0
       bNumEndpoints           1
       bInterfaceClass         2 Communications
-      bInterfaceSubClass     13 
-      bInterfaceProtocol      0 
-      iInterface              8 
+      bInterfaceSubClass     13
+      bInterfaceProtocol      0
+      iInterface              8
       CDC Header:
         bcdCDC               1.10
       CDC Union:
         bMasterInterface        2
-        bSlaveInterface         3 
+        bSlaveInterface         3
       CDC Ethernet:
         iMacAddress                      9 (??)
         bmEthernetStatistics    0x00000000
@@ -152,9 +152,9 @@ OTG Descriptor:
       bAlternateSetting       0
       bNumEndpoints           0
       bInterfaceClass        10 CDC Data
-      bInterfaceSubClass      0 
-      bInterfaceProtocol      1 
-      iInterface             10 
+      bInterfaceSubClass      0
+      bInterfaceProtocol      1
+      iInterface             10
     Interface Descriptor:
       bLength                 9
       bDescriptorType         4
@@ -162,9 +162,9 @@ OTG Descriptor:
       bAlternateSetting       1
       bNumEndpoints           2
       bInterfaceClass        10 CDC Data
-      bInterfaceSubClass      0 
-      bInterfaceProtocol      1 
-      iInterface             10 
+      bInterfaceSubClass      0
+      bInterfaceProtocol      1
+      iInterface             10
       Endpoint Descriptor:
         bLength                 7
         bDescriptorType         5
@@ -193,7 +193,7 @@ OTG Descriptor:
       bFunctionClass          2 Communications
       bFunctionSubClass       2 Abstract (modem)
       bFunctionProtocol       1 AT-commands (v.25ter)
-      iFunction              15 
+      iFunction              15
     Interface Descriptor:
       bLength                 9
       bDescriptorType         4
@@ -203,7 +203,7 @@ OTG Descriptor:
       bInterfaceClass         2 Communications
       bInterfaceSubClass      2 Abstract (modem)
       bInterfaceProtocol      1 AT-commands (v.25ter)
-      iInterface             13 
+      iInterface             13
       CDC Header:
         bcdCDC               1.10
       CDC Call Management:
@@ -214,7 +214,7 @@ OTG Descriptor:
           line coding and serial state
       CDC Union:
         bMasterInterface        4
-        bSlaveInterface         5 
+        bSlaveInterface         5
       Endpoint Descriptor:
         bLength                 7
         bDescriptorType         5
@@ -232,9 +232,9 @@ OTG Descriptor:
       bAlternateSetting       0
       bNumEndpoints           2
       bInterfaceClass        10 CDC Data
-      bInterfaceSubClass      0 
-      bInterfaceProtocol      0 
-      iInterface             14 
+      bInterfaceSubClass      0
+      bInterfaceProtocol      0
+      iInterface             14
       Endpoint Descriptor:
         bLength                 7
         bDescriptorType         5
@@ -263,8 +263,8 @@ OTG Descriptor:
       bNumEndpoints           0
       bInterfaceClass         1 Audio
       bInterfaceSubClass      1 Control Device
-      bInterfaceProtocol      0 
-      iInterface             17 
+      bInterfaceProtocol      0
+      iInterface             17
       AudioControl Interface Descriptor:
         bLength                 9
         bDescriptorType        36
@@ -281,8 +281,8 @@ OTG Descriptor:
       bNumEndpoints           2
       bInterfaceClass         1 Audio
       bInterfaceSubClass      3 MIDI Streaming
-      bInterfaceProtocol      0 
-      iInterface              0 
+      bInterfaceProtocol      0
+      iInterface              0
       MIDIStreaming Interface Descriptor:
         bLength                 7
         bDescriptorType        36
@@ -295,7 +295,7 @@ OTG Descriptor:
         bDescriptorSubtype      2 (MIDI_IN_JACK)
         bJackType               2 External
         bJackID                 1
-        iJack                   0 
+        iJack                   0
       MIDIStreaming Interface Descriptor:
         bLength                 9
         bDescriptorType        36
@@ -305,14 +305,14 @@ OTG Descriptor:
         bNrInputPins            1
         baSourceID( 0)          1
         BaSourcePin( 0)         1
-        iJack                   0 
+        iJack                   0
       MIDIStreaming Interface Descriptor:
         bLength                 6
         bDescriptorType        36
         bDescriptorSubtype      2 (MIDI_IN_JACK)
         bJackType               1 Embedded
         bJackID                 3
-        iJack                   0 
+        iJack                   0
       MIDIStreaming Interface Descriptor:
         bLength                 9
         bDescriptorType        36
@@ -322,7 +322,7 @@ OTG Descriptor:
         bNrInputPins            1
         baSourceID( 0)          3
         BaSourcePin( 0)         1
-        iJack                   0 
+        iJack                   0
       Endpoint Descriptor:
         bLength                 9
         bDescriptorType         5

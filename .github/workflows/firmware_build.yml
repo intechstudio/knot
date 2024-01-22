@@ -55,13 +55,13 @@ jobs:
             knot_esp32_nightly_${{ env.ACTION_DATE }}.uf2
             knot_esp32_nightly.uf2
 
-      - name: Zipping artifacts for Github Release 
+      - name: Zipping artifacts for Github Release
         uses: vimtor/action-zip@v1
         if: ${{ env.RELEASE_VERSION != '' }}
         with:
           files: knot_esp32_release_${{ env.ACTION_DATE }}.uf2
-          dest: knot_release.zip     
-            
+          dest: knot_release.zip
+
       - name: Release
         uses: softprops/action-gh-release@v1
         if: ${{ env.RELEASE_VERSION != '' }}

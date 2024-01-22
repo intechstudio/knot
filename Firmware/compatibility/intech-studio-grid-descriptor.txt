@@ -7,11 +7,11 @@ Device Descriptor:
   bDescriptorType         1
   bcdUSB               2.00
   bDeviceClass          239 Miscellaneous Device
-  bDeviceSubClass         2 
+  bDeviceSubClass         2
   bDeviceProtocol         1 Interface Association
   bMaxPacketSize0        64
-  idVendor           0x303a 
-  idProduct          0x8123 
+  idVendor           0x303a
+  idProduct          0x8123
   bcdDevice            1.00
   iManufacturer           1 Intech Studio
   iProduct                2 Grid
@@ -23,7 +23,7 @@ Device Descriptor:
     wTotalLength       0x00c0
     bNumInterfaces          5
     bConfigurationValue     1
-    iConfiguration          0 
+    iConfiguration          0
     bmAttributes         0x80
       (Bus Powered)
     MaxPower              500mA
@@ -34,8 +34,8 @@ Device Descriptor:
       bInterfaceCount         2
       bFunctionClass          2 Communications
       bFunctionSubClass       2 Abstract (modem)
-      bFunctionProtocol       0 
-      iFunction               0 
+      bFunctionProtocol       0
+      iFunction               0
     Interface Descriptor:
       bLength                 9
       bDescriptorType         4
@@ -44,8 +44,8 @@ Device Descriptor:
       bNumEndpoints           1
       bInterfaceClass         2 Communications
       bInterfaceSubClass      2 Abstract (modem)
-      bInterfaceProtocol      0 
-      iInterface              5 
+      bInterfaceProtocol      0
+      iInterface              5
       CDC Header:
         bcdCDC               1.20
       CDC Call Management:
@@ -56,7 +56,7 @@ Device Descriptor:
           line coding and serial state
       CDC Union:
         bMasterInterface        0
-        bSlaveInterface         1 
+        bSlaveInterface         1
       Endpoint Descriptor:
         bLength                 7
         bDescriptorType         5
@@ -74,9 +74,9 @@ Device Descriptor:
       bAlternateSetting       0
       bNumEndpoints           2
       bInterfaceClass        10 CDC Data
-      bInterfaceSubClass      0 
-      bInterfaceProtocol      0 
-      iInterface              0 
+      bInterfaceSubClass      0
+      bInterfaceProtocol      0
+      iInterface              0
       Endpoint Descriptor:
         bLength                 7
         bDescriptorType         5
@@ -105,8 +105,8 @@ Device Descriptor:
       bNumEndpoints           0
       bInterfaceClass         1 Audio
       bInterfaceSubClass      1 Control Device
-      bInterfaceProtocol      0 
-      iInterface              4 
+      bInterfaceProtocol      0
+      iInterface              4
       AudioControl Interface Descriptor:
         bLength                 9
         bDescriptorType        36
@@ -123,8 +123,8 @@ Device Descriptor:
       bNumEndpoints           2
       bInterfaceClass         1 Audio
       bInterfaceSubClass      3 MIDI Streaming
-      bInterfaceProtocol      0 
-      iInterface              0 
+      bInterfaceProtocol      0
+      iInterface              0
       MIDIStreaming Interface Descriptor:
         bLength                 7
         bDescriptorType        36
@@ -137,14 +137,14 @@ Device Descriptor:
         bDescriptorSubtype      2 (MIDI_IN_JACK)
         bJackType               1 Embedded
         bJackID                 1
-        iJack                   0 
+        iJack                   0
       MIDIStreaming Interface Descriptor:
         bLength                 6
         bDescriptorType        36
         bDescriptorSubtype      2 (MIDI_IN_JACK)
         bJackType               2 External
         bJackID                 2
-        iJack                   0 
+        iJack                   0
       MIDIStreaming Interface Descriptor:
         bLength                 9
         bDescriptorType        36
@@ -154,7 +154,7 @@ Device Descriptor:
         bNrInputPins            1
         baSourceID( 0)          2
         BaSourcePin( 0)         1
-        iJack                   0 
+        iJack                   0
       MIDIStreaming Interface Descriptor:
         bLength                 9
         bDescriptorType        36
@@ -164,7 +164,7 @@ Device Descriptor:
         bNrInputPins            1
         baSourceID( 0)          1
         BaSourcePin( 0)         1
-        iJack                   0 
+        iJack                   0
       Endpoint Descriptor:
         bLength                 9
         bDescriptorType         5
@@ -208,9 +208,9 @@ Device Descriptor:
       bAlternateSetting       0
       bNumEndpoints           1
       bInterfaceClass         3 Human Interface Device
-      bInterfaceSubClass      0 
-      bInterfaceProtocol      0 
-      iInterface              0 
+      bInterfaceSubClass      0
+      bInterfaceProtocol      0
+      iInterface              0
         HID Device Descriptor:
           bLength                 9
           bDescriptorType        33
@@ -219,7 +219,7 @@ Device Descriptor:
           bNumDescriptors         1
           bDescriptorType        34 Report
           wDescriptorLength     214
-         Report Descriptors: 
+         Report Descriptors:
            ** UNAVAILABLE **
       Endpoint Descriptor:
         bLength                 7

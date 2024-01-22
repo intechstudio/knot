@@ -13,7 +13,7 @@ jobs:
   generate-artifacts:
     name: kicad export
     runs-on: ubuntu-latest
-    container: "setsoft/kicad_auto:ki7"    
+    container: "setsoft/kicad_auto:ki7"
     strategy:
       fail-fast: false
       matrix:
@@ -40,8 +40,8 @@ jobs:
       run: |
         python3 .github/workflows/convert_bottom_position.py ../../Electrical/Design/${{ matrix.board }}/mfg-bot/mfg/${{ matrix.board }}-both_pos.csv ../../Electrical/Design/${{ matrix.board }}/mfg-bot/mfg/${{ matrix.board }}-both_pos_fixed.csv
         rm Electrical/Design/${{ matrix.board }}/mfg-bot/mfg/${{ matrix.board }}-both_pos.csv
-  
-    - name: Zipping gerber      
+
+    - name: Zipping gerber
       uses: vimtor/action-zip@v1
       with:
         files: Electrical/Design/${{ matrix.board }}/mfg-bot/JLCPCB
@@ -56,7 +56,7 @@ jobs:
         mv Electrical/Design/${{ matrix.board }}/mfg-bot/PCB_Bottom.pdf Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}_PCB_Bottom.pdf
         mv Electrical/Design/${{ matrix.board }}/mfg-bot/kibot_errors.filter Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}_kibot_errors.filter
         mv Electrical/Design/${{ matrix.board }}/kibot_error.log Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}_kibot_error.log
-        
+
         rm -r Electrical/Design/${{ matrix.board }}/mfg-bot/JLCPCB
 
     - name: Upload results
@@ -70,7 +70,7 @@ jobs:
 
   deploy-results:
     runs-on: ubuntu-latest
-    needs: generate-artifacts    
+    needs: generate-artifacts
     steps:
       - uses: actions/checkout@v2
         with:
@@ -97,10 +97,9 @@ jobs:
           done
 
       - name: Commit the files
-        run: |        
+        run: |
           git config --global user.name ${{ github.actor }}
-          git config --global user.email ${{ github.actor }}@users.noreply.github.com  
+          git config --global user.email ${{ github.actor }}@users.noreply.github.com
           git add Preview/*
           git commit -m "BOT ${{ github.workflow }} ${{ github.sha }}"
           git push
-

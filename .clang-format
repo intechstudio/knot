@@ -1,0 +1,5 @@
+ColumnLimit: 200  # Set to a very large value
+BasedOnStyle: LLVM
+IndentWidth: 2
+DerivePointerAlignment: false
+PointerAlignment: Left

@@ -28,4 +28,3 @@ for row in csv_f:
     row[4] = float(row[4])-100.0
   startwriter.writerow(row)
   print(row)
-

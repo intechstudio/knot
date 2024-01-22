@@ -76,9 +76,9 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 |    Woovebox  | Woovebox | TRS type-A | Tested - OK | Community | |
 
 <!---
-### Comunity contributors
+### Community contributors
 
-A big thank you to our community contributors for testing these devices: 
+A big thank you to our community contributors for testing these devices:
 - Michal
 - Tibi
 
@@ -87,7 +87,7 @@ A big thank you to our community contributors for testing these devices:
 |   Audiothingies   | Micromonsta 2  | TRS type-A | Untested | - |
 |    Bastl Instruments  | Softpop SP2  | 5-pin DIN | Untested | - |
 |    Elektron  | Octatrack  | 5-pin DIN | Untested | - |
-|    Elektron  | Syntakt  | 5-pin DIN | Untested | - |
+|    Elektron  | Syntax  | 5-pin DIN | Untested | - |
 |    Elektron  | Digitakt  | 5-pin DIN | Untested | - |
 |    Elektron  | Digitone  | 5-pin DIN | Untested | - |
 |    Elektron  | Analog Rytm  | 5-pin DIN | Untested | - |

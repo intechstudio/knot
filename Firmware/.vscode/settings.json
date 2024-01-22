@@ -36,36 +36,45 @@
     "grid_led.h": "c",
     "knot_midi_translator.h": "c",
     "knot_midi_uart.h": "c"
-},
+  },
   "actionButtons": {
-    "defaultColor": "#ff0034", // Can also use string color names.
-    "loadNpmCommands":false, // Disables automatic generation of actions for npm commands.
-    "reloadButton":"♻️", // Custom reload button text or icon (default ↻). null value enables automatic reload on configuration change
+    "defaultColor": "#ff0034",
+    // Can also use string color names.
+    "loadNpmCommands": false,
+    // Disables automatic generation of actions for npm commands.
+    "reloadButton": "♻️",
+    // Custom reload button text or icon (default ↻). null value enables automatic reload on configuration change
     "commands": [
-        {
-            "name": "ESP32 Docker",
-            "color": "white",
-            "singleInstance": true,
-            "command": "podman run --privileged -it -v /dev:/dev -v $PWD:/project -w /project espressif/idf:release-v5.1",
-            // clear && idf.py build && idf.py -p $(ls /dev/ttyACM*) flash
-            // ./burn_bootloader.sh
-            // clear && idf.py build && esptool.py --chip esp32s3 -p $(ls /dev/ttyACM*) --before=default_reset --after=no_reset write_flash --flash_mode dio --flash_size detect --flash_freq 80m 0x10000 build/midi_host_fw.bin && otatool.py -p $(ls /dev/ttyACM*) switch_ota_partition --slot 0
-            // clear && idf.py build && ./uf2convert.sh
-        },
-        {
-            "name": "ESP32 Monitor",
-            "color": "white",
-            "singleInstance": true,
-            "command": "podman run --privileged -it -v /dev:/dev -v $PWD:/project -w /project espressif/idf:release-v5.1",
-            // idf.py -p $(ls /dev/ttyUSB0) monitor
-        },
-        {
-            "name": "Unit Test",
-            "color": "white",
-            "singleInstance": true,
-            "command": "cd ./components/knot_midi_translator/host_test && ./test.sh",
-        }
+      {
+        "name": "pre-commit formatting",
+        "color": "white",
+        "singleInstance": true,
+        "command": "pre-commit run --show-diff-on-failure --color=always --all-files",
+      },
+      {
+        "name": "ESP32 Docker",
+        "color": "white",
+        "singleInstance": true,
+        "command": "podman run --privileged -it -v /dev:/dev -v $PWD:/project -w /project espressif/idf:release-v5.1",
+        // clear && idf.py build && idf.py -p $(ls /dev/ttyACM*) flash
+        // ./burn_bootloader.sh
+        // clear && idf.py build && esptool.py --chip esp32s3 -p $(ls /dev/ttyACM*) --before=default_reset --after=no_reset write_flash --flash_mode dio --flash_size detect --flash_freq 80m 0x10000
+        // build/midi_host_fw.bin && otatool.py -p $(ls /dev/ttyACM*) switch_ota_partition --slot 0 clear && idf.py build && ./uf2convert.sh
+      },
+      {
+        "name": "ESP32 Monitor",
+        "color": "white",
+        "singleInstance": true,
+        "command": "podman run --privileged -it -v /dev:/dev -v $PWD:/project -w /project espressif/idf:release-v5.1",
+        // idf.py -p $(ls /dev/ttyUSB0) monitor
+      },
+      {
+        "name": "Unit Test",
+        "color": "white",
+        "singleInstance": true,
+        "command": "cd ./components/knot_midi_translator/host_test && ./test.sh",
+      }
     ]
-},
-"git.ignoreLimitWarning": true
+  },
+  "git.ignoreLimitWarning": true
 }
