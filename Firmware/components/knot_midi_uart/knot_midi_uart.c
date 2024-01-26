@@ -150,6 +150,8 @@ void knot_midi_uart_rx_task(void* arg) {
         break;
       // Event of HW FIFO overflow detected
       case UART_FIFO_OVF:
+
+        grid_alert_one_set(&grid_led_state, 1, 200, 0, 0, 30); // ERROR
         ESP_LOGI(TAG, "hw fifo overflow");
         // If fifo overflow happened, you should consider adding flow control for your application.
         // The ISR has already reset the rx FIFO,
@@ -159,6 +161,8 @@ void knot_midi_uart_rx_task(void* arg) {
         break;
       // Event of UART ring buffer full
       case UART_BUFFER_FULL:
+
+        grid_alert_one_set(&grid_led_state, 2, 200, 0, 0, 30); // ERROR
         ESP_LOGI(TAG, "ring buffer full");
         // If buffer full happened, you should consider encreasing your buffer size
         // As an example, we directly flush the rx buffer here in order to read more data.
@@ -167,18 +171,22 @@ void knot_midi_uart_rx_task(void* arg) {
         break;
       // Event of UART RX break detected
       case UART_BREAK:
+        grid_alert_one_set(&grid_led_state, 0, 200, 0, 0, 30); // ERROR
         ESP_LOGI(TAG, "uart rx break");
         break;
       // Event of UART parity check error
       case UART_PARITY_ERR:
+        grid_alert_one_set(&grid_led_state, 0, 200, 0, 0, 30); // ERROR
         ESP_LOGI(TAG, "uart parity error");
         break;
       // Event of UART frame error
       case UART_FRAME_ERR:
+        grid_alert_one_set(&grid_led_state, 0, 200, 0, 0, 30); // ERROR
         ESP_LOGI(TAG, "uart frame error");
         break;
       // UART_PATTERN_DET
       case UART_PATTERN_DET:
+        grid_alert_one_set(&grid_led_state, 0, 200, 0, 0, 30); // ERROR
         uart_get_buffered_data_len(EX_UART_NUM, &buffered_size);
         int pos = uart_pattern_pop_pos(EX_UART_NUM);
         ESP_LOGI(TAG, "[UART PATTERN DETECTED] pos: %d, buffered size: %d", pos, buffered_size);
@@ -198,6 +206,7 @@ void knot_midi_uart_rx_task(void* arg) {
         break;
       // Others
       default:
+        grid_alert_one_set(&grid_led_state, 0, 0, 0, 200, 30); // ERROR
         ESP_LOGI(TAG, "uart event type: %d", event.type);
         break;
       }
