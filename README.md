@@ -42,6 +42,7 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 |    M-AUDIO  |   MIDISPORT UNO         | Tested - OK | Intech | |
 |    M-AUDIO | Keystation MK3 (all key sizes) | Tested - Not working | Intech | |
 |    Novation  | Circuit   | Tested - OK | Community | |
+|    Novation   | Launch Control XL2  | Tested - OK | Community | |
 |    Novation   | Launchpad MK3 Mini  | Tested - OK | Intech | |
 |    Novation  | Launchpad MK2     | Tested - OK | Intech | |
 |    Novation  | Launchkey 25   | Tested - Only Power | Intech | |
