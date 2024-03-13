@@ -35,7 +35,11 @@
     "grid_ui.h": "c",
     "grid_led.h": "c",
     "knot_midi_translator.h": "c",
-    "knot_midi_uart.h": "c"
+    "knot_midi_uart.h": "c",
+    "*.ipp": "c",
+    "bitset": "c",
+    "initializer_list": "c",
+    "utility": "c"
   },
   "actionButtons": {
     "defaultColor": "#ff0034",

@@ -208,13 +208,6 @@ static esp_err_t midi_find_intf_and_ep_desc(class_driver_t* driver_obj, const us
 
 static usb_transfer_t* out_transfer;
 
-static void out_transfer_cb(usb_transfer_t* transfer) {
-  // This is function is called from within usb_host_client_handle_events(). Don't block and try to keep it short
-  struct class_driver_t* class_driver_obj = (struct class_driver_t*)transfer->context;
-
-  // ets_printf("OUT: Transfer status %d, actual number of bytes transferred %d\n", transfer->status, transfer->actual_num_bytes);
-}
-
 static usb_transfer_t* in_transfer;
 
 static void in_transfer_cb(usb_transfer_t* in_transfer) {
@@ -234,27 +227,33 @@ static void in_transfer_cb(usb_transfer_t* in_transfer) {
   usb_host_transfer_submit(in_transfer);
 }
 
-void knot_midi_usb_send_packet(struct usb_midi_event_packet ev) {
+volatile uint8_t DRAM_ATTR usb_out_ready = 1;
 
-  if (out_transfer != NULL) {
+static void IRAM_ATTR out_transfer_cb(usb_transfer_t* in_transfer) {
+  // ets_printf("Ready\n");
+  usb_out_ready = 1;
+}
 
-    out_transfer->num_bytes = 4;
-    ets_printf("OUT: %d %d %d %d\r\n", ev.byte0, ev.byte1, ev.byte2, ev.byte3);
+uint8_t knot_midi_usb_out_isready(void) { return usb_out_ready; }
 
-    out_transfer->data_buffer[0] = ev.byte0;
-    out_transfer->data_buffer[1] = ev.byte1;
-    out_transfer->data_buffer[2] = ev.byte2;
-    out_transfer->data_buffer[3] = ev.byte3;
+int knot_midi_usb_send_packet(struct usb_midi_event_packet ev) {
 
-    usb_host_transfer_submit(out_transfer);
-  } else {
-    ets_printf("USB not connected\r\n");
+  if (out_transfer == NULL) {
+    return 1;
   }
 
-  // memset(out_transfer->data_buffer, 0xAA, 4);
-  // out_transfer->num_bytes = 4;
-  // ets_printf("OUT: %d %d %d %d\r\n", ev.byte0, ev.byte1, ev.byte2, ev.byte3 );
-  // usb_host_transfer_submit(out_transfer);
+  out_transfer->num_bytes = 4;
+
+  out_transfer->data_buffer[0] = ev.byte0;
+  out_transfer->data_buffer[1] = ev.byte1;
+  out_transfer->data_buffer[2] = ev.byte2;
+  out_transfer->data_buffer[3] = ev.byte3;
+  out_transfer->callback = out_transfer_cb;
+
+  usb_out_ready = 0;
+  esp_err_t err = usb_host_transfer_submit(out_transfer);
+
+  return err;
 }
 
 static void action_get_dev_desc(class_driver_t* driver_obj) {

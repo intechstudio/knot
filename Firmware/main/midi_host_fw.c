@@ -302,7 +302,7 @@ void app_main(void) {
     grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 255, 0); // green
   }
 
-  xTaskCreatePinnedToCore(knot_midi_uart_rx_task, "uart_rx", 2048, (void*)signaling_sem, UART_RX_TASK_PRIORITY, &uart_rx_task_hdl, 0);
+  xTaskCreatePinnedToCore(knot_midi_uart_rx_task, "uart_rx", 4096, (void*)signaling_sem, UART_RX_TASK_PRIORITY, &uart_rx_task_hdl, 0);
 
   uint8_t last_button_state = 1;
 

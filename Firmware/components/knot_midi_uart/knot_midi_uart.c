@@ -111,105 +111,54 @@ void knot_midi_uart_rx_task(void* arg) {
 
   for (;;) {
 
+    vTaskDelay(1); // at least one tick however many ms that is
+    bzero(dtmp, RD_BUF_SIZE);
+    int length = 0;
+
+    uart_get_buffered_data_len(EX_UART_NUM, (size_t*)&length);
     // Waiting for UART event.
-    if (xQueueReceive(knot_midi_uart_state.uart0_queue, (void*)&event, (TickType_t)portMAX_DELAY)) {
-      bzero(dtmp, RD_BUF_SIZE);
-      // ESP_LOGI(TAG, "uart[%d] event:", EX_UART_NUM);
-      switch (event.type) {
-      // Event of UART receiving data
-      /*We'd better handler data event fast, there would be much more data events than
-      other types of events. If we take too much time on data event, the queue might
-      be full.*/
-      case UART_DATA:
+    if (uart_read_bytes(EX_UART_NUM, dtmp, length, portMAX_DELAY)) {
+      // led_rx_effect_start();
 
-        // led_rx_effect_start();
+      grid_alert_one_set(&grid_led_state, 0, 200, 200, 200, 30);
 
-        grid_alert_one_set(&grid_led_state, 0, 200, 200, 200, 30);
+      ESP_LOGD(TAG, "[UART DATA]: %d", length);
 
-        // ESP_LOGI(TAG, "[UART DATA]: %d", event.size);
-        uart_read_bytes(EX_UART_NUM, dtmp, event.size, portMAX_DELAY);
+      for (int i = 0; i < length; i++) {
 
-        for (uint8_t i = 0; i < event.size; i++) {
+        struct uart_midi_event_packet uart_ev = uart_midi_process_byte(dtmp[i]);
 
-          struct uart_midi_event_packet uart_ev = uart_midi_process_byte(dtmp[i]);
+        if (uart_ev.length) {
+          struct usb_midi_event_packet usb_ev = midi_uart_to_usb(uart_ev);
+          while (knot_midi_usb_out_isready() == 0) {
+            ESP_LOGD(TAG, "waiting\n");
+            vTaskDelay(1); // at least one tick however many ms that is
+          }
 
-          if (uart_ev.length) {
-            struct usb_midi_event_packet usb_ev = midi_uart_to_usb(uart_ev);
-            knot_midi_usb_send_packet(usb_ev);
+          portMUX_TYPE spinlock = portMUX_INITIALIZER_UNLOCKED;
+          portENTER_CRITICAL(&spinlock);
 
+          int status = knot_midi_usb_send_packet(usb_ev);
+          portEXIT_CRITICAL(&spinlock);
+
+          if (status == 0) {
+
+            // transfer was ok
             if (knot_midi_uart_state.midi_through_state) {
               knot_midi_uart_send_packet(uart_ev);
-              ets_printf("USB + MIDI: %d %d %d %d\n", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
+              ESP_LOGD(TAG, "USB + MIDI: %d %d %d %d", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
             } else {
-              ets_printf("USB: %d %d %d %d\n", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
+              ESP_LOGD(TAG, "USB: %d %d %d %d", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
             }
+          } else if (status == 1) {
+            ESP_LOGW(TAG, "USB not connected");
+          } else {
+            ESP_LOGW(TAG, "USB error: %d", status);
           }
         }
-
-        // ESP_LOGI(TAG, "[DATA EVT]: %d %d %d %d", dtmp[0], dtmp[1], dtmp[2], dtmp[3]);
-        break;
-      // Event of HW FIFO overflow detected
-      case UART_FIFO_OVF:
-
-        grid_alert_one_set(&grid_led_state, 1, 200, 0, 0, 30); // ERROR
-        ESP_LOGI(TAG, "hw fifo overflow");
-        // If fifo overflow happened, you should consider adding flow control for your application.
-        // The ISR has already reset the rx FIFO,
-        // As an example, we directly flush the rx buffer here in order to read more data.
-        uart_flush_input(EX_UART_NUM);
-        xQueueReset(knot_midi_uart_state.uart0_queue);
-        break;
-      // Event of UART ring buffer full
-      case UART_BUFFER_FULL:
-
-        grid_alert_one_set(&grid_led_state, 2, 200, 0, 0, 30); // ERROR
-        ESP_LOGI(TAG, "ring buffer full");
-        // If buffer full happened, you should consider encreasing your buffer size
-        // As an example, we directly flush the rx buffer here in order to read more data.
-        uart_flush_input(EX_UART_NUM);
-        xQueueReset(knot_midi_uart_state.uart0_queue);
-        break;
-      // Event of UART RX break detected
-      case UART_BREAK:
-        grid_alert_one_set(&grid_led_state, 0, 200, 0, 0, 30); // ERROR
-        ESP_LOGI(TAG, "uart rx break");
-        break;
-      // Event of UART parity check error
-      case UART_PARITY_ERR:
-        grid_alert_one_set(&grid_led_state, 0, 200, 0, 0, 30); // ERROR
-        ESP_LOGI(TAG, "uart parity error");
-        break;
-      // Event of UART frame error
-      case UART_FRAME_ERR:
-        grid_alert_one_set(&grid_led_state, 0, 200, 0, 0, 30); // ERROR
-        ESP_LOGI(TAG, "uart frame error");
-        break;
-      // UART_PATTERN_DET
-      case UART_PATTERN_DET:
-        grid_alert_one_set(&grid_led_state, 0, 200, 0, 0, 30); // ERROR
-        uart_get_buffered_data_len(EX_UART_NUM, &buffered_size);
-        int pos = uart_pattern_pop_pos(EX_UART_NUM);
-        ESP_LOGI(TAG, "[UART PATTERN DETECTED] pos: %d, buffered size: %d", pos, buffered_size);
-        if (pos == -1) {
-          // There used to be a UART_PATTERN_DET event, but the pattern position queue is full so that it can not
-          // record the position. We should set a larger queue size.
-          // As an example, we directly flush the rx buffer here.
-          uart_flush_input(EX_UART_NUM);
-        } else {
-          uart_read_bytes(EX_UART_NUM, dtmp, pos, 100 / portTICK_PERIOD_MS);
-          uint8_t pat[PATTERN_CHR_NUM + 1];
-          memset(pat, 0, sizeof(pat));
-          uart_read_bytes(EX_UART_NUM, pat, PATTERN_CHR_NUM, 100 / portTICK_PERIOD_MS);
-          ESP_LOGI(TAG, "read data: %s", dtmp);
-          ESP_LOGI(TAG, "read pat : %s", pat);
-        }
-        break;
-      // Others
-      default:
-        grid_alert_one_set(&grid_led_state, 0, 0, 0, 200, 30); // ERROR
-        ESP_LOGI(TAG, "uart event type: %d", event.type);
-        break;
       }
+
+      // ESP_LOGI(TAG, "[DATA EVT]: %d %d %d %d", dtmp[0], dtmp[1], dtmp[2], dtmp[3]);
     }
 
     // ESP_LOGI(TAG, "UART RX loop");
