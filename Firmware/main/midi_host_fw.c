@@ -29,6 +29,66 @@
 
 static const char* TAG = "DAEMON";
 
+void midi_config_file_update(uint8_t state) {
+
+  ESP_LOGI(TAG, "Midi through set: %d", state);
+
+  FILE* filePointer;        // Pointer to file type
+  char dataToWrite[] = "0"; // Array to hold data to be written
+
+  if (state) {
+    dataToWrite[0] = '1';
+  }
+
+  // Open file in write mode
+  filePointer = fopen("/littlefs/midithrough.cfg", "w");
+
+  // Check if file opened successfully
+  if (filePointer == NULL) {
+    printf("Unable to open file.\n");
+    return; // Exit program with error code
+  }
+
+  // Write data to file
+  fputs(dataToWrite, filePointer);
+
+  // Close file
+  fclose(filePointer);
+}
+
+uint8_t /*is_midi_through_enabled*/ midi_config_file_read(void) {
+
+  FILE* filePointer; // Pointer to file type
+  char firstCharacter;
+
+  // Open file in read mode
+  filePointer = fopen("/littlefs/midithrough.cfg", "r");
+
+  // Check if file opened successfully
+  if (filePointer == NULL) {
+    printf("Unable to open file.\n");
+    return 0; // Midi through not enabled
+  }
+
+  // Read the first character from the file
+  firstCharacter = fgetc(filePointer);
+
+  // Check if the end of the file or an error occurred
+  if (firstCharacter == EOF) {
+    printf("Error reading from file or file is empty.\n");
+    fclose(filePointer); // Close file before exiting
+    return 0;            // Midi through not enabled
+  }
+
+  // Display the first character
+  printf("The first character in the file is: %c\n", firstCharacter);
+
+  // Close file
+  fclose(filePointer);
+
+  return firstCharacter - '0';
+}
+
 static void host_lib_daemon_task(void* arg) {
   SemaphoreHandle_t signaling_sem = (SemaphoreHandle_t)arg;
 
@@ -230,10 +290,21 @@ void app_main(void) {
 
   knot_midi_uart_init(&knot_midi_uart_state);
 
+  grid_esp32_nvm_list_files(&grid_esp32_nvm_state, "/littlefs");
+
+  if (midi_config_file_read()) {
+    ESP_LOGI(TAG, "Midi through enabled");
+    knot_midi_uart_set_midithrough_state(&knot_midi_uart_state, true);
+    grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 0, 255); // blue
+  } else {
+    ESP_LOGI(TAG, "Midi through disabled");
+    knot_midi_uart_set_midithrough_state(&knot_midi_uart_state, false);
+    grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 255, 0); // green
+  }
+
   xTaskCreatePinnedToCore(knot_midi_uart_rx_task, "uart_rx", 2048, (void*)signaling_sem, UART_RX_TASK_PRIORITY, &uart_rx_task_hdl, 0);
 
   uint8_t last_button_state = 1;
-  grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 255, 0);
 
   while (1) {
 
@@ -248,9 +319,12 @@ void app_main(void) {
       if (knot_midi_uart_get_midithrough_state(&knot_midi_uart_state)) {
         knot_midi_uart_set_midithrough_state(&knot_midi_uart_state, false);
         grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 255, 0);
+        midi_config_file_update(false);
+
       } else {
         knot_midi_uart_set_midithrough_state(&knot_midi_uart_state, true);
         grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 0, 255);
+        midi_config_file_update(true);
       }
     }
 
