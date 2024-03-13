@@ -9,8 +9,7 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 
 ### Nightly Build here 
 
-[Nightly Release](https://github.com/intechstudio/knot/blob/preview/Preview/Firmware/knot_esp32_nightly.uf2)
-
+[Nightly Release](https://github.com/0c1cc6a4-bd38-481d-b9db-21fa9f8a5ca5)
 ### Knot features
 
 - Standalone USB MIDI Host, works with Grid and any MIDI class compliant USB controller
