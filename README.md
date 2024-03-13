@@ -6,6 +6,11 @@ Knot is the bridge between old-school MIDI gear like synthesizers, groove boxes,
 
 You can find more info on the [website](https://intech.studio/shop/knot) or in the [Knot - Starter's Guide](https://docs.intech.studio/guides/guide/knot-start).
 
+
+### Nightly Build here 
+
+[Nightly Release](https://github.com/intechstudio/knot/blob/preview/Preview/Firmware/knot_esp32_nightly.uf2)
+
 ### Knot features
 
 - Standalone USB MIDI Host, works with Grid and any MIDI class compliant USB controller
