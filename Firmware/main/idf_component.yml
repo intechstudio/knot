@@ -1,7 +1,9 @@
 ## IDF Component Manager Manifest File
 dependencies:
   sukuwc/grid_esp32_led: "*"
+  sukuwc/grid_esp32_nvm: "*"
   sukuwc/grid_common: "*"
+  joltwallet/littlefs: "*"
   ## Required IDF version
   idf:
     version: ">=4.1.0"

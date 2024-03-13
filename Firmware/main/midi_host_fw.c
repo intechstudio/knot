@@ -97,6 +97,7 @@ uint8_t grid_platform_get_adc_bit_depth(void) { return 12; }
 #include "grid_ui.h"
 
 #include "grid_esp32_led.h"
+#include "grid_esp32_nvm.h"
 
 void knot_module_ui_init(struct grid_ain_model* ain, struct grid_led_model* led, struct grid_ui_model* ui) {
 
@@ -138,6 +139,13 @@ void knot_lua_ui_init_knot(struct grid_lua_model* mod) {
 
 void app_main(void) {
 
+  // MIDI A/B SWITCH AND THROUGH BUTTON INTERACTIVITY
+  gpio_set_direction(SW_AB_PIN, GPIO_MODE_INPUT);
+  gpio_set_direction(SW_MODE_PIN, GPIO_MODE_INPUT);
+
+  SemaphoreHandle_t nvm_or_port = xSemaphoreCreateBinary();
+  xSemaphoreGive(nvm_or_port);
+
   ESP_LOGI(TAG, "===== MAIN START =====");
 
   // gpio_set_direction(GRID_ESP32_PINS_MAPMODE, GPIO_MODE_INPUT);
@@ -162,6 +170,26 @@ void app_main(void) {
   grid_led_set_layer_color(&grid_led_state, 0, 2, 0, 0, 0);
   grid_led_set_layer_color(&grid_led_state, 1, 2, 0, 0, 0);
   grid_led_set_layer_color(&grid_led_state, 2, 2, 0, 0, 0);
+
+  // Create the class driver task
+  TaskHandle_t led_task_hdl;
+  xTaskCreatePinnedToCore(grid_esp32_led_task, // was led_task
+                          "led", 4096, NULL, LED_TASK_PRIORITY, &led_task_hdl, 0);
+
+  ESP_LOGI(TAG, "===== NVM START =====");
+
+  xSemaphoreTake(nvm_or_port, 0);
+  grid_esp32_nvm_init(&grid_esp32_nvm_state);
+
+  if (gpio_get_level(SW_MODE_PIN) == 0) {
+
+    grid_alert_all_set(&grid_led_state, GRID_LED_COLOR_YELLOW_DIM, 1000);
+    grid_alert_all_set_frequency(&grid_led_state, 4);
+    grid_esp32_nvm_erase(&grid_esp32_nvm_state);
+    vTaskDelay(pdMS_TO_TICKS(1600));
+  }
+
+  xSemaphoreGive(nvm_or_port);
 
   ESP_LOGI(TAG, "===== LUA INIT =====");
   grid_lua_init(&grid_lua_state);
@@ -188,7 +216,6 @@ void app_main(void) {
 
   TaskHandle_t daemon_task_hdl;
   TaskHandle_t class_driver_task_hdl;
-  TaskHandle_t led_task_hdl;
 
   TaskHandle_t uart_rx_task_hdl;
   TaskHandle_t uart_housekeeping_task_hdl;
@@ -197,10 +224,6 @@ void app_main(void) {
   // Create the class driver task
   xTaskCreatePinnedToCore(class_driver_task, "class", 4096, (void*)signaling_sem, CLASS_TASK_PRIORITY, &class_driver_task_hdl, 0);
 
-  // Create the class driver task
-  xTaskCreatePinnedToCore(grid_esp32_led_task, // was led_task
-                          "led", 4096, (void*)signaling_sem, LED_TASK_PRIORITY, &led_task_hdl, 0);
-
   // Create a task to handler UART event from ISR
 
   vTaskDelay(10); // Add a short delay to let the tasks run
@@ -208,10 +231,6 @@ void app_main(void) {
   knot_midi_uart_init(&knot_midi_uart_state);
 
   xTaskCreatePinnedToCore(knot_midi_uart_rx_task, "uart_rx", 2048, (void*)signaling_sem, UART_RX_TASK_PRIORITY, &uart_rx_task_hdl, 0);
-
-  // MIDI A/B SWITCH AND THROUGH BUTTON INTERACTIVITY
-  gpio_set_direction(SW_AB_PIN, GPIO_MODE_INPUT);
-  gpio_set_direction(SW_MODE_PIN, GPIO_MODE_INPUT);
 
   uint8_t last_button_state = 1;
   grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 255, 0);
