@@ -221,7 +221,7 @@ static void in_transfer_cb(usb_transfer_t* in_transfer) {
 
   struct uart_midi_event_packet uart_ev = usb_midi_to_uart(usb_ev);
 
-  ESP_LOGI(TAG, "USB -> MIDI: %d %d %d %d", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
+  ets_printf("USB -> MIDI: %d %d %d %d\n", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
   knot_midi_uart_send_packet(uart_ev);
 
   usb_host_transfer_submit(in_transfer);
@@ -229,14 +229,52 @@ static void in_transfer_cb(usb_transfer_t* in_transfer) {
 
 volatile uint8_t DRAM_ATTR usb_out_ready = 1;
 
-static void IRAM_ATTR out_transfer_cb(usb_transfer_t* in_transfer) {
+static void IRAM_ATTR out_transfer_cb(usb_transfer_t* out_transfer) {
   // ets_printf("Ready\n");
   usb_out_ready = 1;
+
+  struct usb_midi_event_packet usb_ev = {0, 0, 0, 0};
+
+  int status = knot_midi_usb_out_queue_pop(&usb_ev);
+
+  if (status == 1) {
+    return;
+  }
+
+  knot_midi_usb_send_packet(usb_ev);
 }
 
-uint8_t knot_midi_usb_out_isready(void) { return usb_out_ready; }
+uint8_t IRAM_ATTR knot_midi_usb_out_isready(void) { return usb_out_ready; }
 
-int knot_midi_usb_send_packet(struct usb_midi_event_packet ev) {
+#define USB_OUT_QUEUE_LENGHT 50
+uint32_t DRAM_ATTR usb_out_queue_write_idx = 0;
+uint32_t DRAM_ATTR usb_out_queue_read_idx = 0;
+static struct usb_midi_event_packet DRAM_ATTR usb_out_queue[USB_OUT_QUEUE_LENGHT] = {0};
+
+int IRAM_ATTR knot_midi_usb_out_queue_push(struct usb_midi_event_packet ev) {
+  usb_out_queue[usb_out_queue_write_idx] = ev;
+  usb_out_queue_write_idx = (usb_out_queue_write_idx + 1) % USB_OUT_QUEUE_LENGHT;
+  return 0;
+}
+
+int IRAM_ATTR knot_midi_usb_out_queue_available(void) {
+  if (usb_out_queue_read_idx == usb_out_queue_write_idx) {
+    return 0;
+  }
+  return 1;
+}
+
+int IRAM_ATTR knot_midi_usb_out_queue_pop(struct usb_midi_event_packet* ev) {
+
+  if (usb_out_queue_read_idx == usb_out_queue_write_idx) {
+    return 1;
+  }
+  *ev = usb_out_queue[usb_out_queue_read_idx];
+  usb_out_queue_read_idx = (usb_out_queue_read_idx + 1) % USB_OUT_QUEUE_LENGHT;
+  return 0;
+}
+
+int IRAM_ATTR knot_midi_usb_send_packet(struct usb_midi_event_packet ev) {
 
   if (out_transfer == NULL) {
     return 1;

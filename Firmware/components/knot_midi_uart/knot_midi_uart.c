@@ -128,40 +128,34 @@ void knot_midi_uart_rx_task(void* arg) {
 
         struct uart_midi_event_packet uart_ev = uart_midi_process_byte(dtmp[i]);
 
-        if (uart_ev.length) {
-          struct usb_midi_event_packet usb_ev = midi_uart_to_usb(uart_ev);
-          while (knot_midi_usb_out_isready() == 0) {
-            ESP_LOGD(TAG, "waiting\n");
-            vTaskDelay(1); // at least one tick however many ms that is
-          }
+        if (uart_ev.length == 0) {
+          continue;
+        }
 
-          portMUX_TYPE spinlock = portMUX_INITIALIZER_UNLOCKED;
-          portENTER_CRITICAL(&spinlock);
+        struct usb_midi_event_packet usb_ev = midi_uart_to_usb(uart_ev);
 
-          int status = knot_midi_usb_send_packet(usb_ev);
-          portEXIT_CRITICAL(&spinlock);
+        // Prepare for sending through usb
+        int status1 = knot_midi_usb_out_queue_push(usb_ev);
 
-          if (status == 0) {
-
-            // transfer was ok
-            if (knot_midi_uart_state.midi_through_state) {
-              knot_midi_uart_send_packet(uart_ev);
-              ESP_LOGD(TAG, "USB + MIDI: %d %d %d %d", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
-            } else {
-              ESP_LOGD(TAG, "USB: %d %d %d %d", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
-            }
-          } else if (status == 1) {
-            ESP_LOGW(TAG, "USB not connected");
+        if (knot_midi_usb_out_isready()) {
+          int status2 = knot_midi_usb_out_queue_pop(&usb_ev);
+          int status3 = knot_midi_usb_send_packet(usb_ev);
+          if (status3 == 0) {
+            // ESP_LOGD(TAG, "USB: %d %d %d %d", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
+          } else if (status3 == 1) {
+            // ESP_LOGW(TAG, "USB not connected");
           } else {
-            ESP_LOGW(TAG, "USB error: %d", status);
+            // ESP_LOGW(TAG, "USB error: %d", status3);
           }
         }
+
+        // transfer was ok
+        if (knot_midi_uart_state.midi_through_state) {
+          knot_midi_uart_send_packet(uart_ev);
+          ESP_LOGD(TAG, "MIDI: %d %d %d", uart_ev.byte1, uart_ev.byte2, uart_ev.byte3);
+        }
       }
-
-      // ESP_LOGI(TAG, "[DATA EVT]: %d %d %d %d", dtmp[0], dtmp[1], dtmp[2], dtmp[3]);
     }
-
-    // ESP_LOGI(TAG, "UART RX loop");
   }
   free(dtmp);
   dtmp = NULL;

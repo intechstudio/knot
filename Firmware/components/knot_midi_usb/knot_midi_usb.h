@@ -22,7 +22,10 @@ typedef struct {
   int claimed_interface;
 } class_driver_t;
 
-uint8_t knot_midi_usb_out_isready(void);
-int knot_midi_usb_send_packet(struct usb_midi_event_packet ev);
+uint8_t IRAM_ATTR knot_midi_usb_out_isready(void);
+int IRAM_ATTR knot_midi_usb_out_queue_push(struct usb_midi_event_packet ev);
+int IRAM_ATTR knot_midi_usb_out_queue_available(void);
 
+int IRAM_ATTR knot_midi_usb_out_queue_pop(struct usb_midi_event_packet* ev);
+int IRAM_ATTR knot_midi_usb_send_packet(struct usb_midi_event_packet ev);
 void class_driver_task(void* arg);
