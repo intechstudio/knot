@@ -136,23 +136,11 @@ void knot_midi_uart_rx_task(void* arg) {
         struct usb_midi_event_packet usb_ev = midi_uart_to_usb(uart_ev);
 
         // Prepare for sending through usb
-        int status1 = knot_midi_queue_usbout_push(usb_ev);
-
-        if (knot_midi_usb_out_isready()) {
-          int status2 = knot_midi_queue_usbout_pop(&usb_ev);
-          int status3 = knot_midi_usb_send_packet(usb_ev);
-          if (status3 == 0) {
-            // ESP_LOGD(TAG, "USB: %d %d %d %d", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
-          } else if (status3 == 1) {
-            // ESP_LOGW(TAG, "USB not connected");
-          } else {
-            // ESP_LOGW(TAG, "USB error: %d", status3);
-          }
-        }
+        knot_midi_queue_usbout_push(usb_ev);
 
         // transfer was ok
         if (knot_midi_uart_state.midi_through_state) {
-          knot_midi_uart_send_packet(uart_ev);
+          knot_midi_queue_trsout_push(uart_ev);
           ESP_LOGD(TAG, "MIDI: %d %d %d", uart_ev.byte1, uart_ev.byte2, uart_ev.byte3);
         }
       }

@@ -6,6 +6,8 @@
 
 #include "esp_intr_alloc.h"
 #include "esp_log.h"
+
+#include "esp_freertos_hooks.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include "freertos/task.h"
@@ -13,6 +15,7 @@
 
 #include <string.h>
 
+#include "knot_midi_queue.h"
 #include "knot_midi_uart.h"
 #include "knot_midi_usb.h"
 
@@ -197,6 +200,36 @@ void knot_lua_ui_init_knot(struct grid_lua_model* mod) {
   grid_lua_dostring(mod, "setmetatable(" GRID_LUA_KW_ELEMENT_short "[0], system_meta)");
 }
 
+bool idle_hook(void) {
+
+  struct uart_midi_event_packet uart_midi_ev = {0};
+  while (0 == knot_midi_queue_trsout_pop(&uart_midi_ev)) {
+    // ets_printf("TRS OUT: %d %d %d %d\n", uart_midi_ev.length, uart_midi_ev.byte1, uart_midi_ev.byte2, uart_midi_ev.byte3);
+    knot_midi_uart_send_packet(uart_midi_ev);
+  }
+
+  if (knot_midi_usb_out_isready()) {
+
+    struct usb_midi_event_packet usb_midi_ev = {0};
+
+    if (0 == knot_midi_queue_usbout_pop(&usb_midi_ev)) {
+
+      int status = knot_midi_usb_send_packet(usb_midi_ev);
+
+      if (status == 0) {
+        // ets_printf("USB OUT: %d %d %d %d", usb_midi_ev.byte0, usb_midi_ev.byte1, usb_midi_ev.byte2, usb_midi_ev.byte3);
+      } else if (status == 1) {
+        // ets_printf("USB not connected");
+      } else {
+        // ets_printf("USB error: %d", status);
+      }
+    }
+  }
+
+  // portYIELD();
+  return 1; // return 1 causes one trigger / rtos tick
+}
+
 void app_main(void) {
 
   // MIDI A/B SWITCH AND THROUGH BUTTON INTERACTIVITY
@@ -303,6 +336,10 @@ void app_main(void) {
   }
 
   xTaskCreatePinnedToCore(knot_midi_uart_rx_task, "uart_rx", 4096, (void*)signaling_sem, UART_RX_TASK_PRIORITY, &uart_rx_task_hdl, 0);
+
+  // Register idle hook to force yield from idle task to lowest priority task
+  esp_register_freertos_idle_hook_for_cpu(idle_hook, 0);
+  // esp_register_freertos_idle_hook_for_cpu(idle_hook, 1);
 
   uint8_t last_button_state = 1;
 

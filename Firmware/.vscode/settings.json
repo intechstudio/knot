@@ -39,7 +39,8 @@
     "*.ipp": "c",
     "bitset": "c",
     "initializer_list": "c",
-    "utility": "c"
+    "utility": "c",
+    "knot_midi_usb.h": "c"
   },
   "actionButtons": {
     "defaultColor": "#ff0034",

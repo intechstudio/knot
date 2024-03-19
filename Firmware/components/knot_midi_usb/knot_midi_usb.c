@@ -222,8 +222,7 @@ static void in_transfer_cb(usb_transfer_t* in_transfer) {
 
   struct uart_midi_event_packet uart_ev = usb_midi_to_uart(usb_ev);
 
-  ets_printf("USB -> MIDI: %d %d %d %d\n", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
-  knot_midi_uart_send_packet(uart_ev);
+  knot_midi_queue_trsout_push(uart_ev);
 
   usb_host_transfer_submit(in_transfer);
 }
@@ -369,6 +368,7 @@ static void action_get_str_desc(class_driver_t* driver_obj) {
 static void aciton_close_dev(class_driver_t* driver_obj) {
 
   ESP_LOGI(TAG, "action_close_dev");
+  out_transfer = NULL;
 
   if (driver_obj->claimed_interface != -1) {
 
