@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "knot_midi_queue.h"
 #include "knot_midi_translator.h"
 #include "knot_midi_uart.h"
 
@@ -235,7 +236,7 @@ static void IRAM_ATTR out_transfer_cb(usb_transfer_t* out_transfer) {
 
   struct usb_midi_event_packet usb_ev = {0, 0, 0, 0};
 
-  int status = knot_midi_usb_out_queue_pop(&usb_ev);
+  int status = knot_midi_queue_usbout_pop(&usb_ev);
 
   if (status == 1) {
     return;
@@ -245,34 +246,6 @@ static void IRAM_ATTR out_transfer_cb(usb_transfer_t* out_transfer) {
 }
 
 uint8_t IRAM_ATTR knot_midi_usb_out_isready(void) { return usb_out_ready; }
-
-#define USB_OUT_QUEUE_LENGHT 50
-uint32_t DRAM_ATTR usb_out_queue_write_idx = 0;
-uint32_t DRAM_ATTR usb_out_queue_read_idx = 0;
-static struct usb_midi_event_packet DRAM_ATTR usb_out_queue[USB_OUT_QUEUE_LENGHT] = {0};
-
-int IRAM_ATTR knot_midi_usb_out_queue_push(struct usb_midi_event_packet ev) {
-  usb_out_queue[usb_out_queue_write_idx] = ev;
-  usb_out_queue_write_idx = (usb_out_queue_write_idx + 1) % USB_OUT_QUEUE_LENGHT;
-  return 0;
-}
-
-int IRAM_ATTR knot_midi_usb_out_queue_available(void) {
-  if (usb_out_queue_read_idx == usb_out_queue_write_idx) {
-    return 0;
-  }
-  return 1;
-}
-
-int IRAM_ATTR knot_midi_usb_out_queue_pop(struct usb_midi_event_packet* ev) {
-
-  if (usb_out_queue_read_idx == usb_out_queue_write_idx) {
-    return 1;
-  }
-  *ev = usb_out_queue[usb_out_queue_read_idx];
-  usb_out_queue_read_idx = (usb_out_queue_read_idx + 1) % USB_OUT_QUEUE_LENGHT;
-  return 0;
-}
 
 int IRAM_ATTR knot_midi_usb_send_packet(struct usb_midi_event_packet ev) {
 

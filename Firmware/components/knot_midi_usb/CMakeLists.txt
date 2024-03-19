@@ -6,6 +6,7 @@ idf_component_register(
     REQUIRES
         "knot_midi_translator"
         "knot_midi_uart"
+        "knot_midi_queue"
         "driver"
         "usb"
         "grid_common"

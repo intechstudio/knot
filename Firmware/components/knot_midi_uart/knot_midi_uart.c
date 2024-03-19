@@ -20,6 +20,7 @@
 
 #include "driver/uart.h"
 #include "freertos/queue.h"
+#include "knot_midi_queue.h"
 #include "knot_midi_translator.h"
 #include "knot_midi_usb.h"
 
@@ -135,10 +136,10 @@ void knot_midi_uart_rx_task(void* arg) {
         struct usb_midi_event_packet usb_ev = midi_uart_to_usb(uart_ev);
 
         // Prepare for sending through usb
-        int status1 = knot_midi_usb_out_queue_push(usb_ev);
+        int status1 = knot_midi_queue_usbout_push(usb_ev);
 
         if (knot_midi_usb_out_isready()) {
-          int status2 = knot_midi_usb_out_queue_pop(&usb_ev);
+          int status2 = knot_midi_queue_usbout_pop(&usb_ev);
           int status3 = knot_midi_usb_send_packet(usb_ev);
           if (status3 == 0) {
             // ESP_LOGD(TAG, "USB: %d %d %d %d", usb_ev.byte0, usb_ev.byte1, usb_ev.byte2, usb_ev.byte3);
