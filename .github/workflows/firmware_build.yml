@@ -17,12 +17,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-      - name: esp-idf build
-        uses: espressif/esp-idf-ci-action@v1
-        with:
-          esp_idf_version: latest
-          target: esp32s3
-          path: 'Firmware'
+
+      - name: Build Docker image containing toolchains
+        run: docker build -t my-image .
+
+      - name: Run script in Docker container
+        run: docker run -v $PWD:/project -w /project/ my-image sh -c "cd Firmware && idf.py build"
 
       - name: Run Unit Tests
         run: |
