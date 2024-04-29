@@ -1846,7 +1846,7 @@
     (pin "4" (uuid 4d35f0ed-7e21-4646-9266-fc5c4235430d))
     (pin "5" (uuid cedd3d21-2aac-4477-8dd3-cf19ff919f0f))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "U17") (unit 1)
         )
@@ -1871,7 +1871,7 @@
     )
     (pin "1" (uuid 9cfdf2d9-069f-419b-a465-295f6ca78ba2))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0107") (unit 1)
         )
@@ -1901,7 +1901,7 @@
     (pin "3" (uuid 4e023a29-4090-4cbf-9ff6-0fe5e9b4b617))
     (pin "4" (uuid bd55f8d3-531c-469a-b54a-6c944b9cf557))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "Q2") (unit 1)
         )
@@ -1926,7 +1926,7 @@
     )
     (pin "1" (uuid 14ab16c7-72c5-43d8-881f-b62fd26984e2))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR098") (unit 1)
         )
@@ -1952,7 +1952,7 @@
     (pin "1" (uuid 662afde4-d778-4ccb-9053-1263e7d861e0))
     (pin "2" (uuid e547f73b-cdcf-4617-a86e-eb1138dd665b))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "R20") (unit 1)
         )
@@ -1978,7 +1978,7 @@
     (pin "1" (uuid ea6b298e-3d12-4f74-a9db-95f07d7e81c3))
     (pin "2" (uuid 64214c60-4688-4f8a-938f-818105d18d53))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "D4") (unit 1)
         )
@@ -2003,7 +2003,7 @@
     )
     (pin "1" (uuid 890e6bac-68bc-41a4-bf81-ae33e4f52931))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0116") (unit 1)
         )
@@ -2029,7 +2029,7 @@
     (pin "1" (uuid d1c198c4-8fa6-4ce6-810c-8865773a8460))
     (pin "2" (uuid 71cdae2c-b3b6-48c3-bbb4-5b600cae90a6))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "R21") (unit 1)
         )
@@ -2062,7 +2062,7 @@
     (pin "8" (uuid 8b23bf52-c561-4d98-8a82-3f55565ffbcb))
     (pin "9" (uuid 92c8a8c2-264d-47ff-89ca-f4e5aa46298b))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "U15") (unit 1)
         )
@@ -2087,7 +2087,7 @@
     )
     (pin "1" (uuid 579dec7c-e10e-431a-ab5c-b273cb98b378))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "TP23") (unit 1)
         )
@@ -2112,7 +2112,7 @@
     )
     (pin "1" (uuid c8c98b05-f063-49fd-9f5f-53e5e656fdc7))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0113") (unit 1)
         )
@@ -2138,7 +2138,7 @@
     (pin "1" (uuid 0d38b175-22d3-4c38-80f6-3a6d304eff3f))
     (pin "2" (uuid 94b3daa1-1d10-493d-8671-f6c8162e709c))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "C25") (unit 1)
         )
@@ -2171,7 +2171,7 @@
     (pin "3" (uuid 473033ef-c3c5-4baa-98ee-934dd0b84205))
     (pin "4" (uuid d83fc080-419b-4975-8f88-aa9d1dbcddd9))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "Q1") (unit 2)
         )
@@ -2197,7 +2197,7 @@
     (pin "1" (uuid f23846e4-2eec-4ea1-b180-1e6aeaf1a3f8))
     (pin "2" (uuid be72c358-d1dc-4ba1-9e65-85305850a94e))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "R22") (unit 1)
         )
@@ -2222,7 +2222,7 @@
     )
     (pin "1" (uuid d009e24a-baff-4cc5-8bd3-3d6bf1fa1227))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "TP25") (unit 1)
         )
@@ -2247,7 +2247,7 @@
     )
     (pin "1" (uuid 3e1879c6-c2f1-4955-97c5-57e7745a210d))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0118") (unit 1)
         )
@@ -2272,7 +2272,7 @@
     )
     (pin "1" (uuid d087bdb5-ee48-492f-a1f9-dfd141ede88f))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0100") (unit 1)
         )
@@ -2298,7 +2298,7 @@
     (pin "1" (uuid 6cdcaafc-bc2a-4127-abcf-d22cbdd91e7a))
     (pin "2" (uuid 2f54bb2e-7d3c-4c9d-9375-151d4124bf7c))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "FB2") (unit 1)
         )
@@ -2324,7 +2324,7 @@
     (pin "1" (uuid 5a66cd7f-a53d-4cb6-808e-4ba88e785316))
     (pin "2" (uuid 3afe2efc-5b3f-4263-88f9-df611f0850d8))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "C26") (unit 1)
         )
@@ -2349,7 +2349,7 @@
     )
     (pin "1" (uuid 14e95458-f7e6-438b-b792-83a3a7ac083c))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#FLG04") (unit 1)
         )
@@ -2374,7 +2374,7 @@
     )
     (pin "1" (uuid 7b7245e5-360a-488e-bb17-d7583ebbeae5))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0117") (unit 1)
         )
@@ -2399,7 +2399,7 @@
     )
     (pin "1" (uuid f59e7d8c-bd86-427a-8a24-d89998fa0d2f))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#FLG03") (unit 1)
         )
@@ -2424,7 +2424,7 @@
     )
     (pin "1" (uuid 1737407e-6f43-42aa-b7c2-06c456506d25))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0104") (unit 1)
         )
@@ -2454,7 +2454,7 @@
     (pin "3" (uuid 9108637a-34ea-4c85-b02f-218646370008))
     (pin "4" (uuid 7d688840-335b-4828-9aae-94ea4d523caa))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "Q2") (unit 2)
         )
@@ -2480,7 +2480,7 @@
     (pin "1" (uuid a4269fe0-f300-42b5-b937-9a8c1ba89543))
     (pin "2" (uuid 117de1b8-6115-4740-b22b-b385bd7759a8))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "C19") (unit 1)
         )
@@ -2506,7 +2506,7 @@
     (pin "1" (uuid d637133d-bcc9-4032-95a4-c3057fd2c213))
     (pin "2" (uuid 0b231083-3b0b-48cf-bfb5-e637c1c99031))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "C18") (unit 1)
         )
@@ -2531,7 +2531,7 @@
     )
     (pin "1" (uuid 4e1811c5-0e10-4d57-80e0-823f14b0ad5a))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR096") (unit 1)
         )
@@ -2556,7 +2556,7 @@
     )
     (pin "1" (uuid dea75e7d-ae6e-4d23-85e6-7c5e475bb9f7))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0114") (unit 1)
         )
@@ -2581,7 +2581,7 @@
     )
     (pin "1" (uuid 3a650da1-78d5-497e-bb17-0ce57ad9d220))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0110") (unit 1)
         )
@@ -2606,7 +2606,7 @@
     )
     (pin "1" (uuid 6781cffa-a5b6-485c-a3a7-9ee601069142))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0103") (unit 1)
         )
@@ -2631,7 +2631,7 @@
     )
     (pin "1" (uuid af106e98-f55d-4ab8-99e7-fdc0a6b7f06b))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0115") (unit 1)
         )
@@ -2657,7 +2657,7 @@
     (pin "1" (uuid d0512fbd-9d48-4cf4-a98d-1e6364c04cef))
     (pin "2" (uuid 7fdcc566-2de3-4184-aa03-426dc6a88796))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "C24") (unit 1)
         )
@@ -2683,7 +2683,7 @@
     (pin "1" (uuid 1688419a-3072-4de1-a4d4-21a9b5b2829f))
     (pin "2" (uuid 0cb68901-c598-47d3-aca7-741958567f54))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "C27") (unit 1)
         )
@@ -2708,7 +2708,7 @@
     )
     (pin "1" (uuid 2e8c4a67-e4e5-47ab-9119-a4a0e31fd4c5))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0112") (unit 1)
         )
@@ -2734,7 +2734,7 @@
     (pin "1" (uuid de1f8893-19b4-44f6-a2d6-60129abca588))
     (pin "2" (uuid 518dedf8-1fa8-4d20-96f6-9f614a19ef78))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "L1") (unit 1)
         )
@@ -2767,7 +2767,7 @@
     (pin "3" (uuid a43ef80d-6280-49d0-a4cd-e29bec5babc1))
     (pin "4" (uuid 158fd60f-0556-42a4-8034-24bebf34cdca))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "Q1") (unit 1)
         )
@@ -2792,7 +2792,7 @@
     )
     (pin "1" (uuid bd8c175d-0cb1-4694-8159-3b70a41919f8))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0101") (unit 1)
         )
@@ -2818,7 +2818,7 @@
     (pin "1" (uuid fa24be1d-7b94-4b82-ab70-2ccb825215e5))
     (pin "2" (uuid 2505c98d-5823-474d-b5e2-d960996cba07))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "C17") (unit 1)
         )
@@ -2843,7 +2843,7 @@
     )
     (pin "1" (uuid d7865376-77b4-4443-8658-159f135626f9))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#FLG02") (unit 1)
         )
@@ -2869,7 +2869,7 @@
     (pin "1" (uuid 776ff2e8-7363-4b25-a545-d1b0158d8304))
     (pin "2" (uuid f7a4cf58-556e-47f7-baac-a71c75cac51f))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "FB1") (unit 1)
         )
@@ -2895,7 +2895,7 @@
     (pin "1" (uuid 47ad0c81-e1ef-49e2-91ea-e230919fb321))
     (pin "2" (uuid 6453a0a4-7d06-40c4-893f-c71b83fc5b31))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "C21") (unit 1)
         )
@@ -2921,7 +2921,7 @@
     (pin "1" (uuid 2926db2e-eb80-4b81-8fa5-b2f67bce62ed))
     (pin "2" (uuid 78c4bf30-ae82-4b4f-ab82-e26e82b52f92))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "R23") (unit 1)
         )
@@ -2946,7 +2946,7 @@
     )
     (pin "1" (uuid eb806814-0dd4-4de8-b8ed-7b7b5a80f210))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0105") (unit 1)
         )
@@ -2971,7 +2971,7 @@
     )
     (pin "1" (uuid 985a2921-54e7-4c59-8c89-2fba2bf963f0))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0106") (unit 1)
         )
@@ -2996,7 +2996,7 @@
     )
     (pin "1" (uuid 38d7956e-02ae-4910-ac0c-40a1f294e261))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "TP24") (unit 1)
         )
@@ -3022,7 +3022,7 @@
     (pin "1" (uuid 3e397f06-8da6-4c1a-86f7-05a9ea87c763))
     (pin "2" (uuid 80476d29-aa46-4046-a309-717431b06513))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "D5") (unit 1)
         )
@@ -3047,7 +3047,7 @@
     )
     (pin "1" (uuid 2db0926f-8b23-469b-8b90-e9cae4e1e1da))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0111") (unit 1)
         )
@@ -3073,7 +3073,7 @@
     (pin "1" (uuid 03c8a8b5-58a7-40b7-9654-0a6bac6dfcf7))
     (pin "2" (uuid 3b08cb78-1896-4fa1-b1a4-2ea52d129ad4))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "C20") (unit 1)
         )
@@ -3102,7 +3102,7 @@
     (pin "4" (uuid c88c22d9-f936-4869-b657-4058c695bf55))
     (pin "5" (uuid c66ce2b4-9d3f-4e08-ab4a-7a9115fb2086))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "U16") (unit 1)
         )
@@ -3128,7 +3128,7 @@
     (pin "1" (uuid 505e6162-749d-46fa-97e6-47772ea381d3))
     (pin "2" (uuid 3718c21d-b893-4987-b597-0e28fecaea48))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "C22") (unit 1)
         )
@@ -3154,7 +3154,7 @@
     (pin "1" (uuid 1ef4529b-4a1c-4a41-89aa-0c8422a09aeb))
     (pin "2" (uuid eb1e306b-0e69-4a9f-bf4a-e4dabca479fb))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "R19") (unit 1)
         )
@@ -3179,7 +3179,7 @@
     )
     (pin "1" (uuid 22dd13a9-cd17-4416-8650-bb8840d68164))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR097") (unit 1)
         )
@@ -3204,7 +3204,7 @@
     )
     (pin "1" (uuid d57e2adb-0af0-42ab-a426-372667cdb63c))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR095") (unit 1)
         )
@@ -3229,7 +3229,7 @@
     )
     (pin "1" (uuid 345f7cba-fde0-4e5d-aa8e-5ecb04c16cc0))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "TP22") (unit 1)
         )
@@ -3254,7 +3254,7 @@
     )
     (pin "1" (uuid c9ae97e2-f42d-431a-adc3-7894ed8557dc))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0108") (unit 1)
         )
@@ -3288,7 +3288,7 @@
     (pin "4" (uuid 67b2c2b2-c93b-4812-80c9-51105701de85))
     (pin "5" (uuid b3b98816-3872-4e46-993f-69535434950b))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "DC1") (unit 1)
         )
@@ -3313,7 +3313,7 @@
     )
     (pin "1" (uuid 17445c20-fc17-410c-95d9-e8902ca1d248))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR099") (unit 1)
         )
@@ -3338,7 +3338,7 @@
     )
     (pin "1" (uuid e86727fd-4973-48cf-947b-82800ffa3244))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#FLG05") (unit 1)
         )
@@ -3363,7 +3363,7 @@
     )
     (pin "1" (uuid 299aca72-e808-48e3-a90d-e416746da3ed))
     (instances
-      (project "MIDI_Host"
+      (project "PCBA-KNOT"
         (path "/e63e39d7-6ac0-4ffd-8aa3-1841a4541b55/60c177f6-9f45-413f-893d-8d98077afbe8"
           (reference "#PWR0102") (unit 1)
         )

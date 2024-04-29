@@ -410,7 +410,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "MIDI_Host.kicad_pro",
+    "filename": "PCBA-KNOT.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -446,8 +446,8 @@
       "idf": "",
       "netlist": "",
       "specctra_dsn": "",
-      "step": "MIDI_Host.step",
-      "vrml": "../../../intech-render/Source-Knot/knot_pcb.wrl"
+      "step": "../../../../../Desktop/MIDI_Host.step",
+      "vrml": "../../../../../Desktop/knot_pcb.wrl"
     },
     "page_layout_descr_file": ""
   },
