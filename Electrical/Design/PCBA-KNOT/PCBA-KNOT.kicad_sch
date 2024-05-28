@@ -5569,7 +5569,7 @@
     (property "Reference" "J1" (at 171.45 25.4 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "MC-107DM" (at 171.45 27.94 0)
+    (property "Value" "TYPE-C-32-M-12" (at 171.45 27.94 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Footprint" "suku_basics:USB_C_Korean_Hroparts_TYPE-C-31-M-12" (at 172.72 50.8 0)
