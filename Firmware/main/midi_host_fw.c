@@ -158,6 +158,7 @@ uint8_t grid_platform_get_adc_bit_depth(void) { return 12; }
 #include "grid_led.h"
 #include "grid_lua_api.h"
 #include "grid_ui.h"
+#include "grid_ui_system.h"
 
 #include "grid_esp32_led.h"
 #include "grid_esp32_nvm.h"
@@ -174,7 +175,7 @@ void knot_module_ui_init(struct grid_ain_model* ain, struct grid_led_model* led,
     // grid_ui_element_init(ui, j, GRID_UI_ELEMENT_POTENTIOMETER);
   }
 
-  grid_ui_element_init(ui, ui->element_list_length - 1, GRID_UI_ELEMENT_SYSTEM);
+  grid_ui_element_system_init(&ui->element_list[ui->element_list_length - 1]);
 
   // ui->lua_ui_init_callback = grid_lua_ui_init_po16;
 }
@@ -234,6 +235,7 @@ void app_main(void) {
 
   // MIDI A/B SWITCH AND THROUGH BUTTON INTERACTIVITY
   gpio_set_direction(SW_AB_PIN, GPIO_MODE_INPUT);
+  gpio_pullup_en(SW_AB_PIN);
   gpio_set_direction(SW_MODE_PIN, GPIO_MODE_INPUT);
 
   SemaphoreHandle_t nvm_or_port = xSemaphoreCreateBinary();
