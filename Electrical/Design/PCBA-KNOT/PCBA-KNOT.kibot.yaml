@@ -215,7 +215,7 @@ outputs:
     options:
       download: true
       view: 'bottom'
-      zoom: 1
+      zoom: 0.75
       ray_tracing: true
       transparent_background: true
       auto_crop: true
