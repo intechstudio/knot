@@ -67,6 +67,12 @@
     "visible_layers": "7ffffff_80000007",
     "zone_display_mode": 0
   },
+  "git": {
+    "repo_password": "",
+    "repo_type": "",
+    "repo_username": "",
+    "ssh_key": ""
+  },
   "meta": {
     "filename": "PCBA-KNOT.kicad_prl",
     "version": 3
