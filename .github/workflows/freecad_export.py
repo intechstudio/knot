@@ -10,7 +10,7 @@ import sys
 
 print(f"sys.argv = {sys.argv}")
 
-import os 
+import os
 if os.path.isdir("temp"):
   print("Directory already exists")
 else:
@@ -75,7 +75,7 @@ def exportScreenshot(label, filename):
   print("STEP 4",filename)
   FreeCADGui.updateGui()
   print("STEP 5",filename)
-  
+
   print("SCREENSHOT", label, filename)
   App.Gui.ActiveDocument.ActiveView.saveImage(filename,3200,2400,'Transparent')
 

@@ -10,7 +10,7 @@ file_list = [f for f in os.listdir(directory_path) if f.endswith('.step')]
 for step_file in file_list:
     step_file_path = os.path.join(directory_path, step_file)
     print(f"Converting {step_file} to STL...")
-    
+
     # Read STEP file
     shape = read_step_file(step_file_path)
 

@@ -19,7 +19,7 @@ jobs:
       matrix:
         component:
         - 'KNOT-ASSEMBLY'
-        
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -38,9 +38,9 @@ jobs:
     - name: Run GUI application
       continue-on-error: true
       run: |
-        ls        
+        ls
         export DISPLAY=:99
-        timeout 1m freecad --hidden ./Mechanical/Design/${{ matrix.component }}/${{ matrix.component }}.FCStd ./.github/workflows/freecad_export.py step pdf
+        timeout 5m freecad --hidden ./Mechanical/Design/${{ matrix.component }}/${{ matrix.component }}.FCStd ./.github/workflows/freecad_export.py step pdf
 
     - name: Install conda, pythonocc and do the conversion
       run: |
@@ -74,7 +74,7 @@ jobs:
 
     - name: Set Date
       run: echo "action_date=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_ENV
-        
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -84,7 +84,7 @@ jobs:
   deploy-results:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
-    needs: generate-artifacts    
+    needs: generate-artifacts
     steps:
       - uses: actions/checkout@v2
         with:
@@ -111,9 +111,9 @@ jobs:
           done
 
       - name: Commit the files
-        run: |        
+        run: |
           git config --global user.name ${{ github.actor }}
-          git config --global user.email ${{ github.actor }}@users.noreply.github.com  
+          git config --global user.email ${{ github.actor }}@users.noreply.github.com
           git add Preview/*
           git commit -m "BOT ${{ github.workflow }} ${{ github.sha }}"
           git push
