@@ -96,7 +96,7 @@ for obj in objs:
   FreeCADGui.updateGui()
   FreeCADGui.updateGui()
 
-  if sono.TypeId == "App::Part":
+  if sono.TypeId == "App::PartNOTACTIVE":
     print(obj.Label, obj.Name, "STEP")
     sono.Shape.exportStep("temp/"+obj.Label+".step")
     #__objs__=[]
