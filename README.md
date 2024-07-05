@@ -6,6 +6,12 @@ Knot is the bridge between old-school MIDI gear like synthesizers, groove boxes,
 
 You can find more info on the [website](https://intech.studio/shop/knot) or in the [Knot - Starter's Guide](https://docs.intech.studio/guides/knot/knot-start).
 
+## Electrical components
+
+| Component                 | Part number          | Preview | Links        |
+|---------------------------|----------------------|---------|--------------|
+| KNOT board            | PCBA-KNOT       | <img src="../preview/Preview/Electrical/PCBA-KNOT-3D_top.png?raw=true" width="150"> <img src="../preview/Preview/Electrical/PCBA-KNOT-3D_bottom.png?raw=true" width="150"> | [[Schematic]](../preview/Preview/Electrical/PCBA-KNOT_Schematic.pdf) [[STEP]](../preview/Preview/Electrical/PCBA-KNOT-3D.step?raw=true) [[Gerber]](../preview/Preview/Electrical/mfg/PCBA-KNOT-gerber.zip?raw=true)  [[PCB3D]](../preview/Preview/Electrical/PCBA-KNOT-blender_export.pcb3d?raw=true)  |
+
 
 ### Nightly Firmware version
 
@@ -23,8 +29,6 @@ The nightly firmware is an early release version of the stable release. As it is
 - Hardware A/B switch for changing the TRS wiring mode
 - Mode button for updating the firmware
 - 3 indicator LEDs, which will be utilized for various feedback
-
-
 
 ### USB MIDI Device compatibility with Knot as a host
 
