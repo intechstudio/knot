@@ -12,6 +12,13 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 |---------------------------|----------------------|---------|--------------|
 | KNOT board            | PCBA-KNOT       | <img src="../preview/Preview/Electrical/PCBA-KNOT-3D_top.png?raw=true" width="150"> <img src="../preview/Preview/Electrical/PCBA-KNOT-3D_bottom.png?raw=true" width="150"> | [[Schematic]](../preview/Preview/Electrical/PCBA-KNOT_Schematic.pdf) [[STEP]](../preview/Preview/Electrical/PCBA-KNOT-3D.step?raw=true) [[Gerber]](../preview/Preview/Electrical/mfg/PCBA-KNOT-gerber.zip?raw=true)  [[PCB3D]](../preview/Preview/Electrical/PCBA-KNOT-blender_export.pcb3d?raw=true)  |
 
+## Mechanical components
+
+| Component                 | Part number          | Type       | Preview | Links        |
+|---------------------------|----------------------|------------|---------|--------------|
+| Aluminum housing          | KNOT-HOUSING         | Fabricated | <img src="../preview/Preview/Mechanical/KNOT-HOUSING.png?raw=true" width="100"> | [[step]](../preview/Preview/Mechanical/KNOT-HOUSING.step) [[stl]](../preview/Preview/Mechanical/KNOT-HOUSING.stl) [[pdf]](../preview/Preview/Mechanical/KNOT-HOUSING_Drawing.pdf) |
+| Aluminum front panel      | KNOT-FRONT           | Fabricated | <img src="../preview/Preview/Mechanical/KNOT-FRONT.png?raw=true" width="100"> | [[step]](../preview/Preview/Mechanical/KNOT-FRONT.step) [[stl]](../preview/Preview/Mechanical/KNOT-FRONT.stl) [[pdf]](../preview/Preview/Mechanical/KNOT-FRONT_Drawing.pdf) |
+| Aluminum back panel       | KNOT-BACK            | Fabricated | <img src="../preview/Preview/Mechanical/KNOT-BACK.png?raw=true" width="100"> | [[step]](../preview/Preview/Mechanical/KNOT-BACK.step) [[stl]](../preview/Preview/Mechanical/KNOT-BACK.stl) [[pdf]](../preview/Preview/Mechanical/KNOT-BACK_Drawing.pdf) |
 
 ### Nightly Firmware version
 
