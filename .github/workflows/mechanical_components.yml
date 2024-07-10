@@ -18,7 +18,9 @@ jobs:
       fail-fast: false
       matrix:
         component:
-        - 'KNOT-ASSEMBLY'
+        - 'KNOT-FRONT'
+        - 'KNOT-BACK'
+        - 'KNOT-HOUSING'
 
     steps:
     - name: Checkout code
