@@ -40,7 +40,8 @@
     "bitset": "c",
     "initializer_list": "c",
     "utility": "c",
-    "knot_midi_usb.h": "c"
+    "knot_midi_usb.h": "c",
+    "grid_lua.h": "c"
   },
   "actionButtons": {
     "defaultColor": "#ff0034",

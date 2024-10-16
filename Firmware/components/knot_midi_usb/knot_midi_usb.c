@@ -7,6 +7,8 @@
 #include "knot_midi_usb.h"
 
 #include "esp_log.h"
+
+#include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include "grid_led.h"
@@ -211,12 +213,51 @@ static usb_transfer_t* out_transfer;
 
 static usb_transfer_t* in_transfer;
 
-static void in_transfer_cb(usb_transfer_t* in_transfer) {
-  // This is function is called from within usb_host_client_handle_events(). Don't block and try to keep it short
-  struct class_driver_t* class_driver_obj = (struct class_driver_t*)in_transfer->context;
-  // printf("IN: Transfer status %d, actual number of bytes transferred %d\n", in_transfer->status, in_transfer->actual_num_bytes);
+static bool is_transfer_completed(usb_transfer_t* transfer) {
+  bool completed = false;
 
-  // printf("IN: %d %d %d %d", in_transfer->data_buffer[0], in_transfer->data_buffer[1], in_transfer->data_buffer[2], in_transfer->data_buffer[3]);
+  switch (transfer->status) {
+  case USB_TRANSFER_STATUS_COMPLETED:
+    completed = true;
+    break;
+  case USB_TRANSFER_STATUS_NO_DEVICE: // User is notified about device disconnection from usb_event_cb
+  case USB_TRANSFER_STATUS_CANCELED:
+    break;
+  case USB_TRANSFER_STATUS_ERROR:
+  case USB_TRANSFER_STATUS_TIMED_OUT:
+  case USB_TRANSFER_STATUS_STALL:
+  case USB_TRANSFER_STATUS_OVERFLOW:
+  case USB_TRANSFER_STATUS_SKIPPED:
+  default:
+  }
+  return completed;
+}
+
+volatile uint8_t DRAM_ATTR usb_in_ready = 0;
+
+static portMUX_TYPE in_mutex = portMUX_INITIALIZER_UNLOCKED;
+#define CDC_ACM_ENTER_CRITICAL() portENTER_CRITICAL(&in_mutex)
+#define CDC_ACM_EXIT_CRITICAL() portEXIT_CRITICAL(&in_mutex)
+esp_err_t try_start_in_transfer(void) {
+  CDC_ACM_ENTER_CRITICAL();
+
+  if (usb_in_ready == 0) {
+
+    CDC_ACM_EXIT_CRITICAL();
+    return -1;
+  }
+
+  esp_err_t err = usb_host_transfer_submit(in_transfer);
+  usb_in_ready = 0;
+  CDC_ACM_EXIT_CRITICAL();
+
+  // printf("S\n");
+  return err;
+}
+
+static void in_transfer_cb(usb_transfer_t* in_transfer) {
+  // CDC_ACM_ENTER_CRITICAL();
+  printf("TIME: %lld IN: Transfer status %d, actual number of bytes transferred %d\n", esp_timer_get_time(), in_transfer->status, in_transfer->actual_num_bytes);
 
   struct usb_midi_event_packet usb_ev = {.byte0 = in_transfer->data_buffer[0], .byte1 = in_transfer->data_buffer[1], .byte2 = in_transfer->data_buffer[2], .byte3 = in_transfer->data_buffer[3]};
 
@@ -224,7 +265,11 @@ static void in_transfer_cb(usb_transfer_t* in_transfer) {
 
   knot_midi_queue_trsout_push(uart_ev);
 
+  // usb_in_ready = 1;
+  // CDC_ACM_EXIT_CRITICAL();
   usb_host_transfer_submit(in_transfer);
+
+  ets_printf("IN: %d %d %d %d\n", esp_timer_get_time(), in_transfer->status, in_transfer->data_buffer[0], in_transfer->data_buffer[1], in_transfer->data_buffer[2], in_transfer->data_buffer[3]);
 }
 
 volatile uint8_t DRAM_ATTR usb_out_ready = 1;
@@ -313,10 +358,11 @@ static void action_get_config_desc(class_driver_t* driver_obj) {
     if (in_transfer == NULL) {
       usb_host_transfer_alloc(USB_EP_DESC_GET_MPS(in_ep), 0, &in_transfer);
     }
-    memset(in_transfer->data_buffer, 0xAA, 4);
+    memset(in_transfer->data_buffer, 0, 4);
     in_transfer->num_bytes = USB_EP_DESC_GET_MPS(in_ep);
     in_transfer->device_handle = driver_obj->dev_hdl;
     in_transfer->bEndpointAddress = in_ep->bEndpointAddress;
+    in_transfer->timeout_ms = 5000;
     in_transfer->callback = in_transfer_cb;
     in_transfer->context = (void*)&driver_obj;
 

@@ -8,6 +8,7 @@ idf_component_register(
         "knot_midi_uart"
         "knot_midi_queue"
         "driver"
+        "esp_timer"
         "usb"
         "grid_common"
         "grid_esp32_led"
