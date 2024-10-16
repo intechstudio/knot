@@ -1,5 +1,5 @@
 # Use the base image
-FROM docker.io/espressif/idf:v5.1.2
+FROM docker.io/espressif/idf:v5.3.1
 
 # Install pico sdk required dependencies
 RUN apt update && \
