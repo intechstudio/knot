@@ -55,6 +55,7 @@ The nightly firmware is an early release version of the stable release. As it is
 |    Korg  | Electribe ES2  |  Tested - OK | Intech | |
 |    Korg  | Microkey Air 37  |  Tested - OK | Community | |
 |    Korg  | Nanokey 2  |  Tested - OK | Community | |
+|    Korg  | Nanopad 2  |  Tested - Not working | Community | |
 |    Livid Instruments  | DS-1  |  Tested - OK | Community | |
 |    Midi Fighter  | Midi Fighter Twister  |  Tested - OK | Community | |
 |    M-AUDIO  |   MIDISPORT UNO         | Tested - OK | Intech | |
