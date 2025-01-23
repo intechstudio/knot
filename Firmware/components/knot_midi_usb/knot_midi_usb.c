@@ -509,6 +509,7 @@ void class_driver_task(void* arg) {
     if (driver_obj.actions & ACTION_EXIT) {
       break;
     }
+    portYIELD();
   }
 
   ESP_LOGI(TAG, "Deregistering Client");
@@ -517,4 +518,39 @@ void class_driver_task(void* arg) {
   // Wait to be deleted
   xSemaphoreGive(signaling_sem);
   vTaskSuspend(NULL);
+}
+
+void knot_midi_usb_rx_task(void* arg) {
+  while (1) {
+
+    try_start_in_transfer();
+
+    portYIELD();
+  }
+}
+
+void knot_midi_usb_tx_task(void* arg) {
+
+  while (1) {
+
+    if (knot_midi_usb_out_isready()) {
+
+      struct usb_midi_event_packet usb_midi_ev = {0};
+
+      if (0 == knot_midi_queue_usbout_pop(&usb_midi_ev)) {
+
+        int status = knot_midi_usb_send_packet(usb_midi_ev);
+
+        if (status == 0) {
+          // ets_printf("USB OUT: %d %d %d %d", usb_midi_ev.byte0, usb_midi_ev.byte1, usb_midi_ev.byte2, usb_midi_ev.byte3);
+        } else if (status == 1) {
+          // ets_printf("USB not connected");
+        } else {
+          // ets_printf("USB error: %d", status);
+        }
+      }
+    }
+
+    portYIELD();
+  }
 }

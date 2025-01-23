@@ -35,6 +35,7 @@ extern struct knot_midi_uart_model knot_midi_uart_state;
 
 void knot_midi_uart_init(struct knot_midi_uart_model* midi_uart);
 void knot_midi_uart_rx_task(void* arg);
+void knot_midi_uart_tx_task(void* arg);
 
 uint8_t knot_midi_uart_get_midithrough_state(struct knot_midi_uart_model* midi_uart);
 void knot_midi_uart_set_midithrough_state(struct knot_midi_uart_model* midi_uart, uint8_t state);

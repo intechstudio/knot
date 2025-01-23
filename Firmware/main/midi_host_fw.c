@@ -214,7 +214,11 @@ void app_main(void) {
 #define CLASS_TASK_PRIORITY 4
 #define LED_TASK_PRIORITY 2
 
-#define UART_RX_TASK_PRIORITY 12
+#define UART_RX_TASK_PRIORITY 0
+#define UART_TX_TASK_PRIORITY 0
+
+#define USB_RX_TASK_PRIORITY 0
+#define USB_TX_TASK_PRIORITY 0
 
 static const char* TAG = "DAEMON";
 
@@ -304,6 +308,7 @@ static void host_lib_daemon_task(void* arg) {
       // has_devices = false;
     }
     ESP_LOGI(TAG, "Event: %ld", event_flags);
+    portYIELD();
   }
   ESP_LOGI(TAG, "No more clients and devices");
 
@@ -391,34 +396,8 @@ extern esp_err_t try_start_in_transfer(void);
 
 bool idle_hook(void) {
 
-  try_start_in_transfer();
-
-  struct uart_midi_event_packet uart_midi_ev = {0};
-  while (0 == knot_midi_queue_trsout_pop(&uart_midi_ev)) {
-    // ets_printf("TRS OUT: %d %d %d %d\n", uart_midi_ev.length, uart_midi_ev.byte1, uart_midi_ev.byte2, uart_midi_ev.byte3);
-    knot_midi_uart_send_packet(uart_midi_ev);
-  }
-
-  if (knot_midi_usb_out_isready()) {
-
-    struct usb_midi_event_packet usb_midi_ev = {0};
-
-    if (0 == knot_midi_queue_usbout_pop(&usb_midi_ev)) {
-
-      int status = knot_midi_usb_send_packet(usb_midi_ev);
-
-      if (status == 0) {
-        // ets_printf("USB OUT: %d %d %d %d", usb_midi_ev.byte0, usb_midi_ev.byte1, usb_midi_ev.byte2, usb_midi_ev.byte3);
-      } else if (status == 1) {
-        // ets_printf("USB not connected");
-      } else {
-        // ets_printf("USB error: %d", status);
-      }
-    }
-  }
-
-  // portYIELD();
-  return 1; // return 1 causes one trigger / rtos tick
+  portYIELD();
+  return 0; // return 1 causes one trigger / rtos tick
 }
 
 void app_main(void) {
@@ -459,7 +438,7 @@ void app_main(void) {
   // Create the class driver task
   TaskHandle_t led_task_hdl;
   xTaskCreatePinnedToCore(grid_esp32_led_task, // was led_task
-                          "led", 4096, NULL, LED_TASK_PRIORITY, &led_task_hdl, 0);
+                          "led", 4096, NULL, LED_TASK_PRIORITY, &led_task_hdl, 1);
 
   ESP_LOGI(TAG, "===== NVM START =====");
 
@@ -503,11 +482,12 @@ void app_main(void) {
   TaskHandle_t class_driver_task_hdl;
 
   TaskHandle_t uart_rx_task_hdl;
+  TaskHandle_t uart_tx_task_hdl;
   TaskHandle_t uart_housekeeping_task_hdl;
   // Create daemon task
-  xTaskCreatePinnedToCore(host_lib_daemon_task, "daemon", 4096, (void*)signaling_sem, DAEMON_TASK_PRIORITY, &daemon_task_hdl, 0);
+  xTaskCreatePinnedToCore(host_lib_daemon_task, "daemon", 4096, (void*)signaling_sem, DAEMON_TASK_PRIORITY, &daemon_task_hdl, 1);
   // Create the class driver task
-  xTaskCreatePinnedToCore(class_driver_task, "class", 4096, (void*)signaling_sem, CLASS_TASK_PRIORITY, &class_driver_task_hdl, 0);
+  xTaskCreatePinnedToCore(class_driver_task, "class", 4096, (void*)signaling_sem, CLASS_TASK_PRIORITY, &class_driver_task_hdl, 1);
 
   // Create a task to handler UART event from ISR
 
@@ -527,11 +507,15 @@ void app_main(void) {
     grid_led_set_layer_color(&grid_led_state, 2, GRID_LED_LAYER_UI_A, 0, 255, 0); // green
   }
 
-  xTaskCreatePinnedToCore(knot_midi_uart_rx_task, "uart_rx", 4096, (void*)signaling_sem, UART_RX_TASK_PRIORITY, &uart_rx_task_hdl, 0);
+  xTaskCreatePinnedToCore(knot_midi_uart_rx_task, "uart_rx", 4096, (void*)signaling_sem, UART_RX_TASK_PRIORITY, &uart_rx_task_hdl, 1);
+  xTaskCreatePinnedToCore(knot_midi_uart_tx_task, "uart_tx", 4096, (void*)signaling_sem, UART_TX_TASK_PRIORITY, &uart_tx_task_hdl, 1);
+
+  xTaskCreatePinnedToCore(knot_midi_usb_rx_task, "usb_rx", 4096, (void*)signaling_sem, USB_RX_TASK_PRIORITY, &uart_rx_task_hdl, 1);
+  xTaskCreatePinnedToCore(knot_midi_usb_tx_task, "usb_tx", 4096, (void*)signaling_sem, USB_TX_TASK_PRIORITY, &uart_tx_task_hdl, 1);
 
   // Register idle hook to force yield from idle task to lowest priority task
   esp_register_freertos_idle_hook_for_cpu(idle_hook, 0);
-  // esp_register_freertos_idle_hook_for_cpu(idle_hook, 1);
+  esp_register_freertos_idle_hook_for_cpu(idle_hook, 1);
 
   uint8_t last_button_state = 1;
 

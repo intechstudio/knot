@@ -112,7 +112,7 @@ void knot_midi_uart_rx_task(void* arg) {
 
   for (;;) {
 
-    vTaskDelay(1); // at least one tick however many ms that is
+    portYIELD();
     bzero(dtmp, RD_BUF_SIZE);
     int length = 0;
 
@@ -149,4 +149,18 @@ void knot_midi_uart_rx_task(void* arg) {
   free(dtmp);
   dtmp = NULL;
   vTaskDelete(NULL);
+}
+
+void knot_midi_uart_tx_task(void* arg) {
+
+  while (1) {
+
+    struct uart_midi_event_packet uart_midi_ev = {0};
+    while (0 == knot_midi_queue_trsout_pop(&uart_midi_ev)) {
+      // ets_printf("TRS OUT: %d %d %d %d\n", uart_midi_ev.length, uart_midi_ev.byte1, uart_midi_ev.byte2, uart_midi_ev.byte3);
+      knot_midi_uart_send_packet(uart_midi_ev);
+    }
+
+    portYIELD();
+  }
 }
