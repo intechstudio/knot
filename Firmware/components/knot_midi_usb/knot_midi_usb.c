@@ -257,7 +257,7 @@ esp_err_t try_start_in_transfer(void) {
 
 static void in_transfer_cb(usb_transfer_t* in_transfer) {
   // CDC_ACM_ENTER_CRITICAL();
-  printf("TIME: %lld IN: Transfer status %d, actual number of bytes transferred %d\n", esp_timer_get_time(), in_transfer->status, in_transfer->actual_num_bytes);
+  // printf("TIME: %lld IN: Transfer status %d, actual number of bytes transferred %d\n", esp_timer_get_time(), in_transfer->status, in_transfer->actual_num_bytes);
 
   struct usb_midi_event_packet usb_ev = {.byte0 = in_transfer->data_buffer[0], .byte1 = in_transfer->data_buffer[1], .byte2 = in_transfer->data_buffer[2], .byte3 = in_transfer->data_buffer[3]};
 
@@ -269,7 +269,7 @@ static void in_transfer_cb(usb_transfer_t* in_transfer) {
   // CDC_ACM_EXIT_CRITICAL();
   usb_host_transfer_submit(in_transfer);
 
-  ets_printf("IN: %d %d %d %d\n", esp_timer_get_time(), in_transfer->status, in_transfer->data_buffer[0], in_transfer->data_buffer[1], in_transfer->data_buffer[2], in_transfer->data_buffer[3]);
+  // ets_printf("IN: %d %d %d %d\n", esp_timer_get_time(), in_transfer->status, in_transfer->data_buffer[0], in_transfer->data_buffer[1], in_transfer->data_buffer[2], in_transfer->data_buffer[3]);
 }
 
 volatile uint8_t DRAM_ATTR usb_out_ready = 1;
