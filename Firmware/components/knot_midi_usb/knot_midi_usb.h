@@ -26,3 +26,6 @@ uint8_t IRAM_ATTR knot_midi_usb_out_isready(void);
 
 int IRAM_ATTR knot_midi_usb_send_packet(struct usb_midi_event_packet ev);
 void class_driver_task(void* arg);
+
+void knot_midi_usb_rx_task(void* arg);
+void knot_midi_usb_tx_task(void* arg);
