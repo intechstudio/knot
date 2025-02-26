@@ -4407,7 +4407,6 @@
 	)
 	(label "DIO"
 		(at 195.58 22.86 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4418,7 +4417,6 @@
 	)
 	(label "PWR_IN_PIN"
 		(at 104.14 38.1 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4429,7 +4427,6 @@
 	)
 	(label "DC_INPUT"
 		(at 104.14 22.86 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4440,7 +4437,6 @@
 	)
 	(label "PWR_IN_PIN"
 		(at 104.14 58.42 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4451,7 +4447,6 @@
 	)
 	(label "PWR_IN_SLEVE"
 		(at 58.42 38.1 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4462,7 +4457,6 @@
 	)
 	(label "IND"
 		(at 236.22 22.86 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4473,7 +4467,6 @@
 	)
 	(label "PWR_IN_SLEVE"
 		(at 40.64 86.36 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4484,7 +4477,6 @@
 	)
 	(label "PWR_IN_SLEVE"
 		(at 58.42 50.8 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4495,7 +4487,6 @@
 	)
 	(label "PWR_IN_SLEVE"
 		(at 58.42 58.42 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4506,7 +4497,6 @@
 	)
 	(label "PWR_IN_PIN"
 		(at 58.42 45.72 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4517,7 +4507,6 @@
 	)
 	(label "PWR_IN_PIN"
 		(at 40.64 78.74 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4529,7 +4518,6 @@
 	(hierarchical_label "PMIC_EN"
 		(shape input)
 		(at 187.96 76.2 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)

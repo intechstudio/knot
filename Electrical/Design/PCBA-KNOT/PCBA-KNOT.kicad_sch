@@ -8299,7 +8299,6 @@
 	)
 	(label "MCU_D-"
 		(at 63.5 91.44 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8310,7 +8309,6 @@
 	)
 	(label "CONN_C_D-"
 		(at 68.58 248.92 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8321,7 +8319,6 @@
 	)
 	(label "LED_DATA"
 		(at 45.72 177.8 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8332,7 +8329,6 @@
 	)
 	(label "HWCFG_DATA"
 		(at 63.5 114.3 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8343,7 +8339,6 @@
 	)
 	(label "CONN_A_D-"
 		(at 259.08 50.8 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8354,7 +8349,6 @@
 	)
 	(label "TDO"
 		(at 63.5 142.24 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8365,7 +8359,6 @@
 	)
 	(label "HWCFG_LOW"
 		(at 205.74 276.86 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8376,7 +8369,6 @@
 	)
 	(label "HWCFG_LOW"
 		(at 205.74 264.16 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8387,7 +8379,6 @@
 	)
 	(label "MIDI_UART_TX"
 		(at 58.42 25.4 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8398,7 +8389,6 @@
 	)
 	(label "ESP_BOOT0"
 		(at -35.56 109.22 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8409,7 +8399,6 @@
 	)
 	(label "HWCFG_CLOCK"
 		(at 63.5 119.38 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8420,7 +8409,6 @@
 	)
 	(label "MCU_SOFT_D-"
 		(at 45.72 307.34 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8431,7 +8419,6 @@
 	)
 	(label "SW_BOOT"
 		(at 139.7 144.78 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8442,7 +8429,6 @@
 	)
 	(label "HWCFG_LOW"
 		(at 205.74 274.32 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8453,7 +8439,6 @@
 	)
 	(label "CONN_C_D-"
 		(at 210.82 22.86 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8464,7 +8449,6 @@
 	)
 	(label "TDO"
 		(at 264.16 134.62 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8475,7 +8459,6 @@
 	)
 	(label "CONN_C_D+"
 		(at 68.58 325.12 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8486,7 +8469,6 @@
 	)
 	(label "U0RXD"
 		(at 63.5 149.86 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8497,7 +8479,6 @@
 	)
 	(label "CONN_C_D-"
 		(at 198.12 50.8 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8508,7 +8489,6 @@
 	)
 	(label "PMIC_EN"
 		(at 109.22 25.4 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8519,7 +8499,6 @@
 	)
 	(label "MCU_D-"
 		(at 43.18 248.92 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8530,7 +8509,6 @@
 	)
 	(label "TRS_TX_AB_SELECT"
 		(at 63.5 78.74 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8541,7 +8519,6 @@
 	)
 	(label "USB_SELECT_SOFT"
 		(at 63.5 109.22 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8552,7 +8529,6 @@
 	)
 	(label "U0TXD"
 		(at 63.5 152.4 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8563,7 +8539,6 @@
 	)
 	(label "ESP_BOOT0"
 		(at 81.28 127 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8574,7 +8549,6 @@
 	)
 	(label "HWCFG_LOW"
 		(at 256.54 289.56 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8585,7 +8559,6 @@
 	)
 	(label "ESP_RESET"
 		(at -35.56 78.74 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8596,7 +8569,6 @@
 	)
 	(label "USB_SELECT_NATIVE"
 		(at 43.18 243.84 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8607,7 +8579,6 @@
 	)
 	(label "TRS_TX_AB_SELECT"
 		(at 58.42 33.02 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8618,7 +8589,6 @@
 	)
 	(label "TCK"
 		(at 264.16 132.08 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8629,7 +8599,6 @@
 	)
 	(label "TCK"
 		(at 63.5 139.7 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8640,7 +8609,6 @@
 	)
 	(label "TMS"
 		(at 264.16 129.54 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8651,7 +8619,6 @@
 	)
 	(label "CONN_A_D+"
 		(at 162.56 99.06 90)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8662,7 +8629,6 @@
 	)
 	(label "TMS"
 		(at 63.5 147.32 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8673,7 +8639,6 @@
 	)
 	(label "U0RXD"
 		(at 233.68 139.7 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8684,7 +8649,6 @@
 	)
 	(label "CONN_A_D+"
 		(at 68.58 330.2 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8695,7 +8659,6 @@
 	)
 	(label "MIDI_UART_RX"
 		(at 114.3 60.96 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8706,7 +8669,6 @@
 	)
 	(label "MCU_D+"
 		(at 43.18 276.86 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8717,7 +8679,6 @@
 	)
 	(label "SW_BOOT"
 		(at 63.5 132.08 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8728,7 +8689,6 @@
 	)
 	(label "HWCFG_CLOCK"
 		(at 213.36 289.56 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8739,7 +8699,6 @@
 	)
 	(label "HWCFG_HIGH"
 		(at 256.54 279.4 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8750,7 +8709,6 @@
 	)
 	(label "CONN_A_D-"
 		(at 162.56 114.2394 270)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8761,7 +8719,6 @@
 	)
 	(label "HWCFG_SHIFT"
 		(at 213.36 294.64 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8772,7 +8729,6 @@
 	)
 	(label "CONN_A_D-"
 		(at 157.48 114.3 270)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8783,7 +8739,6 @@
 	)
 	(label "MCU_D+"
 		(at 63.5 93.98 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8794,7 +8749,6 @@
 	)
 	(label "MCU_SOFT_D+"
 		(at 43.18 330.2 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8805,7 +8759,6 @@
 	)
 	(label "U0TXD"
 		(at 233.68 137.16 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8816,7 +8769,6 @@
 	)
 	(label "HWCFG_LOW"
 		(at 205.74 279.4 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8827,7 +8779,6 @@
 	)
 	(label "USB_SELECT_NATIVE"
 		(at 43.18 271.78 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8838,7 +8789,6 @@
 	)
 	(label "HWCFG_HIGH"
 		(at 205.74 269.24 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8849,7 +8799,6 @@
 	)
 	(label "USB_SELECT_SOFT"
 		(at 43.18 325.12 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8860,7 +8809,6 @@
 	)
 	(label "CONN_C_D+"
 		(at 210.82 27.94 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8871,7 +8819,6 @@
 	)
 	(label "MIDI_UART_RX"
 		(at 58.42 27.94 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8882,7 +8829,6 @@
 	)
 	(label "PMIC_EN"
 		(at 63.5 121.92 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8893,7 +8839,6 @@
 	)
 	(label "CONN_C_D+"
 		(at 195.58 99.06 90)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8904,7 +8849,6 @@
 	)
 	(label "ESP_BOOT0"
 		(at 114.3 124.46 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8915,7 +8859,6 @@
 	)
 	(label "CONN_A_D+"
 		(at 157.48 99.06 90)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8926,7 +8869,6 @@
 	)
 	(label "SW_BOOT"
 		(at 114.3 119.38 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8937,7 +8879,6 @@
 	)
 	(label "CONN_C_D+"
 		(at 190.5 99.06 90)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8948,7 +8889,6 @@
 	)
 	(label "USB_SELECT_NATIVE"
 		(at 114.3 91.44 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8959,7 +8899,6 @@
 	)
 	(label "MIDI_UART_RX"
 		(at 63.5 86.36 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8970,7 +8909,6 @@
 	)
 	(label "CONN_A_D+"
 		(at 259.08 53.34 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8981,7 +8919,6 @@
 	)
 	(label "CONN_A_D-"
 		(at 68.58 243.84 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8992,7 +8929,6 @@
 	)
 	(label "USB_SELECT_SOFT"
 		(at 114.3 96.52 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9003,7 +8939,6 @@
 	)
 	(label "USB_SELECT_NATIVE"
 		(at 63.5 106.68 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9014,7 +8949,6 @@
 	)
 	(label "CONN_A_D-"
 		(at 71.12 307.34 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9025,7 +8959,6 @@
 	)
 	(label "MCU_SOFT_D-"
 		(at 63.5 101.6 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9036,7 +8969,6 @@
 	)
 	(label "MCU_SOFT_D+"
 		(at 63.5 104.14 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9047,7 +8979,6 @@
 	)
 	(label "MIDI_UART_TX"
 		(at 63.5 83.82 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9058,7 +8989,6 @@
 	)
 	(label "SW_AB"
 		(at 139.7 180.34 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9069,7 +8999,6 @@
 	)
 	(label "TDI"
 		(at 63.5 144.78 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9080,7 +9009,6 @@
 	)
 	(label "CONN_C_D-"
 		(at 190.5 114.3 270)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9091,7 +9019,6 @@
 	)
 	(label "LED_DATA"
 		(at 63.5 157.48 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9102,7 +9029,6 @@
 	)
 	(label "CONN_C_D-"
 		(at 71.12 302.26 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9113,7 +9039,6 @@
 	)
 	(label "HWCFG_DATA"
 		(at 248.92 261.62 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9124,7 +9049,6 @@
 	)
 	(label "CONN_A_D-"
 		(at 269.24 83.82 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9135,7 +9059,6 @@
 	)
 	(label "CONN_C_D+"
 		(at 198.12 53.34 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9146,7 +9069,6 @@
 	)
 	(label "MIDI_UART_TX"
 		(at 114.3 58.42 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9157,7 +9079,6 @@
 	)
 	(label "HWCFG_HIGH"
 		(at 205.74 266.7 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9168,7 +9089,6 @@
 	)
 	(label "TDI"
 		(at 264.16 137.16 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9179,7 +9099,6 @@
 	)
 	(label "SW_AB"
 		(at 63.5 129.54 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9190,7 +9109,6 @@
 	)
 	(label "CONN_C_D-"
 		(at 195.58 114.3 270)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9201,7 +9119,6 @@
 	)
 	(label "HWCFG_LOW"
 		(at 205.74 271.78 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9212,7 +9129,6 @@
 	)
 	(label "CONN_C_D+"
 		(at 68.58 276.86 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9223,7 +9139,6 @@
 	)
 	(label "USB_SELECT_SOFT"
 		(at 45.72 302.26 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9234,7 +9149,6 @@
 	)
 	(label "HWCFG_SHIFT"
 		(at 63.5 116.84 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9245,7 +9159,6 @@
 	)
 	(label "HWCFG_HIGH"
 		(at 205.74 281.94 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9256,7 +9169,6 @@
 	)
 	(label "CONN_A_D+"
 		(at 269.24 88.9 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9267,7 +9179,6 @@
 	)
 	(label "CONN_A_D+"
 		(at 68.58 271.78 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9278,7 +9189,6 @@
 	)
 	(label "ESP_RESET"
 		(at 25.4 68.58 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)

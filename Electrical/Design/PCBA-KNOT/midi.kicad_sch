@@ -3828,7 +3828,6 @@
 	)
 	(label "IN_T"
 		(at 33.02 96.52 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3839,7 +3838,6 @@
 	)
 	(label "OUT_T"
 		(at 43.18 129.54 90)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3850,7 +3848,6 @@
 	)
 	(label "OUT_R"
 		(at 48.26 144.78 270)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3861,7 +3858,6 @@
 	)
 	(label "OUT_R"
 		(at 43.18 167.64 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3872,7 +3868,6 @@
 	)
 	(label "IN_R"
 		(at 58.42 83.82 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3883,7 +3878,6 @@
 	)
 	(label "OUT_R"
 		(at 33.02 182.88 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3894,7 +3888,6 @@
 	)
 	(label "IN_R"
 		(at 33.02 99.06 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3905,7 +3898,6 @@
 	)
 	(label "OUT_T"
 		(at 33.02 180.34 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3916,7 +3908,6 @@
 	)
 	(label "OUT_T"
 		(at 43.18 165.1 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3927,7 +3918,6 @@
 	)
 	(label "OUT_T"
 		(at 48.26 129.54 90)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3938,7 +3928,6 @@
 	)
 	(label "OUT_R"
 		(at 43.18 144.78 270)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3949,7 +3938,6 @@
 	)
 	(label "IN_T"
 		(at 58.42 81.28 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3961,7 +3949,6 @@
 	(hierarchical_label "TX_AB_SELECT"
 		(shape input)
 		(at 116.84 187.96 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3973,7 +3960,6 @@
 	(hierarchical_label "RX"
 		(shape output)
 		(at 149.86 96.52 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3985,7 +3971,6 @@
 	(hierarchical_label "TX"
 		(shape input)
 		(at 149.86 149.86 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4347,7 +4332,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "PJ-320B"
+		(property "Value" "AUDIO-TH_PJ-3200"
 			(at 24.13 170.0549 0)
 			(effects
 				(font
@@ -4356,7 +4341,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "suku_basics:AUDIO-SMD_PJ-320B"
+		(property "Footprint" "suku_basics:AUDIO-TH_PJ-3200"
 			(at 33.02 157.48 0)
 			(effects
 				(font
@@ -7540,7 +7525,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "PJ-320B"
+		(property "Value" "AUDIO-TH_PJ-3200"
 			(at 38.1 86.2349 0)
 			(effects
 				(font
@@ -7549,7 +7534,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "suku_basics:AUDIO-SMD_PJ-320B"
+		(property "Footprint" "suku_basics:AUDIO-TH_PJ-3200"
 			(at 46.99 73.66 0)
 			(effects
 				(font
