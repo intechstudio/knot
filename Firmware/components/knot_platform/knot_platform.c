@@ -27,7 +27,6 @@ void* grid_platform_allocate_volatile(size_t size) {
   return handle;
 }
 
-
 #include "esp_random.h"
 uint8_t grid_platform_get_random_8() {
   uint32_t random_number = esp_random();

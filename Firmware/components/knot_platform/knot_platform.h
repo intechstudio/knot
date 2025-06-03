@@ -21,7 +21,6 @@ void grid_platform_delay_ms(uint32_t delay_milliseconds);
 
 uint8_t grid_platform_get_adc_bit_depth(void);
 
-
 #ifdef __cplusplus
 }
 #endif
