@@ -335,15 +335,7 @@ void grid_platform_printf(char const* fmt, ...) {
   ets_printf(temp);
 }
 
-#include "esp_random.h"
-uint8_t grid_platform_get_random_8() {
-  uint32_t random_number = esp_random();
-  return random_number % 256;
-}
-
-void grid_platform_delay_ms(uint32_t delay_milliseconds) { ets_delay_us(delay_milliseconds * 1000); }
-
-uint8_t grid_platform_get_adc_bit_depth(void) { return 12; }
+#include "knot_platform.h"
 
 #include "grid_ain.h"
 #include "grid_led.h"

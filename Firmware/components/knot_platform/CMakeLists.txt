@@ -1,8 +1,9 @@
 idf_component_register(
     SRCS
-        "knot_midi_queue.c"
+        "knot_platform.c"
     INCLUDE_DIRS
         "."
     REQUIRES
-        "knot_midi_translator" "knot_platform"
+        "driver"
+        "esp_timer"
 )
