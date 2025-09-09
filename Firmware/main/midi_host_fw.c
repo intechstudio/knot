@@ -511,6 +511,9 @@ void app_main(void) {
 
   uint8_t last_button_state = 1;
 
+  UBaseType_t highwatermark = uxTaskGetStackHighWaterMark(xTaskGetCurrentTaskHandle());
+  ESP_LOGI(TAG, "highwatermark before main loop: %d", highwatermark);
+
   while (1) {
 
     vTaskDelay(pdMS_TO_TICKS(10));
