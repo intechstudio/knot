@@ -256,20 +256,24 @@ esp_err_t try_start_in_transfer(void) {
 }
 
 static void in_transfer_cb(usb_transfer_t* in_transfer) {
-  // CDC_ACM_ENTER_CRITICAL();
-  // printf("TIME: %lld IN: Transfer status %d, actual number of bytes transferred %d\n", esp_timer_get_time(), in_transfer->status, in_transfer->actual_num_bytes);
 
-  struct usb_midi_event_packet usb_ev = {.byte0 = in_transfer->data_buffer[0], .byte1 = in_transfer->data_buffer[1], .byte2 = in_transfer->data_buffer[2], .byte3 = in_transfer->data_buffer[3]};
+  for (int i = 0; i < in_transfer->actual_num_bytes; i += 4) {
 
-  struct uart_midi_event_packet uart_ev = usb_midi_to_uart(usb_ev);
+    if (i + 4 > in_transfer->actual_num_bytes) {
+      break;
+    }
 
-  knot_midi_queue_trsout_push(uart_ev);
+    struct usb_midi_event_packet evt = {
+        .byte0 = in_transfer->data_buffer[i + 0],
+        .byte1 = in_transfer->data_buffer[i + 1],
+        .byte2 = in_transfer->data_buffer[i + 2],
+        .byte3 = in_transfer->data_buffer[i + 3],
+    };
 
-  // usb_in_ready = 1;
-  // CDC_ACM_EXIT_CRITICAL();
+    knot_midi_queue_trsout_push(usb_midi_to_uart(evt));
+  }
+
   usb_host_transfer_submit(in_transfer);
-
-  // ets_printf("IN: %d %d %d %d\n", esp_timer_get_time(), in_transfer->status, in_transfer->data_buffer[0], in_transfer->data_buffer[1], in_transfer->data_buffer[2], in_transfer->data_buffer[3]);
 }
 
 volatile uint8_t DRAM_ATTR usb_out_ready = 1;
@@ -358,7 +362,7 @@ static void action_get_config_desc(class_driver_t* driver_obj) {
     if (in_transfer == NULL) {
       usb_host_transfer_alloc(USB_EP_DESC_GET_MPS(in_ep), 0, &in_transfer);
     }
-    memset(in_transfer->data_buffer, 0, 4);
+    // memset(in_transfer->data_buffer, 0, 4);
     in_transfer->num_bytes = USB_EP_DESC_GET_MPS(in_ep);
     in_transfer->device_handle = driver_obj->dev_hdl;
     in_transfer->bEndpointAddress = in_ep->bEndpointAddress;
