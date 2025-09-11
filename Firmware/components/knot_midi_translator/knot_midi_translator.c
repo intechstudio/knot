@@ -192,6 +192,8 @@ struct uart_midi_event_packet uart_midi_process_byte(uint8_t byte) {
 
       if (byte > 127) {
 
+        // Real-Time messages are at most one byte long, can occur in the
+        // middle of other messages, and do not affect Running Status.
         if (uart_midi_is_byte_rtm(byte)) {
 
           // assemble return packet but do not clear the buffer
@@ -223,13 +225,11 @@ struct uart_midi_event_packet uart_midi_process_byte(uint8_t byte) {
           ev = (struct uart_midi_event_packet){
               .length = uart_midi_processor_buffer_index, .byte1 = uart_midi_processor_buffer[0], .byte2 = uart_midi_processor_buffer[1], .byte3 = uart_midi_processor_buffer[2]};
 
-          // Clear buffer
-
-          uart_midi_processor_buffer[0] = 0;
+          // Clear the Data bytes from the buffer, but retain the Status byte,
+          // since subsequent messages might be sent with Running Status.
           uart_midi_processor_buffer[1] = 0;
           uart_midi_processor_buffer[2] = 0;
-          uart_midi_processor_buffer_index = 0;
-          uart_midi_processor_buffer_limit = 0;
+          uart_midi_processor_buffer_index = 1;
         }
       }
     }
