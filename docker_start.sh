@@ -13,4 +13,4 @@ else
     exit 1
 fi
 
-$CONTAINER_TOOL run $ARGS --network=host -it -v /dev:/dev -v $PWD:/project -w /project/Firmware idf-pico-merged
+$CONTAINER_TOOL run $ARGS --network=host -it -v /dev:/dev -v $PWD:/project -w /project/Firmware knot-build
