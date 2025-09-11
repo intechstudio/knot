@@ -10,7 +10,7 @@ RUN git clone -b v5.3.1 --recursive https://github.com/espressif/esp-idf.git
 
 # Install tools used by esp-idf for esp32s3
 WORKDIR /esp-idf
-RUN ./install.sh esp32s3
+RUN ./install.sh esp32s3 > install-sh.log 2>&1
 WORKDIR /
 
 ENV IDF_PATH=/esp-idf
