@@ -26,6 +26,18 @@ The nightly firmware is an early release version of the stable release. As it is
 
 [Nightly Release](https://github.com/intechstudio/knot/raw/preview/Preview/Firmware/knot_esp32_nightly.uf2)
 
+### Updating the firmware
+
+- Hold the mode button while plugging the device using the USB-C port of the Knot.
+- The device is identified as a USB mass storage named KNOT-S3 (3 green LEDs).
+- The file "INFO_UF2.txt" only contains information for the bootloader version, not the firmware itself.
+- You can check the current firmware version, opening the file "CURRENT.UF2" with a text or hexadecimal application.
+- The first lines will contain the firmware date text. (e.g "May 29 2024" for the firmware "v1.0.5").
+- Download the file "knot_release.zip" from the latest release [Stable Release](https://github.com/intechstudio/knot/releases) and extract it.
+- Do not rename the ".uf2" file and copy it to the KNOT-S3 mass storage.
+- The device will update and reboot alone.
+- 3 blinking white LEDs means that the update is finished and that the device is waiting to a USB MIDI device.
+
 ### Knot features
 
 - Standalone USB MIDI Host, works with Grid and any MIDI class compliant USB controller
