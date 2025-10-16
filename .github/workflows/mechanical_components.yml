@@ -60,7 +60,7 @@ jobs:
         # Create environment and activate it
         conda create -n occenv python=3.10 pythonocc-core=7.7.2 -c conda-forge --yes
         conda activate occenv
-    
+
         # Run your Python script inside the environment
         python ./.github/workflows/pythonocc_step_to_stl.py
 
