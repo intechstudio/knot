@@ -4,6 +4,7 @@ dependencies:
   sukuwc/grid_common: "*"
   sukuwc/grid_esp32_led: "*"
   sukuwc/grid_esp32_nvm: "*"
+  sukuwc/grid_esp32_littlefs: "*"
   joltwallet/littlefs: "*"
   ## Required IDF version
   idf:

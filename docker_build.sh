@@ -11,4 +11,4 @@ else
     exit 1
 fi
 
-$CONTAINER_TOOL build -t idf-pico-merged .
+$CONTAINER_TOOL build -t knot-build .

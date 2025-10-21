@@ -205,6 +205,9 @@ void app_main(void) {
 #include "knot_midi_uart.h"
 #include "knot_midi_usb.h"
 
+#include "grid_littlefs.h"
+#include "grid_platform.h"
+
 #define SW_AB_PIN 35
 #define SW_MODE_PIN 36
 
@@ -224,62 +227,49 @@ static const char* TAG = "DAEMON";
 
 void midi_config_file_update(uint8_t state) {
 
-  ESP_LOGI(TAG, "Midi through set: %d", state);
+  ESP_LOGI(TAG, "midi_config_file_update, state: %d", state);
 
-  FILE* filePointer;        // Pointer to file type
-  char dataToWrite[] = "0"; // Array to hold data to be written
+  const char data[1] = {state ? '1' : '0'};
 
-  if (state) {
-    dataToWrite[0] = '1';
+  int status;
+
+  status = grid_platform_write_file("midithrough.cfg", (uint8_t*)&data, 1);
+  if (status) {
+    grid_platform_printf("grid_platform_write_file returned %d\n", status);
+    return;
   }
-
-  // Open file in write mode
-  filePointer = fopen("/littlefs/midithrough.cfg", "w");
-
-  // Check if file opened successfully
-  if (filePointer == NULL) {
-    printf("Unable to open file.\n");
-    return; // Exit program with error code
-  }
-
-  // Write data to file
-  fputs(dataToWrite, filePointer);
-
-  // Close file
-  fclose(filePointer);
 }
 
-uint8_t /*is_midi_through_enabled*/ midi_config_file_read(void) {
+uint8_t midi_config_file_read(void) {
 
-  FILE* filePointer; // Pointer to file type
-  char firstCharacter;
+  ESP_LOGI(TAG, "midi_config_file_read");
 
-  // Open file in read mode
-  filePointer = fopen("/littlefs/midithrough.cfg", "r");
+  struct grid_file_t handle = {0};
 
-  // Check if file opened successfully
-  if (filePointer == NULL) {
-    printf("Unable to open file.\n");
-    return 0; // Midi through not enabled
+  int status;
+
+  status = grid_platform_find_file("midithrough.cfg", &handle);
+  if (status) {
+    grid_platform_printf("grid_platform_find_file returned %d\n", status);
+    return 0;
   }
 
-  // Read the first character from the file
-  firstCharacter = fgetc(filePointer);
+  char data[1];
 
-  // Check if the end of the file or an error occurred
-  if (firstCharacter == EOF) {
-    printf("Error reading from file or file is empty.\n");
-    fclose(filePointer); // Close file before exiting
-    return 0;            // Midi through not enabled
+  status = grid_platform_read_file("midithrough.cfg", (uint8_t*)&data, 1);
+  if (status) {
+    grid_platform_printf("grid_platform_read_file returned %d\n", status);
+    return 0;
   }
 
-  // Display the first character
-  printf("The first character in the file is: %c\n", firstCharacter);
+  if (data[0] != '0' && data[0] != '1') {
+    grid_platform_printf("the first character in the file is not 0 or 1\n", data[0]);
+    return 0;
+  }
 
-  // Close file
-  fclose(filePointer);
+  grid_platform_printf("the first character in the file is: %c\n", data[0]);
 
-  return firstCharacter - '0';
+  return data[0] - '0';
 }
 
 static void host_lib_daemon_task(void* arg) {
@@ -365,23 +355,13 @@ void knot_module_ui_init(struct grid_ain_model* ain, struct grid_led_model* led,
 
 void knot_lua_ui_init_knot(struct grid_lua_model* mod) {
 
-  // define encoder_init_function
-
-  // grid_lua_dostring(mod, GRID_LUA_P_META_init);
-
   // create element array
-  grid_lua_dostring(mod, GRID_LUA_KW_ELEMENT_short "= {} ");
-
-  // initialize 16 potmeter
-  // grid_lua_dostring(mod, "for i=0, 15 do "GRID_LUA_KW_ELEMENT_short"[i] = {index = i} end");
-  // grid_lua_dostring(mod, "for i=0, 15 do setmetatable("GRID_LUA_KW_ELEMENT_short"[i], potmeter_meta) end");
-
-  grid_lua_gc_try_collect(mod);
+  grid_lua_dostring_unsafe(mod, GRID_LUA_KW_ELEMENT_short "= {} ");
 
   // initialize the system element
-  grid_lua_dostring(mod, GRID_LUA_KW_ELEMENT_short "[0] = {index = 0}");
-  grid_lua_dostring(mod, GRID_LUA_SYS_META_init);
-  grid_lua_dostring(mod, "setmetatable(" GRID_LUA_KW_ELEMENT_short "[0], system_meta)");
+  grid_lua_dostring_unsafe(mod, GRID_LUA_KW_ELEMENT_short "[0] = {index = 0}");
+  grid_lua_dostring_unsafe(mod, GRID_LUA_SYS_META_init);
+  grid_lua_dostring_unsafe(mod, "setmetatable(" GRID_LUA_KW_ELEMENT_short "[0], system_meta)");
 }
 
 extern esp_err_t try_start_in_transfer(void);
@@ -435,13 +415,14 @@ void app_main(void) {
   ESP_LOGI(TAG, "===== NVM START =====");
 
   xSemaphoreTake(nvm_or_port, 0);
-  grid_esp32_nvm_init(&grid_esp32_nvm_state);
+  grid_esp32_nvm_mount(&grid_esp32_nvm_state);
 
   if (gpio_get_level(SW_MODE_PIN) == 0) {
 
     grid_alert_all_set(&grid_led_state, GRID_LED_COLOR_YELLOW_DIM, 1000);
     grid_alert_all_set_frequency(&grid_led_state, 4);
-    grid_esp32_nvm_erase(&grid_esp32_nvm_state);
+    grid_platform_remove_dir("");
+    grid_littlefs_mkdir_base(grid_esp32_nvm_state.efs.lfs, grid_esp32_nvm_state.efs.base_path);
     vTaskDelay(pdMS_TO_TICKS(1600));
   }
 
@@ -450,10 +431,7 @@ void app_main(void) {
   ESP_LOGI(TAG, "===== LUA INIT =====");
   grid_lua_init(&grid_lua_state, NULL, NULL);
   grid_lua_set_memory_target(&grid_lua_state, 80); // 80kb
-  grid_lua_start_vm(&grid_lua_state);
-  grid_lua_dostring(&grid_lua_state, "foo = 123");
-  knot_lua_ui_init_knot(&grid_lua_state);
-  // grid_lua_dostring(&grid_lua_state, "print(foo, 2)");
+  grid_lua_start_vm(&grid_lua_state, &(struct luaL_Reg){NULL, NULL}, knot_lua_ui_init_knot);
 
 #define USB_NATIVE_SELECT_PIN 11
 #define USB_SOFT_SELECT_PIN 12
@@ -487,7 +465,7 @@ void app_main(void) {
 
   knot_midi_uart_init(&knot_midi_uart_state);
 
-  grid_esp32_nvm_list_files(&grid_esp32_nvm_state, "/littlefs");
+  grid_platform_list_directory("");
 
   if (midi_config_file_read()) {
     ESP_LOGI(TAG, "Midi through enabled");
