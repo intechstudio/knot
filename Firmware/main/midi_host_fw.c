@@ -380,7 +380,6 @@ void app_main(void) {
       .period = 9500, // 10000 really, but FreeRTOS is currently 100 Hz
   };
 
-
   // MIDI A/B SWITCH AND THROUGH BUTTON INTERACTIVITY
   gpio_set_direction(SW_AB_PIN, GPIO_MODE_INPUT);
   gpio_pullup_en(SW_AB_PIN);
@@ -413,7 +412,7 @@ void app_main(void) {
   grid_led_set_layer_color(&grid_led_state, 0, 2, 0, 0, 0);
   grid_led_set_layer_color(&grid_led_state, 1, 2, 0, 0, 0);
   grid_led_set_layer_color(&grid_led_state, 2, 2, 0, 0, 0);
-  
+
   grid_esp32_led_start(grid_led_get_pin(&grid_led_state));
 
   ESP_LOGI(TAG, "===== NVM START =====");

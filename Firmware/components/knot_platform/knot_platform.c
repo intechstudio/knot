@@ -41,5 +41,3 @@ uint8_t grid_platform_get_adc_bit_depth(void) { return 12; }
 uint64_t IRAM_ATTR grid_platform_rtc_get_micros(void) { return esp_timer_get_time(); }
 
 uint64_t IRAM_ATTR grid_platform_rtc_get_elapsed_time(uint64_t told) { return grid_platform_rtc_get_micros() - told; }
-
-
