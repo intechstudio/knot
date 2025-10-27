@@ -21,6 +21,10 @@ void grid_platform_delay_ms(uint32_t delay_milliseconds);
 
 uint8_t grid_platform_get_adc_bit_depth(void);
 
+uint64_t IRAM_ATTR grid_platform_rtc_get_micros(void);
+
+uint64_t IRAM_ATTR grid_platform_rtc_get_elapsed_time(uint64_t told);
+
 #ifdef __cplusplus
 }
 #endif

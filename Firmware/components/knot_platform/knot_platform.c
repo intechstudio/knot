@@ -5,6 +5,7 @@
  */
 
 #include "knot_platform.h"
+#include "esp_timer.h"
 
 #include "esp_heap_caps.h"
 
@@ -36,3 +37,7 @@ uint8_t grid_platform_get_random_8() {
 void grid_platform_delay_ms(uint32_t delay_milliseconds) { ets_delay_us(delay_milliseconds * 1000); }
 
 uint8_t grid_platform_get_adc_bit_depth(void) { return 12; }
+
+uint64_t IRAM_ATTR grid_platform_rtc_get_micros(void) { return esp_timer_get_time(); }
+
+uint64_t IRAM_ATTR grid_platform_rtc_get_elapsed_time(uint64_t told) { return grid_platform_rtc_get_micros() - told; }
