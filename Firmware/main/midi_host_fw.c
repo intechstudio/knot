@@ -374,6 +374,13 @@ bool idle_hook(void) {
 
 void app_main(void) {
 
+  // Configure task timers
+  struct grid_utask_timer timer_led = (struct grid_utask_timer){
+      .last = grid_platform_rtc_get_micros(),
+      .period = 9500, // 10000 really, but FreeRTOS is currently 100 Hz
+  };
+
+
   // MIDI A/B SWITCH AND THROUGH BUTTON INTERACTIVITY
   gpio_set_direction(SW_AB_PIN, GPIO_MODE_INPUT);
   gpio_pullup_en(SW_AB_PIN);
@@ -406,11 +413,8 @@ void app_main(void) {
   grid_led_set_layer_color(&grid_led_state, 0, 2, 0, 0, 0);
   grid_led_set_layer_color(&grid_led_state, 1, 2, 0, 0, 0);
   grid_led_set_layer_color(&grid_led_state, 2, 2, 0, 0, 0);
-
-  // Create the class driver task
-  TaskHandle_t led_task_hdl;
-  xTaskCreatePinnedToCore(grid_esp32_led_task, // was led_task
-                          "led", 4096, NULL, LED_TASK_PRIORITY, &led_task_hdl, 1);
+  
+  grid_esp32_led_start(grid_led_get_pin(&grid_led_state));
 
   ESP_LOGI(TAG, "===== NVM START =====");
 
@@ -495,6 +499,8 @@ void app_main(void) {
   while (1) {
 
     vTaskDelay(pdMS_TO_TICKS(10));
+
+    grid_esp32_utask_led(&timer_led);
 
     knot_midi_uart_set_miditrsab_state(&knot_midi_uart_state, !gpio_get_level(SW_AB_PIN));
 
