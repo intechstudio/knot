@@ -1,0 +1,49 @@
+name: "Firmware Production Release"
+
+on:
+  workflow_call:
+    inputs:
+      release_version:
+        description: "Git tag version for the release"
+        required: true
+        type: string
+      action_date:
+        description: "Build date timestamp"
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Git tag version for the release"
+        required: true
+        type: string
+      action_date:
+        description: "Build date timestamp"
+        required: true
+        type: string
+
+jobs:
+  create-production-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release_firmware
+          path: release/
+
+      - name: Zip artifacts for Github Release
+        uses: vimtor/action-zip@v1
+        with:
+          files: release/knot_esp32_release_${{ inputs.action_date }}.uf2
+          dest: knot_release.zip
+
+      - name: Create Production Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ inputs.release_version }}
+          name: Knot ${{ inputs.release_version }} (${{ inputs.action_date }})
+          files: knot_release.zip
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
