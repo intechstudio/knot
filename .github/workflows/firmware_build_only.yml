@@ -4,8 +4,11 @@ on:
   workflow_call:
     outputs:
       artifact_name:
-        description: "Name of the uploaded artifact"
+        description: "Name of the uploaded nightly artifact"
         value: ${{ jobs.build.outputs.artifact_name }}
+      release_artifact_name:
+        description: "Name of the uploaded release artifact"
+        value: ${{ jobs.build.outputs.release_artifact_name }}
       action_date:
         description: "Build date timestamp"
         value: ${{ jobs.build.outputs.action_date }}
@@ -19,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       artifact_name: nightly_firmware
+      release_artifact_name: release_firmware
       action_date: ${{ steps.set_env.outputs.action_date }}
       release_version: ${{ steps.set_env.outputs.release_version }}
     steps:
@@ -70,20 +74,8 @@ jobs:
             knot_esp32_nightly_${{ env.ACTION_DATE }}.uf2
             knot_esp32_nightly.uf2
 
-      - name: Zipping artifacts for Github Release
-        uses: vimtor/action-zip@v1
-        if: ${{ env.RELEASE_VERSION != '' }}
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
         with:
-          files: knot_esp32_release_${{ env.ACTION_DATE }}.uf2
-          dest: knot_release.zip
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: ${{ env.RELEASE_VERSION != '' }}
-        with:
-          tag_name: ${{ env.RELEASE_VERSION }}
-          name: Knot  ${{ env.RELEASE_VERSION }} (${{ env.ACTION_DATE }})
-          files: knot_release.zip
-          draft: true
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: release_firmware
+          path: knot_esp32_release_${{ env.ACTION_DATE }}.uf2

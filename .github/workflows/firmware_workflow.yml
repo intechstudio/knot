@@ -13,6 +13,16 @@ jobs:
     name: Build Firmware
     uses: ./.github/workflows/firmware_build_only.yml
 
+  publish-production:
+    name: Publish Production Release
+    if: needs.build.outputs.release_version != ''
+    needs: build
+    uses: ./.github/workflows/firmware_release_production.yml
+    with:
+      release_version: ${{ needs.build.outputs.release_version }}
+      action_date: ${{ needs.build.outputs.action_date }}
+    secrets: inherit
+
   publish-nightly:
     name: Publish Nightly Release
     if: github.ref == 'refs/heads/main'
