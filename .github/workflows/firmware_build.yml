@@ -78,6 +78,12 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: build
     steps:
+        - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+
       - name: Generate tag name
         id: get_version
         run: |
