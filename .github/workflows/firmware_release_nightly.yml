@@ -24,7 +24,7 @@ jobs:
       - name: Delete all releases by name
         id: delete_releases_by_name
         run: |
-          release_name="Nightly build"  # Replace with the release name you want to delete
+          release_name="Nightly Build"  # Replace with the release name you want to delete
           echo "Deleting all releases with the name: $release_name"
 
           # Fetch all releases
@@ -76,6 +76,12 @@ jobs:
         run: |
           rm build/*nightly.uf2
 
+      - name: Zip nightly artifacts
+        uses: vimtor/action-zip@v1
+        with:
+          files: build/
+          dest: knot_nightly.zip
+
       - name: Build Changelog
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v5
@@ -87,9 +93,9 @@ jobs:
       - name: Release Nightly
         uses: softprops/action-gh-release@v1
         with:
-          name: Release Nightly Version
+          name: Nightly Build
           tag_name: ${{ steps.get_version.outputs.tag_name }}
-          files: build/*.*
+          files: knot_nightly.zip
           draft: false
           prerelease: true
           body: ${{steps.github_release.outputs.changelog}}
