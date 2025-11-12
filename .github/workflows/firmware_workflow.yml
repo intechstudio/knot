@@ -1,0 +1,27 @@
+name: "Firmware Workflow"
+
+on:
+  workflow_dispatch:
+  push:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Firmware
+    uses: ./.github/workflows/firmware_build_only.yml
+
+  publish-nightly:
+    name: Publish Nightly Release
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    uses: ./.github/workflows/firmware_release_nightly.yml
+    secrets: inherit
+
+  deploy-preview:
+    name: Deploy to Preview Branch
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    uses: ./.github/workflows/firmware_deploy_preview.yml
