@@ -50,7 +50,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: grid-fw nightly
+          name: nightly_firmware
           path: |
             knot_esp32_nightly_${{ env.ACTION_DATE }}.uf2
             knot_esp32_nightly.uf2
