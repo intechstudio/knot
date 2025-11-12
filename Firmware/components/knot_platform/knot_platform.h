@@ -25,6 +25,8 @@ uint64_t IRAM_ATTR grid_platform_rtc_get_micros(void);
 
 uint64_t IRAM_ATTR grid_platform_rtc_get_elapsed_time(uint64_t told);
 
+uint64_t IRAM_ATTR grid_platform_rtc_get_diff(uint64_t t1, uint64_t t2);
+
 #ifdef __cplusplus
 }
 #endif

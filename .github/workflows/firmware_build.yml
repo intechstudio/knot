@@ -136,6 +136,10 @@ jobs:
           path: build/ # Path to save the downloaded artifacts
           merge-multiple: true
 
+      - name: Remove duplicate file (the one that does not have date in the name)
+        run: |
+          rm build/*nightly.uf2
+
       - name: Build Changelog
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v5
