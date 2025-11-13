@@ -25,13 +25,15 @@ jobs:
 
   publish-nightly:
     name: Publish Nightly Release
-    if: github.ref == 'refs/heads/main'
+    # Run on main branch OR when a tag exists to ensure nightly is never behind production releases
+    if: github.ref == 'refs/heads/main' || needs.build.outputs.release_version != ''
     needs: build
     uses: ./.github/workflows/firmware_release_nightly.yml
     secrets: inherit
 
   deploy-preview:
     name: Deploy to Preview Branch
-    if: github.ref == 'refs/heads/main'
+    # Run on main branch OR when a tag exists to ensure preview is never behind production releases
+    if: github.ref == 'refs/heads/main' || needs.build.outputs.release_version != ''
     needs: build
     uses: ./.github/workflows/firmware_deploy_preview.yml
