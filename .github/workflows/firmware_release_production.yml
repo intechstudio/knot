@@ -3,6 +3,10 @@ name: "Firmware Production Release"
 on:
   workflow_call:
     inputs:
+      product_name:
+        description: "Product name for release naming"
+        required: true
+        type: string
       release_version:
         description: "Git tag version for the release"
         required: true
@@ -13,6 +17,10 @@ on:
         type: string
   workflow_dispatch:
     inputs:
+      product_name:
+        description: "Product name for release naming"
+        required: true
+        type: string
       release_version:
         description: "Git tag version for the release"
         required: true
@@ -35,15 +43,15 @@ jobs:
       - name: Zip artifacts for Github Release
         uses: vimtor/action-zip@v1
         with:
-          files: release/knot_esp32_release_${{ inputs.action_date }}.uf2
-          dest: knot_release.zip
+          files: release/*_release_${{ inputs.action_date }}.uf2
+          dest: ${{ inputs.product_name }}_release.zip
 
       - name: Create Production Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ inputs.release_version }}
-          name: Knot ${{ inputs.release_version }} (${{ inputs.action_date }})
-          files: knot_release.zip
+          name: ${{ inputs.product_name }} ${{ inputs.release_version }} (${{ inputs.action_date }})
+          files: ${{ inputs.product_name }}_release.zip
           draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
