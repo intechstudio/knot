@@ -19,6 +19,7 @@ jobs:
     needs: build
     uses: ./.github/workflows/firmware_release_production.yml
     with:
+      product_name: "knot"
       release_version: ${{ needs.build.outputs.release_version }}
       action_date: ${{ needs.build.outputs.action_date }}
     secrets: inherit
@@ -29,6 +30,8 @@ jobs:
     if: github.ref == 'refs/heads/main' || needs.build.outputs.release_version != ''
     needs: build
     uses: ./.github/workflows/firmware_release_nightly.yml
+    with:
+      product_name: "knot"
     secrets: inherit
 
   deploy-preview:

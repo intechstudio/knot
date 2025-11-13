@@ -2,7 +2,17 @@ name: "Firmware Nightly Release"
 
 on:
   workflow_call:
+    inputs:
+      product_name:
+        description: "Product name for release naming"
+        required: true
+        type: string
   workflow_dispatch:
+    inputs:
+      product_name:
+        description: "Product name for release naming"
+        required: true
+        type: string
 
 jobs:
   publish-nightly-release:
@@ -80,7 +90,7 @@ jobs:
         uses: vimtor/action-zip@v1
         with:
           files: build/
-          dest: knot_nightly.zip
+          dest: ${{ inputs.product_name }}_nightly.zip
 
       - name: Build Changelog
         id: github_release
@@ -95,7 +105,7 @@ jobs:
         with:
           name: Nightly Build
           tag_name: ${{ steps.get_version.outputs.tag_name }}
-          files: knot_nightly.zip
+          files: ${{ inputs.product_name }}_nightly.zip
           draft: false
           prerelease: true
           body: ${{steps.github_release.outputs.changelog}}
