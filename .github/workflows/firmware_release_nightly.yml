@@ -76,11 +76,11 @@ jobs:
           fi
           echo "Tag deletion process completed."
 
-      - name: Download all nightly artifacts
+      - name: Download nightly artifacts
         uses: actions/download-artifact@v4
         with:
-          path: build/ # Path to save the downloaded artifacts
-          merge-multiple: true
+          name: nightly_firmware
+          path: build/
 
       - name: Remove duplicate file (the one that does not have date in the name)
         run: |
