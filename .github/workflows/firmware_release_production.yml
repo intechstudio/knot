@@ -43,7 +43,7 @@ jobs:
       - name: Zip artifacts for Github Release
         uses: vimtor/action-zip@v1
         with:
-          files: release/*_release_${{ inputs.action_date }}.uf2
+          files: release/
           dest: ${{ inputs.product_name }}_release.zip
 
       - name: Create Production Release
