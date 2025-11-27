@@ -330,38 +330,23 @@ void grid_platform_printf(char const* fmt, ...) {
 #include "grid_ain.h"
 #include "grid_led.h"
 #include "grid_lua.h"
+#include "grid_module.h"
 #include "grid_ui.h"
 #include "grid_ui_system.h"
 
 #include "grid_esp32_led.h"
 #include "grid_esp32_nvm.h"
 
-void knot_module_ui_init(struct grid_ain_model* ain, struct grid_led_model* led, struct grid_ui_model* ui) {
+const struct luaL_Reg grid_lua_api_gui_lib_reference[] = {{NULL, NULL}};
 
-  // grid_ain_init(ain, 16, 5);
+void knot_module_ui_init(struct grid_ain_model* ain, struct grid_led_model* led, struct grid_ui_model* ui) {
 
   grid_led_init(led, 3);
   grid_ui_model_init(ui, 0 + 1); // +1 for the system element
 
-  for (uint8_t j = 0; j < 16; j++) {
-
-    // grid_ui_element_init(ui, j, GRID_UI_ELEMENT_POTENTIOMETER);
-  }
-
   grid_ui_element_system_init(&ui->element_list[ui->element_list_length - 1]);
 
-  // ui->lua_ui_init_callback = grid_lua_ui_init_po16;
-}
-
-void knot_lua_ui_init_knot(struct grid_lua_model* mod) {
-
-  // create element array
-  grid_lua_dostring_unsafe(mod, GRID_LUA_KW_ELEMENT_short "= {} ");
-
-  // initialize the system element
-  grid_lua_dostring_unsafe(mod, GRID_LUA_KW_ELEMENT_short "[0] = {index = 0}");
-  grid_lua_dostring_unsafe(mod, GRID_LUA_S_META_init);
-  grid_lua_dostring_unsafe(mod, "setmetatable(" GRID_LUA_KW_ELEMENT_short "[0], system_meta)");
+  ui->lua_ui_init_callback = grid_lua_ui_init;
 }
 
 extern esp_err_t try_start_in_transfer(void);
@@ -424,8 +409,7 @@ void app_main(void) {
 
     grid_alert_all_set(&grid_led_state, GRID_LED_COLOR_YELLOW_DIM, 1000);
     grid_alert_all_set_frequency(&grid_led_state, 4);
-    grid_platform_remove_dir("");
-    grid_littlefs_mkdir_base(grid_esp32_nvm_state.efs.lfs, grid_esp32_nvm_state.efs.base_path);
+    grid_platform_nvm_format_and_mount();
     vTaskDelay(pdMS_TO_TICKS(1600));
   }
 
@@ -434,7 +418,7 @@ void app_main(void) {
   ESP_LOGI(TAG, "===== LUA INIT =====");
   grid_lua_init(&grid_lua_state, NULL, NULL);
   grid_lua_set_memory_target(&grid_lua_state, 80); // 80kb
-  grid_lua_start_vm(&grid_lua_state, &(struct luaL_Reg){NULL, NULL}, knot_lua_ui_init_knot);
+  grid_lua_start_vm(&grid_lua_state, &(struct luaL_Reg){NULL, NULL}, grid_ui_state.lua_ui_init_callback);
 
 #define USB_NATIVE_SELECT_PIN 11
 #define USB_SOFT_SELECT_PIN 12
