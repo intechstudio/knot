@@ -256,7 +256,7 @@ uint8_t midi_config_file_read(void) {
 
   char data[1];
 
-  status = grid_platform_read_file("midithrough.cfg", (uint8_t*)&data, 1);
+  status = grid_platform_read_file(&handle, (uint8_t*)&data, 1);
   if (status) {
     grid_platform_printf("grid_platform_read_file returned %d\n", status);
     return 0;
@@ -360,7 +360,7 @@ void knot_lua_ui_init_knot(struct grid_lua_model* mod) {
 
   // initialize the system element
   grid_lua_dostring_unsafe(mod, GRID_LUA_KW_ELEMENT_short "[0] = {index = 0}");
-  grid_lua_dostring_unsafe(mod, GRID_LUA_SYS_META_init);
+  grid_lua_dostring_unsafe(mod, GRID_LUA_S_META_init);
   grid_lua_dostring_unsafe(mod, "setmetatable(" GRID_LUA_KW_ELEMENT_short "[0], system_meta)");
 }
 
@@ -418,7 +418,7 @@ void app_main(void) {
   ESP_LOGI(TAG, "===== NVM START =====");
 
   xSemaphoreTake(nvm_or_port, 0);
-  grid_esp32_nvm_mount(&grid_esp32_nvm_state);
+  grid_esp32_nvm_mount(&grid_esp32_nvm_state, false);
 
   if (gpio_get_level(SW_MODE_PIN) == 0) {
 
