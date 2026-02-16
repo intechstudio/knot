@@ -6,7 +6,7 @@ RUN apt update
 RUN apt -y install git wget flex bison gperf python3 python3-pip python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
 
 # Clone esp-idf
-RUN git clone -b v5.3.1 --recursive https://github.com/espressif/esp-idf.git
+RUN git clone -b v5.5 --recursive https://github.com/espressif/esp-idf.git
 
 # Install tools used by esp-idf for esp32s3
 WORKDIR /esp-idf
