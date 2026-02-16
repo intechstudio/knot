@@ -330,14 +330,31 @@ void grid_platform_printf(char const* fmt, ...) {
 #include "grid_ain.h"
 #include "grid_led.h"
 #include "grid_lua.h"
-#include "grid_module.h"
 #include "grid_ui.h"
 #include "grid_ui_system.h"
 
 #include "grid_esp32_led.h"
 #include "grid_esp32_nvm.h"
 
-const struct luaL_Reg grid_lua_api_gui_lib_reference[] = {{NULL, NULL}};
+void knot_lua_ui_init(struct grid_lua_model* lua) {
+
+  struct grid_ui_model* ui = &grid_ui_state;
+
+  grid_lua_create_element_array(lua->L, ui->element_list_length);
+
+  for (int i = 0; i < ui->element_list_length; ++i) {
+
+    struct grid_ui_element* ele = grid_ui_element_find(&grid_ui_state, i);
+
+    if (ele->type == GRID_PARAMETER_ELEMENT_SYSTEM) {
+      grid_lua_dostring_unsafe(lua, GRID_LUA_S_META_init);
+      grid_lua_register_index_meta_for_type(lua->L, GRID_LUA_S_TYPE, GRID_LUA_S_INDEX_META);
+    }
+
+    grid_lua_register_element(lua->L, i);
+    grid_lua_register_index_meta_for_element(lua->L, i, GRID_LUA_S_TYPE);
+  }
+}
 
 void knot_module_ui_init(struct grid_ain_model* ain, struct grid_led_model* led, struct grid_ui_model* ui) {
 
@@ -346,7 +363,7 @@ void knot_module_ui_init(struct grid_ain_model* ain, struct grid_led_model* led,
 
   grid_ui_element_system_init(&ui->element_list[ui->element_list_length - 1]);
 
-  ui->lua_ui_init_callback = grid_lua_ui_init;
+  ui->lua_ui_init_callback = knot_lua_ui_init;
 }
 
 extern esp_err_t try_start_in_transfer(void);
