@@ -142,6 +142,13 @@ struct uart_midi_event_packet uart_midi_process_byte(uint8_t byte) {
 
   if (uart_midi_processor_state_is_sysex) {
 
+    // Check for Real-Time Messages first - they must be processed immediately
+    // even during SysEx, without affecting the SysEx buffer or state
+    if (uart_midi_is_byte_rtm(byte)) {
+      // Return RTM immediately without storing in buffer
+      return (struct uart_midi_event_packet){.length = 1, .byte1 = byte, .byte2 = 0, .byte3 = 0};
+    }
+
     // store sysex data
     uart_midi_processor_buffer[uart_midi_processor_buffer_index] = byte;
     uart_midi_processor_buffer_index++;
