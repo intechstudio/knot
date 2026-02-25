@@ -11,10 +11,6 @@ on:
         description: "Git tag for the release"
         required: true
         type: string
-      zip_name:
-        description: "Output zip file name"
-        required: true
-        type: string
 
 jobs:
   deploy-nightly-release:
@@ -51,18 +47,12 @@ jobs:
         with:
           path: download
 
-      - name: Zip artifacts
-        uses: vimtor/action-zip@v1
-        with:
-          files: download/
-          dest: ${{ inputs.zip_name }}
-
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ inputs.release_name }}
           tag_name: ${{ inputs.tag_name }}
-          files: ${{ inputs.zip_name }}
+          files: download/**/*
           draft: false
           prerelease: true
         env:

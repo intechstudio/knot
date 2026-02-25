@@ -75,5 +75,4 @@ jobs:
     with:
       release_name: "Nightly Electrical"
       tag_name: "nightly-electrical"
-      zip_name: "knot_electrical_nightly.zip"
     secrets: inherit

@@ -87,5 +87,4 @@ jobs:
     with:
       release_name: "Nightly Mechanical"
       tag_name: "nightly-mechanical"
-      zip_name: "knot_mechanical_nightly.zip"
     secrets: inherit
