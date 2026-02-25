@@ -24,7 +24,7 @@ You can find more info on the [website](https://intech.studio/shop/knot) or in t
 
 The nightly firmware is an early release version of the stable release. As it is an early version, some issues could still persist. In the case of issues, please denote the usage of a nightly firmware in the issue report.
 
-[Nightly Release](https://github.com/intechstudio/knot/raw/preview/Preview/Firmware/knot_esp32_nightly.uf2)
+[Nightly Release](https://github.com/intechstudio/knot/releases/tag/nightly)
 
 ### Updating the firmware
 
