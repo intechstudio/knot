@@ -80,3 +80,12 @@ jobs:
         name: "result_${{ matrix.component }}_${{ env.action_date }}"
         path: temp/*.*
 
+  deploy-results:
+    needs: generate-artifacts
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/deploy_nightly_release.yml
+    with:
+      release_name: "Nightly Mechanical"
+      tag_name: "nightly-mechanical"
+      zip_name: "knot_mechanical_nightly.zip"
+    secrets: inherit
