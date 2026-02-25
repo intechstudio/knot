@@ -33,4 +33,3 @@ jobs:
     with:
       product_name: "knot"
     secrets: inherit
-
