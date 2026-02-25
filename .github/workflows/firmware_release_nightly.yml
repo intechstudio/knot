@@ -34,7 +34,7 @@ jobs:
       - name: Delete all releases by name
         id: delete_releases_by_name
         run: |
-          release_name="Nightly Build"  # Replace with the release name you want to delete
+          release_name="Nightly Firmware"  # Replace with the release name you want to delete
           echo "Deleting all releases with the name: $release_name"
 
           # Fetch all releases
@@ -103,7 +103,7 @@ jobs:
       - name: Release Nightly
         uses: softprops/action-gh-release@v1
         with:
-          name: Nightly Build
+          name: Nightly Firmware
           tag_name: ${{ steps.get_version.outputs.tag_name }}
           files: ${{ inputs.product_name }}_nightly.zip
           draft: false
