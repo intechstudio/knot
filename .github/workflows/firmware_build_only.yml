@@ -35,18 +35,13 @@ jobs:
         run: docker build -t my-image .
 
       - name: Run script in Docker container
-        run: docker run -v $PWD:/project -w /project/ my-image sh -c "cd Firmware && idf.py build"
+        run: docker run -v $PWD:/project -w /project/ my-image sh -c "cd Firmware && ./esp_build_firmware.sh"
 
       - name: Run Unit Tests
         run: |
           cd Firmware/components/knot_midi_translator/host_test/
           ./test.sh
           ./test.sh >> test.txt
-
-      - name: Convert to uf2
-        run: |
-          cd Firmware
-          sudo python3 ./tools/uf2conv.py -f ESP32S3 ./build/midi_host_fw.bin -b 0x0 -c -o ./output/midi_host_fw.uf2
 
       - name: Set env
         id: set_env
@@ -62,9 +57,9 @@ jobs:
       - name: Copy and rename the artifacts
         run: |
           ls
-          cp Firmware/output/midi_host_fw.uf2 knot_esp32_release_${{ env.ACTION_DATE }}.uf2
-          cp Firmware/output/midi_host_fw.uf2 knot_esp32_nightly_${{ env.ACTION_DATE }}.uf2
-          cp Firmware/output/midi_host_fw.uf2 knot_esp32_nightly.uf2
+          cp binary/midi_host_fw.uf2 knot_esp32_release_${{ env.ACTION_DATE }}.uf2
+          cp binary/midi_host_fw.uf2 knot_esp32_nightly_${{ env.ACTION_DATE }}.uf2
+          cp binary/midi_host_fw.uf2 knot_esp32_nightly.uf2
 
       - name: Upload nightly artifacts
         uses: actions/upload-artifact@v4
