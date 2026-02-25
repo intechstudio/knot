@@ -14,6 +14,11 @@ jobs:
   generate-artifacts:
     name: freecad export
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       fail-fast: false
       matrix:
@@ -24,17 +29,12 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
-    - name: Install dependencies
+    - name: Start virtual display
       run: |
-        sudo apt-get update
-        sudo apt-get install -y xvfb x11vnc
-        sudo apt-get  install snapd
-        sudo snap install freecad
-        sudo apt-get install -y openscad
         Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
-        sleep 10  # Give Xvfb some time to start
+        until xdpyinfo -display :99 > /dev/null 2>&1; do sleep 0.5; done
         x11vnc -display :99 -nopw -listen localhost -xkb -ncache 10 -ncache_cr -forever > /dev/null 2>&1 &
 
     - name: Run GUI application
@@ -44,25 +44,8 @@ jobs:
         export DISPLAY=:99
         timeout 5m freecad --hidden ./Mechanical/Design/${{ matrix.component }}/${{ matrix.component }}.FCStd ./.github/workflows/freecad_export.py step pdf || true
 
-    - name: Install conda, create env with pythonocc-core
-      run: |
-        CONDA_INSTALL_DIR="$HOME/miniconda3"
-
-        # Install Miniconda
-        wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-        bash miniconda.sh -b -p "$CONDA_INSTALL_DIR"
-        rm miniconda.sh
-
-        # Add Conda to PATH
-        export PATH="$CONDA_INSTALL_DIR/bin:$PATH"
-        source "$CONDA_INSTALL_DIR/etc/profile.d/conda.sh"
-
-        # Create environment and activate it
-        conda create -n occenv python=3.10 pythonocc-core=7.7.2 -c conda-forge --yes
-        conda activate occenv
-
-        # Run your Python script inside the environment
-        python ./.github/workflows/pythonocc_step_to_stl.py
+    - name: Convert STEP to STL
+      run: python ./.github/workflows/pythonocc_step_to_stl.py
 
     - name: Generate Preview PNG
       run: |
