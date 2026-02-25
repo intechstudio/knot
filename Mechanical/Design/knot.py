@@ -5,7 +5,7 @@ myfile = "knot.step"
 
 pcb_width = 56
 pcb_height = 60
-pcb_zdrop = 3
+pcb_zdrop = 2.5
 pcb_thickness = 1
 pcb_bottom_clearance = 3
 pcb_side_clearance = 2
