@@ -6,20 +6,14 @@ on:
 jobs:
   build-firmware:
     uses: ./.github/workflows/_firmware_build.yml
-    with:
-      dockerfile_changed: false
     secrets: inherit
 
   build-mechanical:
     uses: ./.github/workflows/_mechanical_build.yml
-    with:
-      dockerfile_changed: false
     secrets: inherit
 
   build-electrical:
     uses: ./.github/workflows/_electrical_build.yml
-    with:
-      dockerfile_changed: false
     secrets: inherit
 
   publish-release:

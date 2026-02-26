@@ -1,0 +1,52 @@
+name: Prepare builder image
+description: >
+  Pull or rebuild a GHCR builder image using Git SHA-based Dockerfile
+  change detection. Rebuilds only when the current Dockerfile differs from
+  the one that produced the cached image. Pushes to GHCR only on main/master.
+
+inputs:
+  image-name:
+    description: Short image name, e.g. knot-firmware-builder
+    required: true
+  dockerfile:
+    description: Path to the Dockerfile, e.g. docker/firmware-builder/Dockerfile
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+
+    - name: Pull or rebuild image
+      shell: bash
+      run: |
+        IMAGE=ghcr.io/${{ github.repository_owner }}/${{ inputs.image-name }}:latest
+        DOCKERFILE=${{ inputs.dockerfile }}
+
+        NEEDS_REBUILD=true
+        if docker pull $IMAGE 2>/dev/null; then
+          IMAGE_SHA=$(docker inspect $IMAGE \
+            --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' 2>/dev/null || echo "")
+          if [ -n "$IMAGE_SHA" ]; then
+            OLD_DOCKERFILE=$(git show ${IMAGE_SHA}:${DOCKERFILE} 2>/dev/null || echo "")
+            if [ "$(cat $DOCKERFILE)" = "$OLD_DOCKERFILE" ]; then
+              echo "Dockerfile unchanged, reusing image."
+              NEEDS_REBUILD=false
+            fi
+          fi
+        fi
+
+        if [ "$NEEDS_REBUILD" = "true" ]; then
+          docker build \
+            --label org.opencontainers.image.revision=${{ github.sha }} \
+            -t $IMAGE \
+            -f $DOCKERFILE .
+          if [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.ref }}" == "refs/heads/master" ]]; then
+            docker push $IMAGE
+          fi
+        fi

@@ -1,11 +1,5 @@
 on:
   workflow_call:
-    inputs:
-      dockerfile_changed:
-        description: "Whether the firmware Dockerfile was changed"
-        required: false
-        type: boolean
-        default: false
 
 jobs:
   build:
@@ -17,24 +11,13 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Prepare image
-        run: |
-          if [ "${{ inputs.dockerfile_changed }}" == "true" ]; then
-            docker build -t ghcr.io/${{ github.repository_owner }}/knot-firmware-builder:latest -f docker/firmware-builder/Dockerfile .
-            if [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.ref }}" == "refs/heads/master" ]]; then
-              docker push ghcr.io/${{ github.repository_owner }}/knot-firmware-builder:latest
-            fi
-          else
-            docker pull ghcr.io/${{ github.repository_owner }}/knot-firmware-builder:latest
-          fi
+        uses: ./.github/actions/prepare-builder-image
+        with:
+          image-name: knot-firmware-builder
+          dockerfile: docker/firmware-builder/Dockerfile
 
       - name: Run script in Docker container
         run: docker run -v $PWD:/project -w /project/ ghcr.io/${{ github.repository_owner }}/knot-firmware-builder:latest sh -c "cd Firmware && ./esp_build_firmware.sh"

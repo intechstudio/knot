@@ -1,11 +1,5 @@
 on:
   workflow_call:
-    inputs:
-      dockerfile_changed:
-        description: "Whether the electrical Dockerfile was changed"
-        required: false
-        type: boolean
-        default: false
 
 jobs:
   build:
@@ -21,37 +15,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v3
       with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
 
     - name: Prepare image
+      uses: ./.github/actions/prepare-builder-image
+      with:
+        image-name: knot-electrical-builder
+        dockerfile: docker/electrical-builder/Dockerfile
+
+    - name: Run build
       run: |
-        if [ "${{ inputs.dockerfile_changed }}" == "true" ]; then
-          docker build -t builder:local -f docker/electrical-builder/Dockerfile .
-          if [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.ref }}" == "refs/heads/master" ]]; then
-            docker tag builder:local ghcr.io/${{ github.repository_owner }}/knot-electrical-builder:latest
-            docker push ghcr.io/${{ github.repository_owner }}/knot-electrical-builder:latest
-          fi
-        else
-          docker pull ghcr.io/${{ github.repository_owner }}/knot-electrical-builder:latest
-          docker tag ghcr.io/${{ github.repository_owner }}/knot-electrical-builder:latest builder:local
-        fi
-        docker run -d --name builder \
+        docker run --rm \
           -v ${{ github.workspace }}:/work \
           -w /work \
-          builder:local tail -f /dev/null
-
-    - name: Run PCB stuff
-      run: docker exec builder bash -c "make -C /work/Electrical/Design/${{ matrix.board }}"
-
-    - name: Stop container
-      if: always()
-      run: docker rm -f builder
+          ghcr.io/${{ github.repository_owner }}/knot-electrical-builder:latest \
+          bash -c "make -C /work/Electrical/Design/${{ matrix.board }}"
 
     - name: Fix file ownership
       if: always()

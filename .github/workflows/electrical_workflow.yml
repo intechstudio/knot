@@ -8,24 +8,8 @@ on:
       - 'docker/electrical-builder/Dockerfile'
 
 jobs:
-  check-dockerfile:
-    runs-on: ubuntu-latest
-    outputs:
-      dockerfile-changed: ${{ steps.filter.outputs.dockerfile }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            dockerfile:
-              - 'docker/electrical-builder/Dockerfile'
-
   build:
-    needs: check-dockerfile
     uses: ./.github/workflows/_electrical_build.yml
-    with:
-      dockerfile_changed: ${{ needs.check-dockerfile.outputs.dockerfile-changed == 'true' }}
     secrets: inherit
 
   deploy-results:
