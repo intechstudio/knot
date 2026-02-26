@@ -79,15 +79,12 @@ jobs:
           ls
           cp binary/midi_host_fw.uf2 knot_esp32_release_${{ env.ACTION_DATE }}.uf2
           cp binary/midi_host_fw.uf2 knot_esp32_nightly_${{ env.ACTION_DATE }}.uf2
-          cp binary/midi_host_fw.uf2 knot_esp32_nightly.uf2
 
       - name: Upload nightly artifacts
         uses: actions/upload-artifact@v4
         with:
           name: nightly_firmware
-          path: |
-            knot_esp32_nightly_${{ env.ACTION_DATE }}.uf2
-            knot_esp32_nightly.uf2
+          path: knot_esp32_nightly_${{ env.ACTION_DATE }}.uf2
 
       - name: Upload release artifacts
         uses: actions/upload-artifact@v4
@@ -109,7 +106,8 @@ jobs:
     # Run on main branch OR when a tag exists to ensure nightly is never behind production releases
     needs: build
     if: always() && needs.build.result == 'success' && (github.ref == 'refs/heads/main' || needs.build.outputs.release_version != '')
-    uses: ./.github/workflows/_firmware_release_nightly.yml
+    uses: ./.github/workflows/_deploy_nightly.yml
     with:
-      product_name: "knot"
+      release_name: "Nightly Firmware"
+      tag_name: "nightly-firmware"
     secrets: inherit
