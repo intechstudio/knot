@@ -22,25 +22,12 @@ jobs:
             dockerfile:
               - 'docker/mechanical-builder/Dockerfile'
 
-  build-image:
-    needs: check-dockerfile
-    if: (needs.check-dockerfile.outputs.dockerfile-changed == 'true' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) || github.event_name == 'workflow_dispatch'
-    uses: ./.github/workflows/_build_image.yml
-    with:
-      image_name: knot-mechanical-builder
-      dockerfile: docker/mechanical-builder/Dockerfile
-    secrets: inherit
-
   generate-artifacts:
-    needs: build-image
-    if: always() && needs.build-image.result != 'failure'
+    needs: check-dockerfile
     name: freecad export
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      packages: write
     strategy:
       fail-fast: false
       matrix:
@@ -53,32 +40,60 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Prepare image
+      run: |
+        if [ "${{ needs.check-dockerfile.outputs.dockerfile-changed }}" == "true" ]; then
+          docker build -t builder:local -f docker/mechanical-builder/Dockerfile .
+          if [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.ref }}" == "refs/heads/master" ]]; then
+            docker tag builder:local ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder:latest
+            docker push ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder:latest
+          fi
+        else
+          docker pull ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder:latest
+          docker tag ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder:latest builder:local
+        fi
+        docker run -d --name builder \
+          -v ${{ github.workspace }}:/work \
+          -w /work \
+          builder:local tail -f /dev/null
+
     - name: Start virtual display
       run: |
-        Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
-        until xdpyinfo -display :99 > /dev/null 2>&1; do sleep 0.5; done
-        x11vnc -display :99 -nopw -listen localhost -xkb -ncache 10 -ncache_cr -forever > /dev/null 2>&1 &
+        docker exec builder bash -c "
+          Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
+          until xdpyinfo -display :99 > /dev/null 2>&1; do sleep 0.5; done
+          x11vnc -display :99 -nopw -listen localhost -xkb -ncache 10 -ncache_cr -forever > /dev/null 2>&1 &
+        "
 
     - name: Run GUI application
       continue-on-error: true
       run: |
-        ls
-        export DISPLAY=:99
-        freecad --hidden ./Mechanical/Design/${{ matrix.component }}/${{ matrix.component }}.FCStd ./.github/workflows/freecad_export.py step pdf || true
+        docker exec -e DISPLAY=:99 builder bash -c "
+          freecad --hidden /work/Mechanical/Design/${{ matrix.component }}/${{ matrix.component }}.FCStd /work/.github/workflows/freecad_export.py step pdf || true
+        "
 
     - name: Convert STEP to STL
-      run: /opt/conda/envs/occenv/bin/python ./.github/workflows/pythonocc_step_to_stl.py
+      run: docker exec builder /opt/conda/envs/occenv/bin/python /work/.github/workflows/pythonocc_step_to_stl.py
 
     - name: Generate Preview PNG
-      run: |
-        ./.github/workflows/openscad_preview.sh
+      run: docker exec builder bash -c "/work/.github/workflows/openscad_preview.sh"
 
     - name: Copy reference files
       run: |
-        find Mechanical/Design/${{ matrix.component }}/ -maxdepth 1 -name "${{ matrix.component }}*" ! -name "*.FCStd" ! -name "*.FCBak" -exec cp {} temp/ \; || true
+        docker exec builder bash -c "
+          find /work/Mechanical/Design/${{ matrix.component }}/ -maxdepth 1 -name '${{ matrix.component }}*' ! -name '*.FCStd' ! -name '*.FCBak' -exec cp {} /work/temp/ \; || true
+        "
 
-    - name: Stop x11vnc
-      run: pkill x11vnc
+    - name: Stop container
+      if: always()
+      run: docker rm -f builder
 
     - name: Set Date
       run: echo "action_date=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_ENV

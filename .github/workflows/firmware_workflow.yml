@@ -20,19 +20,12 @@ jobs:
             dockerfile:
               - 'docker/firmware-builder/Dockerfile'
 
-  build-image:
-    needs: check-dockerfile
-    if: (needs.check-dockerfile.outputs.dockerfile-changed == 'true' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) || github.event_name == 'workflow_dispatch'
-    uses: ./.github/workflows/_build_image.yml
-    with:
-      image_name: knot-firmware-builder
-      dockerfile: docker/firmware-builder/Dockerfile
-    secrets: inherit
-
   build:
-    needs: build-image
-    if: always() && needs.build-image.result != 'failure'
+    needs: check-dockerfile
     uses: ./.github/workflows/_firmware_build.yml
+    with:
+      dockerfile_changed: ${{ needs.check-dockerfile.outputs.dockerfile-changed == 'true' }}
+    secrets: inherit
 
   publish-production:
     needs: build
