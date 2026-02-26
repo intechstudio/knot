@@ -91,7 +91,7 @@ jobs:
 
   deploy-results:
     needs: generate-artifacts
-    if: github.ref == 'refs/heads/main'
+    if: always() && needs.generate-artifacts.result == 'success' && github.ref == 'refs/heads/main'
     uses: ./.github/workflows/_deploy_nightly.yml
     with:
       release_name: "Nightly Mechanical"

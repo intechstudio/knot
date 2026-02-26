@@ -35,8 +35,8 @@ jobs:
     uses: ./.github/workflows/_firmware_build.yml
 
   publish-production:
-    if: needs.build.outputs.release_version != ''
     needs: build
+    if: always() && needs.build.result == 'success' && needs.build.outputs.release_version != ''
     uses: ./.github/workflows/_firmware_release_production.yml
     with:
       product_name: "knot"
@@ -46,8 +46,8 @@ jobs:
 
   publish-nightly:
     # Run on main branch OR when a tag exists to ensure nightly is never behind production releases
-    if: github.ref == 'refs/heads/main' || needs.build.outputs.release_version != ''
     needs: build
+    if: always() && needs.build.result == 'success' && (github.ref == 'refs/heads/main' || needs.build.outputs.release_version != '')
     uses: ./.github/workflows/_firmware_release_nightly.yml
     with:
       product_name: "knot"
