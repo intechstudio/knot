@@ -13,7 +13,11 @@ jobs:
   generate-artifacts:
     name: kicad export
     runs-on: ubuntu-latest
-    container: "setsoft/kicad_auto:ki8"
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/knot-electrical-builder:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       fail-fast: false
       matrix:
