@@ -1,14 +1,15 @@
-name: build_mechanical_builder_image
+name: build_firmware_builder_image
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - 'docker/mechanical-builder/Dockerfile'
+      - 'docker/firmware-builder/Dockerfile'
+      - '.pre-commit-config.yaml'
 
 jobs:
   build-and-push:
-    name: Build and push mechanical builder image
+    name: Build and push firmware builder image
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -31,7 +32,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder
+          images: ghcr.io/${{ github.repository_owner }}/knot-firmware-builder
           tags: |
             type=raw,value=latest
             type=sha,prefix=sha-,format=short
@@ -40,8 +41,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: docker/mechanical-builder/Dockerfile
+          file: docker/firmware-builder/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder:buildcache
-          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder:buildcache,mode=max
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/knot-firmware-builder:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/knot-firmware-builder:buildcache,mode=max
