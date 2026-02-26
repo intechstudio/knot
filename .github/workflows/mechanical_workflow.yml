@@ -60,6 +60,7 @@ jobs:
           docker tag ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder:latest builder:local
         fi
         docker run -d --name builder \
+          --user $(id -u):$(id -g) \
           -v ${{ github.workspace }}:/work \
           -w /work \
           builder:local tail -f /dev/null
