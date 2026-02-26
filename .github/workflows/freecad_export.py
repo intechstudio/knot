@@ -161,7 +161,4 @@ App.ActiveDocument.save()
 print("DONE3")
 
 
-App.Gui.getMainWindow().close()
-
-# sys.exit(0)
-# exit(0)
+sys.exit(0)

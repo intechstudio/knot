@@ -42,10 +42,10 @@ jobs:
       run: |
         ls
         export DISPLAY=:99
-        timeout 5m freecad --hidden ./Mechanical/Design/${{ matrix.component }}/${{ matrix.component }}.FCStd ./.github/workflows/freecad_export.py step pdf || true
+        freecad --hidden ./Mechanical/Design/${{ matrix.component }}/${{ matrix.component }}.FCStd ./.github/workflows/freecad_export.py step pdf || true
 
     - name: Convert STEP to STL
-      run: python ./.github/workflows/pythonocc_step_to_stl.py
+      run: /opt/conda/envs/occenv/bin/python ./.github/workflows/pythonocc_step_to_stl.py
 
     - name: Generate Preview PNG
       run: |
