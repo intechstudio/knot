@@ -1,17 +1,39 @@
-name: mechanical_components
-
 on:
   workflow_dispatch:
   push:
     paths:
-      - '.github/workflows/mechanical_components.yml'
+      - '.github/workflows/mechanical_workflow.yml'
       - '.github/workflows/freecad_export.py'
       - '.github/workflows/openscad_preview.sh'
       - 'Mechanical/Design/**'
+      - 'docker/mechanical-builder/Dockerfile'
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  check-dockerfile:
+    runs-on: ubuntu-latest
+    outputs:
+      dockerfile-changed: ${{ steps.filter.outputs.dockerfile }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            dockerfile:
+              - 'docker/mechanical-builder/Dockerfile'
+
+  build-image:
+    needs: check-dockerfile
+    if: (needs.check-dockerfile.outputs.dockerfile-changed == 'true' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/_build_image.yml
+    with:
+      image_name: knot-mechanical-builder
+      dockerfile: docker/mechanical-builder/Dockerfile
+    secrets: inherit
+
   generate-artifacts:
+    needs: build-image
+    if: always() && needs.build-image.result != 'failure'
     name: freecad export
     runs-on: ubuntu-latest
     container:
@@ -70,7 +92,7 @@ jobs:
   deploy-results:
     needs: generate-artifacts
     if: github.ref == 'refs/heads/main'
-    uses: ./.github/workflows/deploy_nightly_release.yml
+    uses: ./.github/workflows/_deploy_nightly.yml
     with:
       release_name: "Nightly Mechanical"
       tag_name: "nightly-mechanical"

@@ -18,13 +18,13 @@ ENTRYPOINT ["/esp-idf/tools/docker/entrypoint.sh"]
 
 # Install pre-commit from pip
 RUN python3 -m pip install --break-system-packages pre-commit
-RUN pre-commit --version
 
-# Copy pre-commit hooks and create a git directory,
-# to allow missing environments of hooks to be installed
-COPY ./.pre-commit-config.yaml /
-RUN git init
-RUN pre-commit install-hooks
+# Pre-install hook environments using a bind mount so the config file is
+# available during the build but never written into the image layer.
+RUN --mount=type=bind,source=.pre-commit-config.yaml,target=/tmp/.pre-commit-config.yaml \
+    cd /tmp && git init && \
+    pre-commit install-hooks --config /tmp/.pre-commit-config.yaml && \
+    rm -rf /tmp/.git
 
 # Add /project as a safe git repository
 RUN git config --global --add safe.directory /project

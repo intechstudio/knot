@@ -11,4 +11,4 @@ else
     exit 1
 fi
 
-$CONTAINER_TOOL build -t knot-build .
+$CONTAINER_TOOL pull ghcr.io/intechstudio/knot-firmware-builder:latest

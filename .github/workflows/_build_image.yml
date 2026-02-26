@@ -1,14 +1,15 @@
-name: build_mechanical_builder_image
-
 on:
-  workflow_dispatch:
-  push:
-    paths:
-      - 'docker/mechanical-builder/Dockerfile'
+  workflow_call:
+    inputs:
+      image_name:
+        required: true
+        type: string
+      dockerfile:
+        required: true
+        type: string
 
 jobs:
   build-and-push:
-    name: Build and push mechanical builder image
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -31,7 +32,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder
+          images: ghcr.io/${{ github.repository_owner }}/${{ inputs.image_name }}
           tags: |
             type=raw,value=latest
             type=sha,prefix=sha-,format=short
@@ -40,8 +41,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: docker/mechanical-builder/Dockerfile
+          file: ${{ inputs.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder:buildcache
-          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/knot-mechanical-builder:buildcache,mode=max
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ inputs.image_name }}:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ inputs.image_name }}:buildcache,mode=max

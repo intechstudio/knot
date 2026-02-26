@@ -1,5 +1,3 @@
-name: "Firmware Workflow"
-
 on:
   workflow_dispatch:
   push:
@@ -9,15 +7,37 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check-dockerfile:
+    runs-on: ubuntu-latest
+    outputs:
+      dockerfile-changed: ${{ steps.filter.outputs.dockerfile }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            dockerfile:
+              - 'docker/firmware-builder/Dockerfile'
+
+  build-image:
+    needs: check-dockerfile
+    if: (needs.check-dockerfile.outputs.dockerfile-changed == 'true' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/_build_image.yml
+    with:
+      image_name: knot-firmware-builder
+      dockerfile: docker/firmware-builder/Dockerfile
+    secrets: inherit
+
   build:
-    name: Build Firmware
-    uses: ./.github/workflows/firmware_build_only.yml
+    needs: build-image
+    if: always() && needs.build-image.result != 'failure'
+    uses: ./.github/workflows/_firmware_build.yml
 
   publish-production:
-    name: Publish Production Release
     if: needs.build.outputs.release_version != ''
     needs: build
-    uses: ./.github/workflows/firmware_release_production.yml
+    uses: ./.github/workflows/_firmware_release_production.yml
     with:
       product_name: "knot"
       release_version: ${{ needs.build.outputs.release_version }}
@@ -25,11 +45,10 @@ jobs:
     secrets: inherit
 
   publish-nightly:
-    name: Publish Nightly Release
     # Run on main branch OR when a tag exists to ensure nightly is never behind production releases
     if: github.ref == 'refs/heads/main' || needs.build.outputs.release_version != ''
     needs: build
-    uses: ./.github/workflows/firmware_release_nightly.yml
+    uses: ./.github/workflows/_firmware_release_nightly.yml
     with:
       product_name: "knot"
     secrets: inherit

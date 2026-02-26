@@ -1,5 +1,3 @@
-name: "Firmware Build and Test"
-
 on:
   workflow_call:
     outputs:

@@ -1,5 +1,3 @@
-name: "Firmware Nightly Release"
-
 on:
   workflow_call:
     inputs:
