@@ -56,7 +56,6 @@ jobs:
           docker tag ghcr.io/${{ github.repository_owner }}/knot-electrical-builder:latest builder:local
         fi
         docker run -d --name builder \
-          --user $(id -u):$(id -g) \
           -v ${{ github.workspace }}:/work \
           -w /work \
           builder:local tail -f /dev/null
@@ -67,6 +66,10 @@ jobs:
     - name: Stop container
       if: always()
       run: docker rm -f builder
+
+    - name: Fix file ownership
+      if: always()
+      run: sudo chown -R $USER ${{ github.workspace }}
 
     - name: Print errors
       if: always()
