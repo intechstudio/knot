@@ -1,0 +1,46 @@
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-firmware:
+    uses: ./.github/workflows/_firmware_build.yml
+    with:
+      dockerfile_changed: false
+    secrets: inherit
+
+  build-mechanical:
+    uses: ./.github/workflows/_mechanical_build.yml
+    with:
+      dockerfile_changed: false
+    secrets: inherit
+
+  build-electrical:
+    uses: ./.github/workflows/_electrical_build.yml
+    with:
+      dockerfile_changed: false
+    secrets: inherit
+
+  publish-release:
+    needs: [build-firmware, build-mechanical, build-electrical]
+    if: always() && needs.build-firmware.result == 'success' && needs.build-mechanical.result == 'success' && needs.build-electrical.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release/
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Knot ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          files: release/**/*
+          draft: true
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

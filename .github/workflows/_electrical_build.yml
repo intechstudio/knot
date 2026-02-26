@@ -1,0 +1,99 @@
+on:
+  workflow_call:
+    inputs:
+      dockerfile_changed:
+        description: "Whether the electrical Dockerfile was changed"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    name: kicad export
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        board:
+        - 'PCBA-KNOT'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Prepare image
+      run: |
+        if [ "${{ inputs.dockerfile_changed }}" == "true" ]; then
+          docker build -t builder:local -f docker/electrical-builder/Dockerfile .
+          if [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.ref }}" == "refs/heads/master" ]]; then
+            docker tag builder:local ghcr.io/${{ github.repository_owner }}/knot-electrical-builder:latest
+            docker push ghcr.io/${{ github.repository_owner }}/knot-electrical-builder:latest
+          fi
+        else
+          docker pull ghcr.io/${{ github.repository_owner }}/knot-electrical-builder:latest
+          docker tag ghcr.io/${{ github.repository_owner }}/knot-electrical-builder:latest builder:local
+        fi
+        docker run -d --name builder \
+          -v ${{ github.workspace }}:/work \
+          -w /work \
+          builder:local tail -f /dev/null
+
+    - name: Run PCB stuff
+      run: docker exec builder bash -c "make -C /work/Electrical/Design/${{ matrix.board }}"
+
+    - name: Stop container
+      if: always()
+      run: docker rm -f builder
+
+    - name: Fix file ownership
+      if: always()
+      run: sudo chown -R $USER ${{ github.workspace }}
+
+    - name: Print errors
+      if: always()
+      run: |
+        cat Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}-drc.html
+        cat Electrical/Design/${{ matrix.board }}/kibot_error.log
+
+    - name: Set Date
+      run: echo "action_date=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_ENV
+
+    - name: Convert position file
+      run: |
+        python3 .github/workflows/convert_bottom_position.py ../../Electrical/Design/${{ matrix.board }}/mfg-bot/mfg/${{ matrix.board }}-both_pos.csv ../../Electrical/Design/${{ matrix.board }}/mfg-bot/mfg/${{ matrix.board }}-both_pos_fixed.csv
+        rm Electrical/Design/${{ matrix.board }}/mfg-bot/mfg/${{ matrix.board }}-both_pos.csv
+
+    - name: Zipping gerber
+      uses: vimtor/action-zip@v1
+      with:
+        files: Electrical/Design/${{ matrix.board }}/mfg-bot/JLCPCB
+        dest: Electrical/Design/${{ matrix.board }}/mfg-bot/mfg/${{ matrix.board }}-gerber.zip
+
+    - name: Rename pdf files and removing non-zipped gerber files
+      run: |
+        mv Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}-erc.html Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}_erc.html
+        mv Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}-drc.html Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}_drc.html
+        mv Electrical/Design/${{ matrix.board }}/mfg-bot/Schematic.pdf Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}_Schematic.pdf
+        mv Electrical/Design/${{ matrix.board }}/mfg-bot/PCB_Top.pdf Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}_PCB_Top.pdf
+        mv Electrical/Design/${{ matrix.board }}/mfg-bot/PCB_Bottom.pdf Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}_PCB_Bottom.pdf
+        mv Electrical/Design/${{ matrix.board }}/mfg-bot/kibot_errors.filter Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}_kibot_errors.filter
+        mv Electrical/Design/${{ matrix.board }}/kibot_error.log Electrical/Design/${{ matrix.board }}/mfg-bot/${{ matrix.board }}_kibot_error.log
+
+        rm -r Electrical/Design/${{ matrix.board }}/mfg-bot/JLCPCB
+
+    - name: Upload results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: "result_${{ matrix.board }}_${{ env.action_date }}"
+        path: |
+          Electrical/Design/${{ matrix.board }}/mfg-bot/
+        if-no-files-found: warn

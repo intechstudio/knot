@@ -1,6 +1,8 @@
 on:
   workflow_dispatch:
   push:
+    branches:
+      - '**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -22,90 +24,14 @@ jobs:
 
   build:
     needs: check-dockerfile
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-    outputs:
-      artifact_name: nightly_firmware
-      release_artifact_name: release_firmware
-      action_date: ${{ steps.set_env.outputs.action_date }}
-      release_version: ${{ steps.set_env.outputs.release_version }}
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Prepare image
-        run: |
-          if [ "${{ needs.check-dockerfile.outputs.dockerfile-changed }}" == "true" ]; then
-            docker build -t ghcr.io/${{ github.repository_owner }}/knot-firmware-builder:latest -f docker/firmware-builder/Dockerfile .
-            if [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.ref }}" == "refs/heads/master" ]]; then
-              docker push ghcr.io/${{ github.repository_owner }}/knot-firmware-builder:latest
-            fi
-          else
-            docker pull ghcr.io/${{ github.repository_owner }}/knot-firmware-builder:latest
-          fi
-
-      - name: Run script in Docker container
-        run: docker run -v $PWD:/project -w /project/ ghcr.io/${{ github.repository_owner }}/knot-firmware-builder:latest sh -c "cd Firmware && ./esp_build_firmware.sh"
-
-      - name: Run Unit Tests
-        run: |
-          cd Firmware/components/knot_midi_translator/host_test/
-          ./test.sh
-          ./test.sh >> test.txt
-
-      - name: Set env
-        id: set_env
-        shell: bash
-        run: |
-          ACTION_DATE=$(date +'%Y-%m-%d-%H%M')
-          RELEASE_VERSION=$(git tag --contains ${{ github.sha }})
-          echo "ACTION_DATE=$ACTION_DATE" >> $GITHUB_ENV
-          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
-          echo "action_date=$ACTION_DATE" >> $GITHUB_OUTPUT
-          echo "release_version=$RELEASE_VERSION" >> $GITHUB_OUTPUT
-
-      - name: Copy and rename the artifacts
-        run: |
-          ls
-          cp binary/midi_host_fw.uf2 knot_esp32_release_${{ env.ACTION_DATE }}.uf2
-          cp binary/midi_host_fw.uf2 knot_esp32_nightly_${{ env.ACTION_DATE }}.uf2
-
-      - name: Upload nightly artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: nightly_firmware
-          path: knot_esp32_nightly_${{ env.ACTION_DATE }}.uf2
-
-      - name: Upload release artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: release_firmware
-          path: knot_esp32_release_${{ env.ACTION_DATE }}.uf2
-
-  publish-production:
-    needs: build
-    if: always() && needs.build.result == 'success' && needs.build.outputs.release_version != ''
-    uses: ./.github/workflows/_firmware_release_production.yml
+    uses: ./.github/workflows/_firmware_build.yml
     with:
-      product_name: "knot"
-      release_version: ${{ needs.build.outputs.release_version }}
-      action_date: ${{ needs.build.outputs.action_date }}
+      dockerfile_changed: ${{ needs.check-dockerfile.outputs.dockerfile-changed == 'true' }}
     secrets: inherit
 
   publish-nightly:
-    # Run on main branch OR when a tag exists to ensure nightly is never behind production releases
     needs: build
-    if: always() && needs.build.result == 'success' && (github.ref == 'refs/heads/main' || needs.build.outputs.release_version != '')
+    if: always() && needs.build.result == 'success' && github.ref == 'refs/heads/main'
     uses: ./.github/workflows/_deploy_nightly.yml
     with:
       release_name: "Nightly Firmware"
